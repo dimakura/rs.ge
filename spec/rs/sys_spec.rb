@@ -30,7 +30,6 @@ end
 
 describe 'check service user' do
   before(:all) do
-    @org = RS::TEST_ORG1
     @user = RS.check_service_user('su' => RS::SU_NAME, 'sp' => RS::SU_PSWD)
   end
   subject { @user }
@@ -39,4 +38,12 @@ describe 'check service user' do
   it { subject.payer_id.should_not be_nil }
   it { subject.user_name.should_not be_nil }
   it { subject.user_name.should == RS::SU_NAME }
+end
+
+describe 'check service user with illegal password' do
+  before(:all) do
+    @user = RS.check_service_user('su' => RS::SU_NAME, 'sp' => RS::SU_PSWD + '123')
+  end
+  subject { @user }
+  it { should be_nil }
 end
