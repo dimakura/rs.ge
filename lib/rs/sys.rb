@@ -97,7 +97,7 @@ module RS
   # name -- მაღაზიის დასახელება
   # su -- მომხამრებლის სახელი
   # sp -- პაროლი
-  def update_service_user(params)
+  def self.update_service_user(params)
     RS.ensure_params(params, 'user_name', 'user_password', 'ip', 'name', 'su', 'sp')
     client = RS.service_client
     response = client.request 'update_service_user' do
