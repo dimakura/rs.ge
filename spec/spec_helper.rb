@@ -38,4 +38,8 @@ module RS
     TEST_ORG1 = { :user => 'tbilisi',  :password => '123456', :taxid => '206322102'}
     TEST_ORG2 = { :user => 'satesto2', :password => '123456', :taxid => '12345678910'}
   end
+  unless defined?(SU_NAME) and defined?(SU_PSWD)
+    SU_NAME = 'dimitri1979'
+    SU_PSWD = '123456'
+  end
 end
