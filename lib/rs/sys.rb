@@ -64,6 +64,23 @@ module RS
     end
   end
 
-  
+  # გადაეცემეა შემდეგი პარამეტრები:
+  #
+  # user_name -- მომხმარებლის სახელი
+  # user_password -- პაროლი
+  # ip -- მანქანის მისამართი,
+  # name -- მაღაზიის დასახელება
+  # su -- მომხამრებლის სახელი
+  # sp -- პაროლი
+  def update_service_user(params)
+    RS.ensure_params(params, 'user_name', 'user_password', 'ip', 'name', 'su', 'sp')
+    client = RS.service_client
+    response = client.request 'update_service_user' do
+      soap.body = params
+    end
+    puts params
+    puts response.to_hash
+    response.to_hash[:update_service_user_response][:update_service_user_result]
+  end
 
 end

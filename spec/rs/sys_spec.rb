@@ -38,6 +38,7 @@ describe 'check service user' do
   it { subject.payer_id.should_not be_nil }
   it { subject.user_name.should_not be_nil }
   it { subject.user_name.should == RS::SU_NAME }
+  it { subject.name.should be_nil }
   it { subject.ip.should be_nil }
 end
 
@@ -47,4 +48,14 @@ describe 'check service user with illegal password' do
   end
   subject { @user }
   it { should be_nil }
+end
+
+describe 'update service user' do
+  before(:all) do
+    @org  = RS::TEST_ORG1
+    @ip   = RS.what_is_my_ip
+    @resp = RS.update_service_user('user_name' => @org[:user], 'user_password' => @org[:password], 'ip' => @ip, 'name' => 'c12', 'su' => RS::SU_NAME, 'sp' => RS::SU_PSWD)
+  end
+  subject { @resp }
+  it { should be_true }
 end
