@@ -1,4 +1,4 @@
-# encoding: utf-8
+# -*- encoding : utf-8 -*-
 require 'spec_helper'
 
 IP_PATTERN = /^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$/
