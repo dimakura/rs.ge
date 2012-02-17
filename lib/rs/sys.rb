@@ -14,7 +14,28 @@ module RS
     response.to_hash[:what_is_my_ip_response][:what_is_my_ip_result]
   end
 
-  # გადასაცემია შემდეგი პარამეტრები:
+  # ქმნის ახალ მომხმარებელს.
+  #
+  # გადაეცემა შემდეგი პარამეტრები:
+  #
+  # user_name -- მომხმარებლის სახელი
+  # user_password -- მომხმარებლის პაროლი
+  # ip -- მანქანის IP მისამართი, რომლიდანაც უნდა მოხდეს ამ მომხმარებლის შემოსვლა
+  # name -- მაღაზიის სახელი
+  # su -- სერვისის მომხმარებლის სახელი
+  # sp -- სერვისის მომხმარებლის პაროლი
+  def self.create_service_user(params)
+    RS.ensure_params(params, 'user_name', 'user_password', 'ip', 'name', 'su', 'sp')
+    client = RS.service_client
+    response = client.request 'create_service_user' do
+      soap.body = params
+    end
+    response.to_hash[:create_service_user_response][:create_service_user_result]
+  end
+
+  # აბრუნებს სერვისის მომხმარებლელბის სიას. 
+  #
+  # გადაეცემა შემდეგი პარამეტრები:
   #
   # user_name -- მომხმარებლის სახელი
   # user_password -- მომხმარებლი პაროლი
@@ -41,6 +62,8 @@ module RS
     users
   end
 
+  # სერვისის მომხმარებლის პაროლის შემოწმება.
+  #
   # გადაეცემა შემდეგი პარამეტრები:
   #
   # su -- სერვისის მომხმარებელი
@@ -64,7 +87,9 @@ module RS
     end
   end
 
-  # გადაეცემეა შემდეგი პარამეტრები:
+  # სერვისის მომხმარებლის მონაცემების შეცვლა.
+  #
+  # გადაეცემა შემდეგი პარამეტრები:
   #
   # user_name -- მომხმარებლის სახელი
   # user_password -- პაროლი
