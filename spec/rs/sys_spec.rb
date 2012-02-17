@@ -38,6 +38,7 @@ describe 'check service user' do
   it { subject.payer_id.should_not be_nil }
   it { subject.user_name.should_not be_nil }
   it { subject.user_name.should == RS::SU_NAME }
+  it { subject.ip.should be_nil }
 end
 
 describe 'check service user with illegal password' do
