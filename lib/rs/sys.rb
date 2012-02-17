@@ -103,8 +103,8 @@ module RS
     response = client.request 'update_service_user' do
       soap.body = params
     end
-    puts params
-    puts response.to_hash
+    #puts params
+    #puts response.to_hash
     response.to_hash[:update_service_user_response][:update_service_user_result]
   end
 

@@ -42,4 +42,12 @@ module RS
     SU_NAME = 'dimitri1979'
     SU_PSWD = '123456'
   end
+  def su_params
+    {'su' => SU_NAME, 'sp' => SU_PSWD}
+  end
+  def auth_params(org = 1)
+    u = org == 1 ? TEST_ORG1[:user] : TEST_ORG2[:user]
+    p = org == 2 ? TEST_ORG1[:password] : TEST_ORG2[:password]
+    {'user_name' => u, 'user_password' => p}
+  end
 end

@@ -14,7 +14,7 @@ end
 describe 'get service users' do
   before(:all) do
     @org = RS::TEST_ORG1
-    @users = RS.get_service_users('user_name' => @org[:user], 'user_password' => @org[:password])
+    @users = RS.get_service_users(RS.auth_params)
   end
   subject { @users }
   it { should_not be_empty }
@@ -30,7 +30,7 @@ end
 
 describe 'check service user' do
   before(:all) do
-    @user = RS.check_service_user('su' => RS::SU_NAME, 'sp' => RS::SU_PSWD)
+    @user = RS.check_service_user(RS.su_params)
   end
   subject { @user }
   it { should be_instance_of User }
@@ -44,7 +44,7 @@ end
 
 describe 'check service user with illegal password' do
   before(:all) do
-    @user = RS.check_service_user('su' => RS::SU_NAME, 'sp' => RS::SU_PSWD + '123')
+    @user = RS.check_service_user('su' => RS::SU_NAME, 'sp' => 'someincorrectpassword')
   end
   subject { @user }
   it { should be_nil }
@@ -54,7 +54,7 @@ describe 'update service user' do
   before(:all) do
     @org  = RS::TEST_ORG1
     @ip   = RS.what_is_my_ip
-    @resp = RS.update_service_user('user_name' => @org[:user], 'user_password' => @org[:password], 'ip' => @ip, 'name' => 'c12', 'su' => RS::SU_NAME, 'sp' => RS::SU_PSWD)
+    @resp = RS.update_service_user( RS.auth_params.merge(RS.su_params).merge({ 'ip' => @ip, 'name' => 'c12' }) )
   end
   subject { @resp }
   it { should be_true }
