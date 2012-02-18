@@ -32,6 +32,19 @@ module RS
     end
   end
 
+  # ზედნადების ერთეულების განსაზღვრა.
+  class WaybillUnit
+    attr_accessor :id, :name
+
+    # ეს კოდი შეესაბამება ზომის ერთეულს 'სხვა'.
+    OTHERS = 99
+  end
+
+  # ტრანსპორტირების ტიპი
+  class TransportType
+    attr_accessor :id, :name
+  end
+
   protected
 
   def normalize_excise_name(name)
@@ -83,6 +96,54 @@ module RS
     types = []
     types_hash.each do |hash|
       type = WaybillType.new
+      type.id = hash[:id]
+      type.name = hash[:name]
+      #puts "#{type.id}: #{type.name}"
+      types << type
+    end
+    types
+  end
+
+  # ზედნადების ზომის ერთეულების მიღება.
+  #
+  # უნდა გადაეცეს შემდეგი პარამეტრები:
+  #
+  # su -- სერვისის მომხმარებლის სახელი
+  # sp -- სერვისის მომხმარებლის პაროლი
+  def self.get_waybill_units(params)
+    RS.ensure_params(params, 'su', 'sp')
+    client = RS.service_client
+    response = client.request 'get_waybill_units' do
+      soap.body = params
+    end
+    units_hash = response.to_hash[:get_waybill_units_response][:get_waybill_units_result][:waybill_units][:waybill_unit]
+    units = []
+    units_hash.each do |hash|
+      unit = WaybillUnit.new
+      unit.id = hash[:id]
+      unit.name = hash[:name]
+      #puts "#{unit.id}: #{unit.name}"
+      units << unit
+    end
+    units
+  end
+
+  # ტრანსპორტის სახეობების მიღება.
+  #
+  # უნდა გადაეცეს შემდეგი პარამეტრები:
+  #
+  # su -- სერვისის მომხმარებლის სახელი
+  # sp -- სერვისის მომხმარებლის პაროლი
+  def self.get_transport_types(params)
+    RS.ensure_params(params, 'su', 'sp')
+    client = RS.service_client
+    response = client.request 'get_trans_types' do
+      soap.body = params
+    end
+    types_hash = response.to_hash[:get_trans_types_response][:get_trans_types_result][:transport_types][:transport_type]
+    types = []
+    types_hash.each do |hash|
+      type = TransportType.new
       type.id = hash[:id]
       type.name = hash[:name]
       #puts "#{type.id}: #{type.name}"

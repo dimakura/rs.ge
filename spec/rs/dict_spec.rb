@@ -66,3 +66,36 @@ describe WaybillType do
   waybill_type_creation_test WaybillType::SUB_WAYBILL
 end
 
+describe 'getting waybill units' do
+  before(:all) do
+    @units = RS.get_waybill_units(RS.su_params)
+  end
+  subject { @units }
+  it { should_not be_nil }
+  it { should_not be_empty }
+  context 'first unit' do
+    subject{ @units.first }
+    it { should_not be_nil }
+    it { should be_instance_of WaybillUnit }
+    its(:id)   { should_not be_nil }
+    its(:name) { should_not be_nil }
+    its(:name) { should_not be_empty }
+  end
+end
+
+describe 'getting transport types' do
+  before(:all) do
+    @types = RS.get_transport_types(RS.su_params)
+  end
+  subject { @types }
+  it { should_not be_nil }
+  it { should_not be_empty }
+  context 'first type' do
+    subject { @types.first }
+    it { should_not be_nil }
+    it { should be_instance_of TransportType }
+    its(:id) { should_not be_nil }
+    its(:name) { should_not be_nil }
+    its(:name) { should_not be_empty }
+  end
+end
