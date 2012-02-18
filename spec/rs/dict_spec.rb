@@ -14,6 +14,7 @@ describe 'getting excise codes' do
     its(:id)      { should_not be_nil }
     its(:name)    { should_not be_nil }
     its(:name)    { should_not be_empty }
+    its(:code)    { should_not be_empty }
     its(:measure) { should_not be_nil }
     its(:value)   { should_not be_nil }
     its(:value)   { should > 0 }
