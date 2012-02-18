@@ -34,12 +34,12 @@ describe 'check service user' do
   end
   subject { @user }
   it { should be_instance_of User }
-  it { subject.id.should_not be_nil }
-  it { subject.payer_id.should_not be_nil }
-  it { subject.user_name.should_not be_nil }
-  it { subject.user_name.should == RS::SU_NAME }
-  it { subject.name.should be_nil }
-  it { subject.ip.should be_nil }
+  its(:id)        { should_not be_nil }
+  its(:payer_id)  { should_not be_nil }
+  its(:user_name) { should_not be_nil }
+  its(:user_name) { should == RS::SU_NAME }
+  its(:name)      { should be_nil }
+  its(:ip)        { should be_nil }
 end
 
 describe 'check service user with illegal password' do
