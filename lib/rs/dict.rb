@@ -11,6 +11,27 @@ module RS
     attr_accessor :id, :name, :measure, :code, :value
   end
 
+  # ეს არის ზედნადების ტიპის კლასი.
+  class WaybillType
+    INNER = 1
+    TRANSPORTATION = 2
+    WITHOUT_TRANSPORTATION = 3
+    DISTRIBUTION = 4
+    RETURN = 5
+    SUB_WAYBILL = 6
+    NAMES = {
+      1 => 'შიდა გადაზიდვა', 2 => 'ტრანსპორტირებით', 3 => 'ტრანსპორტირების გარეშე',
+      4 => 'დისტრიბუცია', 5 => 'უკან დაბრუნება', 6 => 'ქვე-ზედნადები'
+    }
+    attr_accessor :id, :name
+    def self.create_from_id(id)
+      type = WaybillType.new
+      type.id = id
+      type.name = NAMES[id]
+      type
+    end
+  end
+
   protected
 
   def normalize_excise_name(name)
@@ -44,6 +65,30 @@ module RS
       codes << code
     end
     codes
+  end
+
+  # ზედნადების ტიპების მიღება.
+  #
+  # უნდა გადაეცეს შემდეგი პარამეტრები:
+  #
+  # su -- სერვისის მომხმარებლის სახელი
+  # sp -- სერვისის მომხმარებლის პაროლი
+  def self.get_waybill_types(params)
+    RS.ensure_params(params, 'su', 'sp')
+    client = RS.service_client
+    response = client.request 'get_waybill_types' do
+      soap.body = params
+    end
+    types_hash = response.to_hash[:get_waybill_types_response][:get_waybill_types_result][:waybill_types][:waybill_type]
+    types = []
+    types_hash.each do |hash|
+      type = WaybillType.new
+      type.id = hash[:id]
+      type.name = hash[:name]
+      #puts "#{type.id}: #{type.name}"
+      types << type
+    end
+    types
   end
 
 end

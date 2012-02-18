@@ -31,3 +31,38 @@ describe 'excise name normalization' do
     it { should == 'name' }
   end
 end
+
+describe 'getting waybill types' do
+  before(:all) do
+    @types = RS.get_waybill_types(RS.su_params)
+  end
+  subject { @types }
+  it { should_not be_nil }
+  it { should_not be_empty  }
+  context 'first type' do
+    subject { @types.first }
+    it { should be_instance_of WaybillType }
+    its(:id)   { should_not be_nil }
+    its(:name) { should_not be_nil }
+    its(:name) { should_not be_empty }
+  end
+end
+
+def waybill_type_creation_test(id)
+  context "WaybillType with ID=#{id}" do
+    subject { WaybillType.create_from_id(id) }
+    it { should be_instance_of WaybillType }
+    its(:id) { should ==  id }
+    its(:name) { should == WaybillType::NAMES[id]}
+  end
+end
+
+describe WaybillType do
+  waybill_type_creation_test WaybillType::INNER
+  waybill_type_creation_test WaybillType::TRANSPORTATION
+  waybill_type_creation_test WaybillType::WITHOUT_TRANSPORTATION
+  waybill_type_creation_test WaybillType::DISTRIBUTION
+  waybill_type_creation_test WaybillType::RETURN
+  waybill_type_creation_test WaybillType::SUB_WAYBILL
+end
+
