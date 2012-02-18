@@ -59,3 +59,11 @@ describe 'update service user' do
   subject { @resp }
   it { should be_true }
 end
+
+describe 'get name from TIN' do
+  before(:all) do
+    @name = RS.get_name_from_tin(RS.su_params.merge('tin' => '422430239'))
+  end
+  subject { @name }
+  it { should == 'შპს ც12' }
+end

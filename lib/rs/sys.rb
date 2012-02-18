@@ -108,4 +108,20 @@ module RS
     response.to_hash[:update_service_user_response][:update_service_user_result]
   end
 
+  # აბრუნებს ორგანიზაციის/პიროვნების სახელს მისი საიდენტიფიკაციო ნომრიდან.
+  #
+  # გადაეცემა შემდეგი პარამეტრები:
+  #
+  # su -- მომხამრებლის სახელი
+  # sp -- პაროლი
+  # tin -- საიდენტიფიკაციო ნომერი
+  def self.get_name_from_tin(params)
+    RS.ensure_params(params, 'su', 'sp', 'tin')
+    client = RS.service_client
+    response = client.request 'get_name_from_tin' do
+      soap.body = params
+    end
+    response.to_hash[:get_name_from_tin_response][:get_name_from_tin_result]
+  end
+
 end
