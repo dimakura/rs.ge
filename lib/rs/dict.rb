@@ -11,6 +11,15 @@ module RS
     attr_accessor :id, :name, :measure, :code, :value
   end
 
+  protected
+
+  def normalize_excise_name(name)
+    index = name =~ /\([0-9]+\)/
+    index ? name[0..index-1].strip : name
+  end
+
+  public
+
   # აქციზის კოდების სიის მიღება.
   #
   # უნდა გადაეცეს შემდეგი პარამეტრები:
@@ -28,7 +37,7 @@ module RS
     codes_hash.each do |hash|
       code = ExciseCode.new
       code.id = hash[:id]
-      code.name = hash[:title]
+      code.name = normalize_excise_name(hash[:title])
       code.measure = hash[:measurement]
       code.code = hash[:sakon_kodi]
       code.value = hash[:akcis_ganakv].to_f
