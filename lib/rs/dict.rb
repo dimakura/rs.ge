@@ -156,6 +156,8 @@ module RS
   #
   # უნდა გადაეცეს შემდეგი პარამეტრები:
   #
+  # su -- სერვისის მომხმარებლის სახელი
+  # sp -- სერვისის მომხმარებლის პაროლი
   # bar_code -- შტრიხკოდის მნიშვნელობა
   # prod_name -- საქონლის დასახელება (შეესაბამება <code>goods_name</code> RS-ის სპეციფიკაციაში)
   # unit_id -- ზომის ერთეულის კოდი
@@ -170,26 +172,31 @@ module RS
       'goods_name' => params['prod_name'], 'unit_id' => params['unit_id'],
       'unit_txt' => params['unit_name'], 'a_id' => params['excise_id']}
     prepare_params(params2)
-    # params2['attributes!'] = {}
-    # if params['unit_name']
-    #   params2['unit_txt'] = params['unit_name']
-    # else
-    #   params2['attributes!']['unit_txt'] = { 'xsi:nil' => true }
-    # end
-    # if params['excise_id']
-    #   params2['a_id'] = params['excise_id']
-    # else
-    #   params2['attributes!']['a_id'] = { 'xsi:nil' => true }
-    # end
     params2['order!'] = ['su', 'sp', 'bar_code', 'goods_name', 'unit_id', 'unit_txt', 'a_id']
-    #puts params2
     client = RS.service_client
     response = client.request 'save_bar_code' do
       soap.body = params2
     end
     resp = response.to_hash[:save_bar_code_response][:save_bar_code_result]
-    #puts resp
-    resp == '1' # success!
+    resp.to_i == 1 # success!
+  end
+
+  # შტრიხკოდის წაშლის მეთოდი.
+  #
+  # უნდა გადაეცეს შემდეგი პარამეტრები:
+  #
+  # su -- სერვისის მომხმარებლის სახელი
+  # sp -- სერვისის მომხმარებლის პაროლი
+  # bar_code -- შტრიხკოდის მნიშვნელობა
+  def self.delete_bar_code(params)
+    RS.validate_presence_of(params, 'su', 'sp', 'bar_code')
+    params['order!'] = ['su', 'sp', 'bar_code']
+    client = RS.service_client
+    response = client.request 'delete_bar_code' do
+      soap.body = params
+    end
+    resp = response.to_hash[:delete_bar_code_response][:delete_bar_code_result]
+    resp.to_i == 1 # success!
   end
 
 end

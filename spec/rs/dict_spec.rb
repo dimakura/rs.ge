@@ -100,10 +100,17 @@ describe 'getting transport types' do
   end
 end
 
-describe 'save bar code' do
+describe 'save and delete bar code' do
   before(:all) do
-    @resp = RS.save_bar_code(RS.su_params.merge('bar_code' => '123567900', 'prod_name' => 'Apple', 'unit_id' => 1, 'unit_name' => 'kg', 'excise_id' => nil))
+    @resp = RS.save_bar_code(RS.su_params.merge('bar_code' => 'inv/1', 'prod_name' => 'Apple', 'unit_id' => 1, 'unit_name' => 'kg', 'excise_id' => nil))
   end
   subject { @resp }
   it { should be_true }
+  context 'delete this bar code' do
+    before(:all) do
+      @resp = RS.delete_bar_code(RS.su_params.merge('bar_code' => 'inv/1'))
+    end
+    subject { @resp }
+    it { should be_true }
+  end
 end
