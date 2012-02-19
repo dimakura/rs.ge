@@ -61,7 +61,7 @@ module RS
   # su -- სერვისის მომხმარებლის სახელი
   # sp -- სერვისის მომხმარებლის პაროლი
   def self.get_excise_codes(params)
-    RS.ensure_params(params, 'su', 'sp')
+    RS.validate_presence_of(params, 'su', 'sp')
     client = RS.service_client
     response = client.request 'get_akciz_codes' do
       soap.body = params
@@ -87,7 +87,7 @@ module RS
   # su -- სერვისის მომხმარებლის სახელი
   # sp -- სერვისის მომხმარებლის პაროლი
   def self.get_waybill_types(params)
-    RS.ensure_params(params, 'su', 'sp')
+    RS.validate_presence_of(params, 'su', 'sp')
     client = RS.service_client
     response = client.request 'get_waybill_types' do
       soap.body = params
@@ -111,7 +111,7 @@ module RS
   # su -- სერვისის მომხმარებლის სახელი
   # sp -- სერვისის მომხმარებლის პაროლი
   def self.get_waybill_units(params)
-    RS.ensure_params(params, 'su', 'sp')
+    RS.validate_presence_of(params, 'su', 'sp')
     client = RS.service_client
     response = client.request 'get_waybill_units' do
       soap.body = params
@@ -135,7 +135,7 @@ module RS
   # su -- სერვისის მომხმარებლის სახელი
   # sp -- სერვისის მომხმარებლის პაროლი
   def self.get_transport_types(params)
-    RS.ensure_params(params, 'su', 'sp')
+    RS.validate_presence_of(params, 'su', 'sp')
     client = RS.service_client
     response = client.request 'get_trans_types' do
       soap.body = params
@@ -165,20 +165,22 @@ module RS
   # excise_id -- აქციზის კოდი. ან <code>nil</code>, თუ აქციზის კოდი არ უყენდება ამ საქონელს
   #   (შეესაბამება <code>a_id</code> პარამეტრს RS-ის სპეციფიკაციაში)
   def self.save_bar_code(params)
-    RS.ensure_params(params, 'su', 'sp', 'bar_code', 'prod_name', 'unit_id')
+    RS.validate_presence_of(params, 'su', 'sp', 'bar_code', 'prod_name', 'unit_id')
     params2 = {'su' => params['su'], 'sp' => params['sp'], 'bar_code' => params['bar_code'],
-      'goods_name' => params['prod_name'], 'unit_id' => params['unit_id']}
-    params2['attributes!'] = {}
-    if params['unit_name']
-      params2['unit_txt'] = params['unit_name']
-    else
-      params2['attributes!']['unit_txt'] = { 'xsi:nil' => true }
-    end
-    if params['excise_id']
-      params2['a_id'] = params['excise_id']
-    else
-      params2['attributes!']['a_id'] = { 'xsi:nil' => true }
-    end
+      'goods_name' => params['prod_name'], 'unit_id' => params['unit_id'],
+      'unit_txt' => params['unit_name'], 'a_id' => params['excise_id']}
+    prepare_params(params2)
+    # params2['attributes!'] = {}
+    # if params['unit_name']
+    #   params2['unit_txt'] = params['unit_name']
+    # else
+    #   params2['attributes!']['unit_txt'] = { 'xsi:nil' => true }
+    # end
+    # if params['excise_id']
+    #   params2['a_id'] = params['excise_id']
+    # else
+    #   params2['attributes!']['a_id'] = { 'xsi:nil' => true }
+    # end
     params2['order!'] = ['su', 'sp', 'bar_code', 'goods_name', 'unit_id', 'unit_txt', 'a_id']
     #puts params2
     client = RS.service_client

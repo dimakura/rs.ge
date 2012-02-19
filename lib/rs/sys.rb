@@ -25,7 +25,7 @@ module RS
   # su -- სერვისის მომხმარებლის სახელი
   # sp -- სერვისის მომხმარებლის პაროლი
   def self.create_service_user(params)
-    RS.ensure_params(params, 'user_name', 'user_password', 'ip', 'name', 'su', 'sp')
+    RS.validate_presence_of(params, 'user_name', 'user_password', 'ip', 'name', 'su', 'sp')
     client = RS.service_client
     response = client.request 'create_service_user' do
       soap.body = params
@@ -42,7 +42,7 @@ module RS
   #
   # ბრუნდება #{User}-ების მასივი.
   def self.get_service_users(params)
-    RS.ensure_params(params, 'user_name', 'user_password')
+    RS.validate_presence_of(params, 'user_name', 'user_password')
     client = RS.service_client
     response = client.request 'get_service_users' do
       soap.body = params
@@ -71,7 +71,7 @@ module RS
   #
   # აბრუნებს #{User} ობიექტს, ცარიელი ip-თი ან <code>nil</code>-ს თუ არასწორი მომხმარებელია.
   def self.check_service_user(params)
-    RS.ensure_params(params, 'su', 'sp')
+    RS.validate_presence_of(params, 'su', 'sp')
     client = RS.service_client
     response = client.request 'chek_service_user' do
       soap.body = params
@@ -98,7 +98,7 @@ module RS
   # su -- მომხამრებლის სახელი
   # sp -- პაროლი
   def self.update_service_user(params)
-    RS.ensure_params(params, 'user_name', 'user_password', 'ip', 'name', 'su', 'sp')
+    RS.validate_presence_of(params, 'user_name', 'user_password', 'ip', 'name', 'su', 'sp')
     client = RS.service_client
     response = client.request 'update_service_user' do
       soap.body = params
@@ -116,7 +116,7 @@ module RS
   # sp -- პაროლი
   # tin -- საიდენტიფიკაციო ნომერი
   def self.get_name_from_tin(params)
-    RS.ensure_params(params, 'su', 'sp', 'tin')
+    RS.validate_presence_of(params, 'su', 'sp', 'tin')
     client = RS.service_client
     response = client.request 'get_name_from_tin' do
       soap.body = params
