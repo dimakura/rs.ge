@@ -25,7 +25,7 @@ module RS
   def self.ensure_params(params, *options)
     options.each do |opt|
       val = params[opt.to_s]
-      raise RS::Error.new("#{opt.to_s} required") if val.nil? or val.strip.empty?
+      raise RS::Error.new("#{opt.to_s} required") if val.nil? or (val.instance_of? String and val.strip.empty?)
     end if options
   end
 

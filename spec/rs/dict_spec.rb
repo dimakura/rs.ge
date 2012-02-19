@@ -99,3 +99,11 @@ describe 'getting transport types' do
     its(:name) { should_not be_empty }
   end
 end
+
+describe 'save bar code' do
+  before(:all) do
+    @resp = RS.save_bar_code(RS.su_params.merge('bar_code' => '123567900', 'prod_name' => 'Apple', 'unit_id' => 1, 'unit_name' => 'kg', 'excise_id' => nil))
+  end
+  subject { @resp }
+  it { should be_true }
+end

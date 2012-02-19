@@ -152,4 +152,42 @@ module RS
     types
   end
 
+  # შტრიხკოდის შენახვის მეთოდი.
+  #
+  # უნდა გადაეცეს შემდეგი პარამეტრები:
+  #
+  # bar_code -- შტრიხკოდის მნიშვნელობა
+  # prod_name -- საქონლის დასახელება (შეესაბამება <code>goods_name</code> RS-ის სპეციფიკაციაში)
+  # unit_id -- ზომის ერთეულის კოდი
+  # unit_name -- ზომის ერთეულის დასახელება, როდესაც #{unit_id} ტოლია #{WaybillUnit::OTHERS},
+  #   სხვა მნიშვნელობისთვის ეს პარამეტრი არ უნდა გადმოეცეს
+  #   (შეესანამება <code>unit_txt</code> პარამეტრს RS-ის სპეციფიკაციაში)
+  # excise_id -- აქციზის კოდი. ან <code>nil</code>, თუ აქციზის კოდი არ უყენდება ამ საქონელს
+  #   (შეესაბამება <code>a_id</code> პარამეტრს RS-ის სპეციფიკაციაში)
+  def self.save_bar_code(params)
+    RS.ensure_params(params, 'su', 'sp', 'bar_code', 'prod_name', 'unit_id')
+    params2 = {'su' => params['su'], 'sp' => params['sp'], 'bar_code' => params['bar_code'],
+      'goods_name' => params['prod_name'], 'unit_id' => params['unit_id']}
+    params2['attributes!'] = {}
+    if params['unit_name']
+      params2['unit_txt'] = params['unit_name']
+    else
+      params2['attributes!']['unit_txt'] = { 'xsi:nil' => true }
+    end
+    if params['excise_id']
+      params2['a_id'] = params['excise_id']
+    else
+      params2['attributes!']['a_id'] = { 'xsi:nil' => true }
+    end
+    params2['order!'] = ['su', 'sp', 'bar_code', 'goods_name', 'unit_id', 'unit_txt', 'a_id']
+    #puts params2
+    client = RS.service_client
+    response = client.request 'save_bar_code' do
+      soap.body = params2
+    end
+    resp = response.to_hash[:save_bar_code_response][:save_bar_code_result]
+    #puts resp
+    resp == '1' # success!
+  end
+
 end
