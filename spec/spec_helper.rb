@@ -3,12 +3,9 @@
 # Savon (SOAP client)
 
 require 'savon'
-require 'httpi'
 
 HTTPI.log = false
-Savon.configure do |config|
-  config.log = false
-end
+Savon.log = false
 
 # SimpleCov
 

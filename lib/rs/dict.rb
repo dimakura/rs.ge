@@ -45,6 +45,11 @@ module RS
     attr_accessor :id, :name
   end
 
+  # შტრიხკოდის აღმწერი კლასი
+  class BarCode
+    attr_accessor :code, :name, :unit_id, :unit_name, :excise_id
+  end
+
   protected
 
   def normalize_excise_name(name)
@@ -197,6 +202,35 @@ module RS
     end
     resp = response.to_hash[:delete_bar_code_response][:delete_bar_code_result]
     resp.to_i == 1 # success!
+  end
+
+  # შტრიხკოდების მიღების მეთოდი.
+  #
+  # უნდა გადაეცეს შემდეგი პარამეტრები:
+  #
+  # su -- სერვისის მომხმარებლის სახელი
+  # sp -- სერვისის მომხმარებლის პაროლი
+  # bar_code -- შტრიხკოდის მნიშვნელობა, რომლის მსგავსის ამოღებაც გვინდა
+  def self.get_bar_codes(params)
+    RS.validate_presence_of(params, 'su', 'sp', 'bar_code')
+    params['order!']= ['su', 'sp', 'bar_code']
+    client = RS.service_client
+    response = client.request 'get_bar_codes' do
+      soap.body = params
+    end
+    codes_hash = response.to_hash[:get_bar_codes_response][:bar_codes][:bar_codes][:bar_code]
+    codes_hash = [codes_hash] if codes_hash.instance_of? Hash
+    codes = []
+    codes_hash.each do |hash|
+      code = BarCode.new
+      code.code = hash[:code]
+      code.name = hash[:name]
+      code.unit_id = hash[:unit_id].to_i
+      code.unit_name = hash[:unit_txt]
+      code.excise_id = hash[:a_id].to_i == 0 ? nil : hash[:a_id].to_i
+      codes << code
+    end
+    codes
   end
 
 end
