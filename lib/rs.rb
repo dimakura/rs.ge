@@ -30,7 +30,7 @@ module RS
   end
 
   # უზრუნველყოფს <code>nil</code> მნიშვნელობების სწორად ჩაწერას.
-  def prepare_params(params)
+  def self.prepare_params(params)
     attributes = {}
     params.each do |k, v|
       if v.nil?
