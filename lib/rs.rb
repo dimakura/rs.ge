@@ -18,7 +18,7 @@ module RS
   protected
 
   # SOAP სერვისის კლიენტი
-  def self.service_client
+  def self.waybill_service
     Savon::Client.new do
       wsdl.document = WAYBILL_SERVICE_URL
     end

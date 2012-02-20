@@ -9,7 +9,7 @@ module RS
 
   # აბრუნებს თქვენი კომპიუტერის გარე IP მისამართს.
   def self.what_is_my_ip
-    client = RS.service_client
+    client = RS.waybill_service
     response = client.request 'what_is_my_ip'
     response.to_hash[:what_is_my_ip_response][:what_is_my_ip_result]
   end
@@ -26,7 +26,7 @@ module RS
   # sp -- სერვისის მომხმარებლის პაროლი
   def self.create_service_user(params)
     RS.validate_presence_of(params, 'user_name', 'user_password', 'ip', 'name', 'su', 'sp')
-    client = RS.service_client
+    client = RS.waybill_service
     response = client.request 'create_service_user' do
       soap.body = params
     end
@@ -43,7 +43,7 @@ module RS
   # ბრუნდება #{User}-ების მასივი.
   def self.get_service_users(params)
     RS.validate_presence_of(params, 'user_name', 'user_password')
-    client = RS.service_client
+    client = RS.waybill_service
     response = client.request 'get_service_users' do
       soap.body = params
     end
@@ -72,7 +72,7 @@ module RS
   # აბრუნებს #{User} ობიექტს, ცარიელი ip-თი ან <code>nil</code>-ს თუ არასწორი მომხმარებელია.
   def self.check_service_user(params)
     RS.validate_presence_of(params, 'su', 'sp')
-    client = RS.service_client
+    client = RS.waybill_service
     response = client.request 'chek_service_user' do
       soap.body = params
     end
@@ -99,7 +99,7 @@ module RS
   # sp -- პაროლი
   def self.update_service_user(params)
     RS.validate_presence_of(params, 'user_name', 'user_password', 'ip', 'name', 'su', 'sp')
-    client = RS.service_client
+    client = RS.waybill_service
     response = client.request 'update_service_user' do
       soap.body = params
     end
@@ -117,7 +117,7 @@ module RS
   # tin -- საიდენტიფიკაციო ნომერი
   def self.get_name_from_tin(params)
     RS.validate_presence_of(params, 'su', 'sp', 'tin')
-    client = RS.service_client
+    client = RS.waybill_service
     response = client.request 'get_name_from_tin' do
       soap.body = params
     end

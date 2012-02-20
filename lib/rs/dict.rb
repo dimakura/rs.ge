@@ -67,7 +67,7 @@ module RS
   # sp -- სერვისის მომხმარებლის პაროლი
   def self.get_excise_codes(params)
     RS.validate_presence_of(params, 'su', 'sp')
-    client = RS.service_client
+    client = RS.waybill_service
     response = client.request 'get_akciz_codes' do
       soap.body = params
     end
@@ -93,7 +93,7 @@ module RS
   # sp -- სერვისის მომხმარებლის პაროლი
   def self.get_waybill_types(params)
     RS.validate_presence_of(params, 'su', 'sp')
-    client = RS.service_client
+    client = RS.waybill_service
     response = client.request 'get_waybill_types' do
       soap.body = params
     end
@@ -117,7 +117,7 @@ module RS
   # sp -- სერვისის მომხმარებლის პაროლი
   def self.get_waybill_units(params)
     RS.validate_presence_of(params, 'su', 'sp')
-    client = RS.service_client
+    client = RS.waybill_service
     response = client.request 'get_waybill_units' do
       soap.body = params
     end
@@ -141,7 +141,7 @@ module RS
   # sp -- სერვისის მომხმარებლის პაროლი
   def self.get_transport_types(params)
     RS.validate_presence_of(params, 'su', 'sp')
-    client = RS.service_client
+    client = RS.waybill_service
     response = client.request 'get_trans_types' do
       soap.body = params
     end
@@ -178,7 +178,7 @@ module RS
       'unit_txt' => params['unit_name'], 'a_id' => params['excise_id']}
     prepare_params(params2)
     params2['order!'] = ['su', 'sp', 'bar_code', 'goods_name', 'unit_id', 'unit_txt', 'a_id']
-    client = RS.service_client
+    client = RS.waybill_service
     response = client.request 'save_bar_code' do
       soap.body = params2
     end
@@ -196,7 +196,7 @@ module RS
   def self.delete_bar_code(params)
     RS.validate_presence_of(params, 'su', 'sp', 'bar_code')
     params['order!'] = ['su', 'sp', 'bar_code']
-    client = RS.service_client
+    client = RS.waybill_service
     response = client.request 'delete_bar_code' do
       soap.body = params
     end
@@ -214,7 +214,7 @@ module RS
   def self.get_bar_codes(params)
     RS.validate_presence_of(params, 'su', 'sp', 'bar_code')
     params['order!']= ['su', 'sp', 'bar_code']
-    client = RS.service_client
+    client = RS.waybill_service
     response = client.request 'get_bar_codes' do
       soap.body = params
     end
