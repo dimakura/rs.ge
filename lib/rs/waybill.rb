@@ -28,6 +28,8 @@ module RS
   class Waybill
     TRANSPORTATION_PAID_BY_BUYER = 1
     TRANSPORTATION_PAID_BY_SELLER = 2
+    STATUS_START  = 0
+    STATUS_ACTIVE = 1
     attr_accessor :id, :type, :status, :parent_id
     attr_accessor :seller_id # გამყიდველის უნიკალური კოდი
     attr_accessor :buyer_tin, :check_buyer_tin, :buyer_name
@@ -42,7 +44,7 @@ module RS
     def to_xml(xml)
       xml.WAYBILL do |b|
         b.GOODS_LIST do |g|
-          (self.items || {}).each do |item|
+          (self.items || []).each do |item|
             item.to_xml g
           end
         end
@@ -56,16 +58,16 @@ module RS
         b.DRIVER_TIN self.driver_tin
         b.CHEK_DRIVER_TIN (self.check_driver_tin ? 1 : 0)
         b.DRIVER_NAME self.driver_name
-        b.TRANSPORT_COAST self.transportation_cost
+        b.TRANSPORT_COAST (self.transportation_cost ? self.transportation_cost : 0)
         b.RECEPTION_INFO self.seller_info
         b.RECEIVER_INFO self.buyer_info
         b.DELIVERY_DATE (self.delivery_date ? self.delivery_date.strftime('%Y-%m-%dT%H:%M:%S') : '')
         b.STATUS self.status
-        b.SELLER_UN_ID self.seller_id
+        b.SELER_UN_ID self.seller_id
         b.PAR_ID (self.parent_id ? self.parent_id : '')
         b.CAR_NUMBER self.car_number
         b.BEGIN_DATE (self.start_date ? self.start_date.strftime('%Y-%m-%dT%H:%M:%S') : '')
-        b.TRANS_COST_PAYER self.transportation_cost_payer
+        b.TRANS_COST_PAYER (self.transportation_cost_payer ? self.transportation_cost_payer : Waybill::TRANSPORTATION_PAID_BY_BUYER)
         b.TRANS_ID self.transport_type_id
         b.TRANS_TXT self.transport_type_name
         b.COMMENT self.comment
