@@ -26,10 +26,13 @@ module RS
 
   # ეს არის ზედნადების კლასი.
   class Waybill
-    TRANSPORTATION_PAID_BY_BUYER = 1
+    TRANSPORTATION_PAID_BY_BUYER  = 1
     TRANSPORTATION_PAID_BY_SELLER = 2
     STATUS_START  = 0
     STATUS_ACTIVE = 1
+    # XXX ???
+    #STATUS_COMPLETED = -1
+    #STATUS_CANCELED  = -2
     attr_accessor :id, :type, :status, :parent_id
     attr_accessor :seller_id # გამყიდველის უნიკალური კოდი
     attr_accessor :buyer_tin, :check_buyer_tin, :buyer_name
@@ -74,5 +77,7 @@ module RS
       end
     end
   end
+
+  # TODO: save waybill
 
 end
