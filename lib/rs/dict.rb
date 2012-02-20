@@ -20,8 +20,8 @@ module RS
     RETURN = 5
     SUB_WAYBILL = 6
     NAMES = {
-      1 => 'შიდა გადაზიდვა', 2 => 'ტრანსპორტირებით', 3 => 'ტრანსპორტირების გარეშე',
-      4 => 'დისტრიბუცია', 5 => 'უკან დაბრუნება', 6 => 'ქვე-ზედნადები'
+      INNER => 'შიდა გადაზიდვა', TRANSPORTATION => 'ტრანსპორტირებით', WITHOUT_TRANSPORTATION => 'ტრანსპორტირების გარეშე',
+      DISTRIBUTION => 'დისტრიბუცია', RETURN => 'უკან დაბრუნება', SUB_WAYBILL => 'ქვე-ზედნადები'
     }
     attr_accessor :id, :name
     def self.create_from_id(id)
@@ -42,7 +42,20 @@ module RS
 
   # ტრანსპორტირების ტიპი
   class TransportType
+    VEHICLE = 1
+    RAILWAY = 2
+    AIR     = 3
+    OTHERS  = 4
+    NAMES   = {
+      VEICLE => 'საავტომობილო', RAILWAY => 'სარკინიგზო', AIR => 'საავიაციო', OTHERS => 'სხვა'
+    }
     attr_accessor :id, :name
+    def self.create_from_id(id)
+      type = TransportType.new
+      type.id = id
+      type.name = NAMES[id]
+      type
+    end
   end
 
   # შტრიხკოდის აღმწერი კლასი
