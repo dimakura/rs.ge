@@ -8,6 +8,9 @@ module RS
   # ელქტრონული ზედნადების ფორმის WSDL მისამართი
   WAYBILL_SERVICE_URL = 'http://services.rs.ge/WayBillService/WayBillService.asmx?WSDL'
 
+  # ელექტრონული ა/ფ WSDL მისამართი
+  NTO_SERVICE_URL = 'https://www.revenue.mof.ge/ntosservice/ntosservice.asmx?WSDL'
+
   # შეცდომის კლასი
   class Error < RuntimeError
   end
