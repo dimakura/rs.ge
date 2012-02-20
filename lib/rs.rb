@@ -9,7 +9,7 @@ module RS
   WAYBILL_SERVICE_URL = 'http://services.rs.ge/WayBillService/WayBillService.asmx?WSDL'
 
   # ელექტრონული ა/ფ WSDL მისამართი
-  NTO_SERVICE_URL = 'https://www.revenue.mof.ge/ntosservice/ntosservice.asmx?WSDL'
+  INVOICE_SERVICE_URL = 'https://www.revenue.mof.ge/ntosservice/ntosservice.asmx?WSDL'
 
   # შეცდომის კლასი
   class Error < RuntimeError
@@ -17,10 +17,17 @@ module RS
 
   protected
 
-  # SOAP სერვისის კლიენტი
+  # ელექტრონული ზედნადების SOAP კლიენტის მიღება
   def self.waybill_service
     Savon::Client.new do
       wsdl.document = WAYBILL_SERVICE_URL
+    end
+  end
+
+  # ანგარიშ-ფაქტურის SOAP კლიენტის მიღება
+  def self.invoice_service
+    Savon::Client.new do
+      wsdl.document = INVOICE_SERVICE_URL
     end
   end
 
