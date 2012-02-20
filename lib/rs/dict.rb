@@ -46,9 +46,7 @@ module RS
     RAILWAY = 2
     AIR     = 3
     OTHERS  = 4
-    NAMES   = {
-      VEICLE => 'საავტომობილო', RAILWAY => 'სარკინიგზო', AIR => 'საავიაციო', OTHERS => 'სხვა'
-    }
+    NAMES   = { VEHICLE => 'საავტომობილო', RAILWAY => 'სარკინიგზო', AIR => 'საავიაციო', OTHERS => 'სხვა' }
     attr_accessor :id, :name
     def self.create_from_id(id)
       type = TransportType.new
