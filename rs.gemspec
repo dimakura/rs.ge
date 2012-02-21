@@ -3,13 +3,13 @@ $:.push File.expand_path("../lib", __FILE__)
 require "rs/version"
 
 Gem::Specification.new do |s|
-  s.name        = "rs"
+  s.name        = "rs.ge"
   s.version     = RS::VERSION
   s.authors     = ["Dimitri Kurashvili"]
   s.email       = ["dimitri@c12.ge"]
   s.homepage    = "http://c12.ge"
-  s.summary     = %q{RS.GE web services}
-  s.description = %q{RS.GE web services Ruby interface}
+  s.summary     = %q{rs.ge web services}
+  s.description = %q{ruby client for rs.ge web services}
 
   s.rubyforge_project = "rs"
 
