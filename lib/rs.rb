@@ -3,6 +3,7 @@ require 'savon'
 require 'rs/version'
 require 'rs/sys'
 require 'rs/dict'
+require 'rs/waybill'
 
 module RS
   # ელქტრონული ზედნადების ფორმის WSDL მისამართი

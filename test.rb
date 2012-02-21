@@ -156,7 +156,10 @@ waybill.check_buyer_tin = true
 waybill.buyer_name = 'სატესტო ორგანიზაცია - 2'
 waybill.start_address = 'Tbilisi'
 waybill.end_address = 'Sokhumi'
-waybill.transport_type_id = 2
+waybill.transport_type_id = 1
+waybill.driver_name = 'დიმიტრი ყურაშვილი'
+waybill.car_number = 'WDW842'
+waybill.driver_tin = '02001000490'
 waybill.start_date = Time.now
 
 item = WaybillItem.new

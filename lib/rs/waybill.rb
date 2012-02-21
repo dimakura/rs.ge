@@ -5,7 +5,6 @@ module RS
   # ეს არის ზედნადების ხაზი საქონლისთვის.
   class WaybillItem
     attr_accessor :id, :prod_name, :unit_id, :unit_name, :quantity, :price, :bar_code, :excise_id
-    attr_accessor :error_code, :status_code
 
     # აბრუნებს ამ ხაზის XML წარმოდგენას.
     # @param xml XML builder-ის კლასი
@@ -30,9 +29,6 @@ module RS
     TRANSPORTATION_PAID_BY_SELLER = 2
     STATUS_START  = 0
     STATUS_ACTIVE = 1
-    # XXX ???
-    #STATUS_COMPLETED = -1
-    #STATUS_CANCELED  = -2
     attr_accessor :id, :type, :status, :parent_id
     attr_accessor :seller_id # გამყიდველის უნიკალური კოდი
     attr_accessor :buyer_tin, :check_buyer_tin, :buyer_name
@@ -43,6 +39,7 @@ module RS
     attr_accessor :comment
     attr_accessor :start_date, :delivery_date
     attr_accessor :items
+    attr_accessor :error_code
 
     def to_xml(xml)
       xml.WAYBILL do |b|
@@ -78,6 +75,42 @@ module RS
     end
   end
 
-  # TODO: save waybill
+  # ზედნადების შენახვის მეთოდი
+  #
+  # გადაეცემა:
+  # waybill -- ზედნადები
+  # params -- პარამეტრები
+  #
+  # პარამეტრების შემდეგი მნიშვნელობებია დასაშვები:
+  # su -- სერვისის მომხმარებლის სახელი
+  # sp -- სერვისის მომხმარებლის პაროლი
+  #
+  # ინახავს ამ ზედნადებს და განაახლებს მის მონაცემებს.
+  def save_waybill(waybill, params)
+    RS.validate_presence_of(params, 'su', 'sp')
+    client = RS.waybill_service
+    response = client.request 'save_waybill' do |soap|
+      soap.body do |xml|
+        xml.ins0 :su, params['su']
+        xml.ins0 :sp, params['sp']
+        xml.ins0 :waybill do |b|
+          waybill.to_xml b
+        end
+      end
+    end
+    hash_results = response.to_hash[:save_waybill_response][:save_waybill_result][:result]
+    if hash_results[:status].to_i == 0
+      waybill.id = hash_results[:id].to_i
+      waybill.error_code = 0
+      items_hash = hash_results[:goods_list][:goods]
+      items_hash = [items_hash] if items_hash.instance_of? Hash
+      (0..items_hash.size-1).each do |i|
+        waybill.items[i].id = items_hash[i][:id].to_i
+        #waybill.items[i].error_code = items_hash[i][:error].to_i
+      end
+    else
+      waybill.error_code = hash_results[:status].to_i
+    end
+  end
 
 end
