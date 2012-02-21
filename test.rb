@@ -100,7 +100,7 @@ end
 class Waybill
   TRANSPORTATION_PAID_BY_BUYER = 1
   TRANSPORTATION_PAID_BY_SELLER = 2
-  STATUS_START  = 0
+  STATUS_SAVED  = 0
   STATUS_ACTIVE = 1
   attr_accessor :id, :type, :status, :parent_id
   attr_accessor :seller_id # გამყიდველის უნიკალური კოდი
@@ -149,7 +149,7 @@ end
 
 waybill = Waybill.new
 waybill.type = 2
-waybill.status = Waybill::STATUS_START
+waybill.status = Waybill::STATUS_SAVED
 waybill.seller_id = 731937
 waybill.buyer_tin = '12345678910'
 waybill.check_buyer_tin = true
