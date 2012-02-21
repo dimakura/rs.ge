@@ -87,7 +87,7 @@ module RS
   # sp -- სერვისის მომხმარებლის პაროლი
   #
   # ინახავს ამ ზედნადებს და განაახლებს მის მონაცემებს.
-  def save_waybill(waybill, params)
+  def self.save_waybill(waybill, params)
     RS.validate_presence_of(params, 'su', 'sp')
     client = RS.waybill_service
     response = client.request 'save_waybill' do |soap|

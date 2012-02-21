@@ -1,5 +1,6 @@
 # -*- encoding : utf-8 -*-
 require 'spec_helper'
+require 'rs'
 
 def waybill_skeleton(params = {})
   waybill = RS::Waybill.new
@@ -27,7 +28,7 @@ def waybill_skeleton(params = {})
   if params[:items]
     items = []
     params[:items].each do |item|
-      item = WaybillItem.new
+      item = RS::WaybillItem.new
       item.prod_name = item[:name]
       item.unit_id = item[:unit_id]
       item.unit_name = item[:unit_name]
@@ -37,7 +38,7 @@ def waybill_skeleton(params = {})
       items << item
     end
   else
-    item = WaybillItem.new
+    item = RS::WaybillItem.new
     item.prod_name = 'სატესტო საქონელი'
     item.unit_id = 99
     item.unit_name = 'ერთეული'

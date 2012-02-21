@@ -1,5 +1,6 @@
 # -*- encoding : utf-8 -*-
 require 'spec_helper'
+require 'rs'
 
 # excise codes
 
@@ -45,7 +46,7 @@ describe 'getting waybill types' do
   it { should_not be_empty  }
   context 'first type' do
     subject { @types.first }
-    it { should be_instance_of WaybillType }
+    it { should be_instance_of RS::WaybillType }
     its(:id)   { should_not be_nil }
     its(:name) { should_not be_nil }
     its(:name) { should_not be_empty }
@@ -54,20 +55,20 @@ end
 
 def waybill_type_creation_test(id)
   context "WaybillType with ID=#{id}" do
-    subject { WaybillType.create_from_id(id) }
-    it { should be_instance_of WaybillType }
+    subject { RS::WaybillType.create_from_id(id) }
+    it { should be_instance_of RS::WaybillType }
     its(:id) { should ==  id }
-    its(:name) { should == WaybillType::NAMES[id]}
+    its(:name) { should == RS::WaybillType::NAMES[id]}
   end
 end
 
-describe WaybillType do
-  waybill_type_creation_test WaybillType::INNER
-  waybill_type_creation_test WaybillType::TRANSPORTATION
-  waybill_type_creation_test WaybillType::WITHOUT_TRANSPORTATION
-  waybill_type_creation_test WaybillType::DISTRIBUTION
-  waybill_type_creation_test WaybillType::RETURN
-  waybill_type_creation_test WaybillType::SUB_WAYBILL
+describe RS::WaybillType do
+  waybill_type_creation_test RS::WaybillType::INNER
+  waybill_type_creation_test RS::WaybillType::TRANSPORTATION
+  waybill_type_creation_test RS::WaybillType::WITHOUT_TRANSPORTATION
+  waybill_type_creation_test RS::WaybillType::DISTRIBUTION
+  waybill_type_creation_test RS::WaybillType::RETURN
+  waybill_type_creation_test RS::WaybillType::SUB_WAYBILL
 end
 
 # waybill units
@@ -82,7 +83,7 @@ describe 'getting waybill units' do
   context 'first unit' do
     subject{ @units.first }
     it { should_not be_nil }
-    it { should be_instance_of WaybillUnit }
+    it { should be_instance_of RS::WaybillUnit }
     its(:id)   { should_not be_nil }
     its(:name) { should_not be_nil }
     its(:name) { should_not be_empty }
@@ -101,7 +102,7 @@ describe 'getting transport types' do
   context 'first type' do
     subject { @types.first }
     it { should_not be_nil }
-    it { should be_instance_of TransportType }
+    it { should be_instance_of RS::TransportType }
     its(:id) { should_not be_nil }
     its(:name) { should_not be_nil }
     its(:name) { should_not be_empty }

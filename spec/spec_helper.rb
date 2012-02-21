@@ -24,10 +24,6 @@ RSpec.configure do |config|
   config.include(RSpec::Matchers)
 end
 
-# RS namespace is included by default
-
-include RS
-
 # Test organizations provided by RS.GE service
 
 module RS
@@ -39,10 +35,10 @@ module RS
     SU_NAME = 'dimitri1979'
     SU_PSWD = '123456'
   end
-  def su_params
+  def self.su_params
     {'su' => SU_NAME, 'sp' => SU_PSWD}
   end
-  def auth_params(org = 1)
+  def self.auth_params(org = 1)
     u = org == 1 ? TEST_ORG1[:user] : TEST_ORG2[:user]
     p = org == 2 ? TEST_ORG1[:password] : TEST_ORG2[:password]
     {'user_name' => u, 'user_password' => p}

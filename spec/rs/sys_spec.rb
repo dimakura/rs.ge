@@ -1,5 +1,6 @@
 # -*- encoding : utf-8 -*-
 require 'spec_helper'
+require 'rs'
 
 IP_PATTERN = /^[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$/
 
@@ -33,7 +34,7 @@ describe 'check service user' do
     @user = RS.check_service_user(RS.su_params)
   end
   subject { @user }
-  it { should be_instance_of User }
+  it { should be_instance_of RS::User }
   its(:id)        { should_not be_nil }
   its(:payer_id)  { should_not be_nil }
   its(:user_name) { should_not be_nil }

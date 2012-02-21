@@ -63,7 +63,7 @@ module RS
 
   protected
 
-  def normalize_excise_name(name)
+  def self.normalize_excise_name(name)
     index = name =~ /\([0-9]+\)/
     index ? name[0..index-1].strip : name
   end
