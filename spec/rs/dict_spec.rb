@@ -4,6 +4,21 @@ require 'rs'
 
 # excise codes
 
+describe 'excise name normalization' do
+  context 'name 1 (1234) _ msr _ (1)' do
+    subject { RS.normalize_excise_name('name 1 (1234) _ msr _ (1)') }
+    it { should == 'name 1' }
+  end
+  context 'name 2      (019048999) _     msr _ (1)' do
+    subject { RS.normalize_excise_name('name 2       (019048999) _     msr _ (1)') }
+    it { should == 'name 2' }
+  end
+  context 'name 3 () _ msr __ ' do
+    subject { RS.normalize_excise_name('name 3 () _ msr __ ') }
+    it { should == 'name 3' }
+  end
+end
+
 describe 'getting excise codes' do
   before(:all) do
     @codes = RS.get_excise_codes(RS.su_params)
@@ -21,17 +36,6 @@ describe 'getting excise codes' do
     its(:measure) { should_not be_nil }
     its(:value)   { should_not be_nil }
     its(:value)   { should > 0 }
-  end
-end
-
-describe 'excise name normalization' do
-  context 'name (1234) _ msr _ (1)' do
-    subject { RS.normalize_excise_name('name (1234) _ msr _ (1)') }
-    it { should == 'name' }
-  end
-  context 'name       (019048999) _     msr _ (1)' do
-    subject { RS.normalize_excise_name('name       (019048999) _     msr _ (1)') }
-    it { should == 'name' }
   end
 end
 
