@@ -76,18 +76,20 @@ module RS
   #
   # su -- სერვისის მომხმარებლის სახელი
   # sp -- სერვისის მომხმარებლის პაროლი
+  # normilize -- კი/არა, გამოიყენოს თუ არა სახელების ნორმალიზებული მნიშვნელობები (საწყისად ნორმალიზებულია)
   def self.get_excise_codes(params)
     RS.validate_presence_of(params, 'su', 'sp')
     client = RS.waybill_service
     response = client.request 'get_akciz_codes' do
       soap.body = params
     end
+    normalize = params['normilize'] || true
     codes_hash = response.to_hash[:get_akciz_codes_response][:get_akciz_codes_result][:akciz_codes][:akciz_code]
     codes = []
     codes_hash.each do |hash|
       code = ExciseCode.new
       code.id = hash[:id]
-      code.name = normalize_excise_name(hash[:title])
+      code.name = normalize ? normalize_excise_name(hash[:title]) : hash([:title])
       code.measure = hash[:measurement]
       code.code = hash[:sakon_kodi]
       code.value = hash[:akcis_ganakv].to_f
