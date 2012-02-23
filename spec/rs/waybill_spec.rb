@@ -151,3 +151,22 @@ describe 'activate waybill' do
   subject { @waybill }
   its(:status) { should == RS::Waybill::STATUS_ACTIVE }
 end
+
+describe 'close waybill' do
+  before(:all) do
+    @waybill = waybill_skeleton
+    RS.save_waybill(@waybill, RS.su_params)
+    @wb_params = RS.su_params.merge({ 'waybill_id' => @waybill.id })
+    RS.activate_waybill(@wb_params)
+    @resp = RS.close_waybill(@wb_params)
+  end
+  subject { @resp }
+  it { should == true }
+  context "waybill itself" do
+    before(:all) do
+      @waybill = RS.get_waybill(@wb_params)
+    end
+    subject { @waybill }
+    its(:status) { should == RS::Waybill::STATUS_CLOSED }
+  end
+end

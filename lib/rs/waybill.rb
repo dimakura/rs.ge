@@ -40,9 +40,9 @@ module RS
   class Waybill
     TRANSPORTATION_PAID_BY_BUYER  = 1
     TRANSPORTATION_PAID_BY_SELLER = 2
-    STATUS_SAVED    = 0
-    STATUS_ACTIVE   = 1
-    STATUS_INACTIVE = 2
+    STATUS_SAVED  = 0
+    STATUS_ACTIVE = 1
+    STATUS_CLOSED = 2
     attr_accessor :id, :type, :status, :parent_id
     attr_accessor :seller_id # გამყიდველის უნიკალური კოდი
     attr_accessor :buyer_tin, :check_buyer_tin, :buyer_name
@@ -194,6 +194,24 @@ module RS
     end
     #puts response.to_hash[:send_waybill_response][:send_waybill_result].to_i
     response.to_hash[:send_waybill_response][:send_waybill_result].to_i
+  end
+
+  # ზედნადების დახურვა.
+  #
+  # გადაეცემა შემდეგი პარამეტრები:
+  # waybill_id -- ზედნადების ID
+  # su -- სერვისის მომხმარებელი
+  # sp -- სერვისის მომხმარებლის პაროლი
+  #
+  # აბრუნებს <code>true</code> თუ დაიხურა.
+  def self.close_waybill(params)
+    RS.validate_presence_of(params, 'waybill_id', 'su', 'sp')
+    client = RS.waybill_service
+    response = client.request 'close_waybill' do |soap|
+      soap.body = params.merge({:order => ['su', 'sp', 'waybill_id']})
+    end
+    #puts response.to_hash
+    response.to_hash[:close_waybill_response][:close_waybill_result].to_i == 1
   end
 
 end
