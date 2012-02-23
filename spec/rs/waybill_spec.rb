@@ -15,16 +15,19 @@ def waybill_skeleton(params = {})
   waybill.end_address   = params[:end_address] || 'სოხუმი'
   waybill.transport_type_id = params[:transport_type] || RS::TransportType::VEHICLE
   waybill.start_date = params[:start_date] || Time.now
-  waybill.comment = params[:comment] || 'comment'
+  waybill.comment = params[:comment] #|| 'comment'
   if waybill.transport_type_id == RS::TransportType::VEHICLE
-    waybill.car_number = params[:car_number] ? params[:car_number] : 'WDW842'
-    waybill.driver_name = params[:driver_name] ? params[:driver_name] : 'დიმიტრი ყურაშვილი'
-    waybill.driver_tin = params[:driver_tin] ? params[:driver_tin] : '02001000490'
+    waybill.car_number  = params[:car_number]  || 'WDW842'
+    waybill.driver_name = params[:driver_name] || 'დიმიტრი ყურაშვილი'
+    waybill.driver_tin  = params[:driver_tin]  || '02001000490'
+    waybill.check_driver_tin = params[:check_driver_tin].nil? ? false : params[:check_driver_tin]
   else
     waybill.car_number = params[:car_number]
     waybill.driver_name = params[:driver_name]
     waybill.driver_tin = params[:driver_tin]
+    waybill.check_driver_tin = params[:check_driver_tin]
   end
+  waybill.transportation_cost = params[:transportation_cost] || 0
 
   if params[:items]
     items = []
@@ -52,8 +55,6 @@ def waybill_skeleton(params = {})
 
   waybill
 end
-
-if false
 
 describe 'save waybill' do
   before(:all) do
@@ -87,18 +88,16 @@ describe 'save waybill with large production name' do
   its(:id) { should be_nil }
 end
 
-end
-
 describe 'get waybill information' do
   before(:all) do
-    @start = waybill_skeleton
+    @start = waybill_skeleton({:comment => 'სატესტო კომენტარი'})
+    @item = @start.items.first
     RS.save_waybill(@start, RS.su_params)
     @waybill = RS.get_waybill(RS.su_params.merge('waybill_id' => @start.id))
   end
   subject { @waybill }
   it { should_not be_nil }
   its(:id) { should_not be_nil }
-  its(:items) { should_not be_empty }
   its(:type) { should == @start.type }
   its(:create_date) { should_not be_nil } 
   its(:status) { should == RS::Waybill::STATUS_SAVED }
@@ -120,5 +119,23 @@ describe 'get waybill information' do
   its(:transport_type_name) { should == @start.transport_type_name }
   its(:car_number) { should == @start.car_number }
   its(:comment) { should == @start.comment }
-  # TODO: add more checks
+  its(:start_date) { should_not be_nil }
+  its(:delivery_date) { should be_nil }
+  context 'items' do
+    subject { @waybill.items }
+    it { should_not be_empty }
+    its(:size) { should == 1 }
+    context 'first item' do
+      subject { @waybill.items.first }
+      it { should be_instance_of RS::WaybillItem }
+      its(:id) { should_not be_nil }
+      its(:prod_name) { should == @item.prod_name }
+      its(:unit_id) { should == @item.unit_id }
+      its(:unit_name) { should == @item.unit_name }
+      its(:quantity) { should == @item.quantity }
+      its(:price) { should == @item.price }
+      its(:bar_code) { should == @item.bar_code }
+      its(:excise_id) { should == @item.excise_id}
+    end
+  end
 end

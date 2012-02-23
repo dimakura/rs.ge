@@ -26,12 +26,12 @@ module RS
       item = WaybillItem.new
       item.id = hash[:id]
       item.prod_name = hash[:w_name]
-      item.unit_id = hash[:unit_id]
+      item.unit_id = hash[:unit_id].to_i
       item.unit_name = hash[:unit_txt]
-      item.quantity = hash[:quantity]
-      item.price = hash[:price]
+      item.quantity = hash[:quantity].to_f
+      item.price = hash[:price].to_f
       item.bar_code = hash[:bar_code]
-      item.excise_id = hash[:a_id]
+      item.excise_id = hash[:a_id] == '0' ? nil : hash[:a_id].to_i
       item
     end
   end
@@ -108,7 +108,7 @@ module RS
       waybill.seller_info = hash[:reception_info]
       waybill.buyer_info = hash[:receiver_info]
       waybill.driver_tin = hash[:driver_tin]
-      waybill.check_driver_tin = hash[:check_driver_tin].to_i == 1
+      waybill.check_driver_tin = hash[:chek_driver_tin].to_i == 1
       waybill.driver_name = hash[:driver_name]
       waybill.start_address = hash[:start_address]
       waybill.end_address = hash[:end_address]
@@ -118,6 +118,8 @@ module RS
       waybill.transport_type_name = hash[:trans_txt]
       waybill.car_number = hash[:car_number]
       waybill.comment = hash[:comment]
+      waybill.start_date = hash[:begin_date]
+      waybill.delivery_date = hash[:close_date]
       waybill
     end
   end
@@ -172,6 +174,7 @@ module RS
     response = client.request 'get_waybill' do |soap|
       soap.body = params
     end
+    #puts response.to_hash[:get_waybill_response][:get_waybill_result][:waybill]
     Waybill.init_from_hash(response.to_hash[:get_waybill_response][:get_waybill_result][:waybill])
   end
 
