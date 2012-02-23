@@ -5,16 +5,17 @@ require 'rs'
 def waybill_skeleton(params = {})
   waybill = RS::Waybill.new
   waybill.id = params[:id]
-  waybill.type = params[:type] ? params[:type] : RS::WaybillType::TRANSPORTATION
-  waybill.status = params[:status] ? params[:status] : RS::Waybill::STATUS_SAVED
-  waybill.seller_id = params[:seller_id] ? params[:seller_id] : 731937
-  waybill.buyer_tin = params[:buyer_tin] ? params[:buyer_tin] : '12345678910'
+  waybill.type = params[:type] || RS::WaybillType::TRANSPORTATION
+  waybill.status = params[:status] || RS::Waybill::STATUS_SAVED
+  waybill.seller_id = params[:seller_id] || 731937
+  waybill.buyer_tin = params[:buyer_tin] || '12345678910'
   waybill.check_buyer_tin = params[:check_buyer_tin] ? params[:check_buyer_tin] : true
-  waybill.buyer_name = params[:buyer_name] ? params[:buyer_name] : 'სატესტო მყიდველი'
-  waybill.start_address = params[:start_address] ? params[:start_address] : 'თბილისი'
-  waybill.end_address   = params[:end_address] ? params[:end_address] : 'სოხუმი'
-  waybill.transport_type_id = params[:transport_type] ? params[:transport_type] : RS::TransportType::VEHICLE
-  waybill.start_date = params[:start_date] ? params[:start_date] : Time.now
+  waybill.buyer_name = params[:buyer_name] || 'სატესტო მყიდველი'
+  waybill.start_address = params[:start_address] || 'თბილისი'
+  waybill.end_address   = params[:end_address] || 'სოხუმი'
+  waybill.transport_type_id = params[:transport_type] || RS::TransportType::VEHICLE
+  waybill.start_date = params[:start_date] || Time.now
+  waybill.comment = params[:comment] || 'comment'
   if waybill.transport_type_id == RS::TransportType::VEHICLE
     waybill.car_number = params[:car_number] ? params[:car_number] : 'WDW842'
     waybill.driver_name = params[:driver_name] ? params[:driver_name] : 'დიმიტრი ყურაშვილი'
@@ -52,6 +53,8 @@ def waybill_skeleton(params = {})
   waybill
 end
 
+if false
+
 describe 'save waybill' do
   before(:all) do
     @waybill = waybill_skeleton
@@ -82,4 +85,40 @@ describe 'save waybill with large production name' do
   subject { @waybill }
   its(:error_code) { should == -1 }
   its(:id) { should be_nil }
+end
+
+end
+
+describe 'get waybill information' do
+  before(:all) do
+    @start = waybill_skeleton
+    RS.save_waybill(@start, RS.su_params)
+    @waybill = RS.get_waybill(RS.su_params.merge('waybill_id' => @start.id))
+  end
+  subject { @waybill }
+  it { should_not be_nil }
+  its(:id) { should_not be_nil }
+  its(:items) { should_not be_empty }
+  its(:type) { should == @start.type }
+  its(:create_date) { should_not be_nil } 
+  its(:status) { should == RS::Waybill::STATUS_SAVED }
+  its(:parent_id) { should be_nil }
+  its(:seller_id) { should == @start.seller_id }
+  its(:buyer_tin) { should == @start.buyer_tin }
+  its(:buyer_name) { should == @start.buyer_name }
+  its(:check_buyer_tin) { should == @start.check_buyer_tin }
+  its(:seller_info) { should == @start.seller_info }
+  its(:buyer_info) { should == @start.buyer_info }
+  its(:driver_tin) { should == @start.driver_tin }
+  its(:check_driver_tin) { should == @start.check_driver_tin }
+  its(:driver_name) { should == @start.driver_name }
+  its(:start_address) { should == @start.start_address }
+  its(:end_address) { should == @start.end_address }
+  its(:transportation_cost) { should == @start.transportation_cost }
+  its(:transportation_cost_payer) { should == @start.transportation_cost_payer }
+  its(:transport_type_id) { should == @start.transport_type_id }
+  its(:transport_type_name) { should == @start.transport_type_name }
+  its(:car_number) { should == @start.car_number }
+  its(:comment) { should == @start.comment }
+  # TODO: add more checks
 end

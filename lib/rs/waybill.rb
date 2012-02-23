@@ -21,6 +21,19 @@ module RS
         b.A_ID (self.excise_id ? self.excise_id : 0)
       end
     end
+
+    def self.init_from_hash(hash)
+      item = WaybillItem.new
+      item.id = hash[:id]
+      item.prod_name = hash[:w_name]
+      item.unit_id = hash[:unit_id]
+      item.unit_name = hash[:unit_txt]
+      item.quantity = hash[:quantity]
+      item.price = hash[:price]
+      item.bar_code = hash[:bar_code]
+      item.excise_id = hash[:a_id]
+      item
+    end
   end
 
   # ეს არის ზედნადების კლასი.
@@ -41,6 +54,7 @@ module RS
     attr_accessor :start_date, :delivery_date
     attr_accessor :items
     attr_accessor :error_code
+    attr_accessor :create_date
 
     def to_xml(xml)
       xml.WAYBILL do |b|
@@ -73,6 +87,38 @@ module RS
         b.TRANS_TXT self.transport_type_name
         b.COMMENT self.comment
       end
+    end
+
+    def self.init_from_hash(hash)
+      waybill = Waybill.new
+      items_hash = hash[:goods_list][:goods]
+      items_hash = [items_hash] if items_hash.instance_of? Hash
+      waybill.items = []
+      items_hash.each do |item_hash|
+        waybill.items << WaybillItem.init_from_hash(item_hash)
+      end
+      waybill.id = hash[:id]
+      waybill.type = hash[:type].to_i
+      waybill.create_date = hash[:create_date]
+      waybill.status = hash[:status].to_i
+      waybill.seller_id = hash[:seler_un_id].to_i
+      waybill.buyer_tin = hash[:buyer_tin]
+      waybill.check_buyer_tin = hash[:chek_buyer_tin].to_i == 1
+      waybill.buyer_name = hash[:buyer_name]
+      waybill.seller_info = hash[:reception_info]
+      waybill.buyer_info = hash[:receiver_info]
+      waybill.driver_tin = hash[:driver_tin]
+      waybill.check_driver_tin = hash[:check_driver_tin].to_i == 1
+      waybill.driver_name = hash[:driver_name]
+      waybill.start_address = hash[:start_address]
+      waybill.end_address = hash[:end_address]
+      waybill.transportation_cost = hash[:transport_coast].to_f
+      waybill.transportation_cost_payer = hash[:tran_cost_payer] ? hash[:tran_cost_payer].to_i : nil
+      waybill.transport_type_id = hash[:trans_id].to_i
+      waybill.transport_type_name = hash[:trans_txt]
+      waybill.car_number = hash[:car_number]
+      waybill.comment = hash[:comment]
+      waybill
     end
   end
 
@@ -112,6 +158,21 @@ module RS
     else
       waybill.error_code = hash_results[:status].to_i
     end
+  end
+
+  # ზედნადების გამოტანა.
+  #
+  # გადაცემა:
+  # id -- ზედნადების ID
+  # su -- სერვისის მომხმარებელი
+  # sp -- სერვისის მომხმარებლის პაროლი
+  def self.get_waybill(params)
+    RS.validate_presence_of(params, 'waybill_id', 'su', 'sp')
+    client = RS.waybill_service
+    response = client.request 'get_waybill' do |soap|
+      soap.body = params
+    end
+    Waybill.init_from_hash(response.to_hash[:get_waybill_response][:get_waybill_result][:waybill])
   end
 
 end
