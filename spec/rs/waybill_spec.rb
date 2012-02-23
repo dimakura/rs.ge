@@ -170,3 +170,22 @@ describe 'close waybill' do
     its(:status) { should == RS::Waybill::STATUS_CLOSED }
   end
 end
+
+describe 'delete saved waybill' do
+  before(:all) do
+    @waybill = waybill_skeleton
+    RS.save_waybill(@waybill, RS.su_params)
+    @wb_params = RS.su_params.merge({ 'waybill_id' => @waybill.id })
+    @resp = RS.delete_waybill(@wb_params)
+  end
+  subject { @resp }
+  it { should == true }
+  context "where is waybill" do
+    before(:all) do
+      @deleted = RS.get_waybill(@wb_params)
+    end
+    subject { @deleted }
+    it { should_not be_nil}
+    its(:status) { should == RS::Waybill::STATUS_DELETED }
+  end
+end
