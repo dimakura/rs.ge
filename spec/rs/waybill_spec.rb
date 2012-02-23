@@ -139,3 +139,15 @@ describe 'get waybill information' do
     end
   end
 end
+
+describe 'activate waybill' do
+  before(:all) do
+    @waybill = waybill_skeleton
+    RS.save_waybill(@waybill, RS.su_params)
+    wb_params = RS.su_params.merge({ 'waybill_id' => @waybill.id })
+    RS.activate_waybill(wb_params)
+    @waybill = RS.get_waybill(wb_params)
+  end
+  subject { @waybill }
+  its(:status) { should == RS::Waybill::STATUS_ACTIVE }
+end
