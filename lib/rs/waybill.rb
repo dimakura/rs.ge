@@ -52,10 +52,9 @@ module RS
     attr_accessor :start_address, :end_address
     attr_accessor :transportation_cost, :transportation_cost_payer, :transport_type_id, :transport_type_name, :car_number
     attr_accessor :comment
-    attr_accessor :start_date, :delivery_date
+    attr_accessor :create_date, :start_date, :delivery_date, :activate_date
     attr_accessor :items
     attr_accessor :error_code
-    attr_accessor :create_date
 
     def to_xml(xml)
       xml.WAYBILL do |b|
@@ -100,7 +99,6 @@ module RS
       end
       waybill.id = hash[:id]
       waybill.type = hash[:type].to_i
-      waybill.create_date = hash[:create_date]
       waybill.status = hash[:status].to_i
       waybill.seller_id = hash[:seler_un_id].to_i
       waybill.buyer_tin = hash[:buyer_tin]
@@ -119,8 +117,10 @@ module RS
       waybill.transport_type_name = hash[:trans_txt]
       waybill.car_number = hash[:car_number]
       waybill.comment = hash[:comment]
+      waybill.create_date = hash[:create_date]
       waybill.start_date = hash[:begin_date]
       waybill.delivery_date = hash[:close_date]
+      waybill.activate_date = hash[:activate_date]
       waybill
     end
   end
