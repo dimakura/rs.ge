@@ -105,7 +105,7 @@ module RS
     STATUS_SAVED   =  0
     STATUS_ACTIVE  =  1
     STATUS_CLOSED  =  2
-    attr_accessor :id, :type, :status, :parent_id
+    attr_accessor :id, :type, :status, :parent_id, :number
     attr_accessor :seller_id # გამყიდველის უნიკალური კოდი
     attr_accessor :buyer_tin, :check_buyer_tin, :buyer_name
     attr_accessor :seller_info, :buyer_info # გამყიდველის/მყიდველის თანამდებობა, სახელი და გვარი
@@ -161,6 +161,7 @@ module RS
       waybill.id = hash[:id]
       waybill.type = hash[:type].to_i
       waybill.status = hash[:status].to_i
+      waybill.number = hash[:waybill_number]
       waybill.seller_id = hash[:seler_un_id].to_i
       waybill.buyer_tin = hash[:buyer_tin]
       waybill.check_buyer_tin = hash[:chek_buyer_tin].to_i == 1
