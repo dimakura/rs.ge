@@ -30,6 +30,9 @@ module RS
       type.name = NAMES[id]
       type
     end
+    def self.all_types
+      []
+    end
   end
 
   # ზედნადების ერთეულების განსაზღვრა.
@@ -47,7 +50,9 @@ module RS
     AIR     = 3
     OTHERS  = 4
     NAMES   = { VEHICLE => 'საავტომობილო', RAILWAY => 'სარკინიგზო', AIR => 'საავიაციო', OTHERS => 'სხვა' }
+
     attr_accessor :id, :name
+
     def self.create_from_id(id)
       type = TransportType.new
       type.id = id
