@@ -2,6 +2,15 @@
 
 module RS
 
+  protected
+
+  def self.append_validation_error(errors, field, error)
+    errors[field.to_sym] ||= []
+    errors[field.to_sym] << error
+  end
+
+  public
+
   # ამოწმებს თუ რამდენად სწორია პირადი ნომრის ჩანაწერი.
   # პირადი ნომერი უნდა შედგებოდს ზუსტად 11 ციფრისაგან.
   def self.is_valid_personal_tin(tin)
@@ -14,7 +23,6 @@ module RS
   def self.is_valid_corporate_tin(tin)
     tin =~ /^[0-9]{9}$/
   end
-
 
   # ეს არის ზედნადების ხაზი საქონლისთვის.
   class WaybillItem
@@ -47,6 +55,45 @@ module RS
       item.bar_code = hash[:bar_code]
       item.excise_id = hash[:a_id] == '0' ? nil : hash[:a_id].to_i
       item
+    end
+
+    # ამოწმებს ამ კლასს შემდეგი შეცდომების არსებობაზე:
+    #
+    # 1) საქონლის დასახელება უნდა იყოს მითითებული
+    # 2) საქონლის ზომის ერთეული უნდა იყოს მითითებული
+    # 3) თუ ზომის ერთეულია "სხვა", ზომის ერთეულის სახელიც უნდა იყოს მითითებული
+    # 4) რაოდენობა > 0
+    # 5) ფასი >= 0
+    # 6) შტრიხ-კოდი უნდა იყოს მითითებული
+    def validate
+      @validation_errors = {}
+      if self.prod_name.nil? or self.prod_name.strip.empty?
+        RS.append_validation_error(@validation_errors, :prod_name, 'საქონლის სახელი არაა განსაზღვრული')
+      end
+      if self.unit_id.nil?
+        RS.append_validation_error(@validation_errors, :unit_id, 'ზომის ერთეული არაა განსაზღვრული')
+      end
+      if self.unit_id == RS::WaybillUnit::OTHERS and (self.unit_name.nil? or self.unit_name.strip.empty?)
+        RS.append_validation_error(@validation_errors, :unit_id, 'ზომის ერთეულის სახელი არაა განსაზღვრული')
+      end
+      if self.quantity.nil? or self.quantity <= 0
+        RS.append_validation_error(@validation_errors, :quantity, 'რაოდენობა უნდა იყოს მეტი 0-ზე')
+      end
+      if self.price.nil? or self.price < 0
+        RS.append_validation_error(@validation_errors, :price, 'ფასი არ უნდა იყოს უარყოფითი')
+      end
+      if self.bar_code.nil? or self.bar_code.strip.empty?
+        RS.append_validation_error(@validation_errors, :price, 'საქონლის შტრიხ-კოდი უნდა იყოს განსაზღვრული')
+      end
+    end
+
+    def validation_errors
+      @validation_errors
+    end
+
+    def valid?
+      self.validate
+      @validation_errors.empty?
     end
   end
 
@@ -153,8 +200,109 @@ module RS
     # 8) ცალკეულ საქონელზე: იხ. {WaybillItem#validate}
     # 9) არ უნდა არსებობდეს საქონლის გამეორებული კოდები
     def validate
-      # TODO:
+      @validation_errors = {}
+      validate_buyer # 1, 2
+      validate_transport # 3, 4
+      validate_addresses # 5, 6
+      validate_items # 7, 8, 9
     end
+
+    def validation_errors
+      @validation_errors
+    end
+
+    def valid?
+      #self.validate
+      return false unless @validation_errors.empty?
+      self.items.each do |item|
+        item.validate
+        return false unless item.validation_errors.empty?
+      end if self.items
+      return true
+    end
+
+    def items_valid?
+      @items_valid != false
+    end
+
+    private
+
+    # მყიდველის შემოწმება
+    def validate_buyer
+      if self.buyer_tin.nil?
+        RS.append_validation_error(@validation_errors, :buyer_tin, 'მყიდველის საიდენტიფიკაციო ნომერი განუსაზღვრელია')
+      else
+        if self.check_buyer_tin
+          if !RS.is_valid_personal_tin(self.buyer_tin) and !RS.is_valid_corporate_tin(self.buyer_tin)
+            RS.append_validation_error(@validation_errors, :buyer_tin, 'საიდენტიფიკაციო ნომერი უნდა შედგებოდეს 9 ან 11 ციფრისაგან')
+          end
+        else
+          if self.buyer_name.nil? or self.buyer_name.strip.empty?
+            RS.append_validation_error(@validation_errors, :buyer_name, 'განსაზღვრეთ მყიდველის სახელი')
+          end
+        end
+      end
+    end
+
+    # სატრანსპორტო საშუალების შემოწმება
+    def validate_transport
+      if self.transport_type_id == RS::TransportType::VEHICLE
+        if self.car_number.nil? or self.car_number.strip.empty?
+          RS.append_validation_error(@validation_errors, :car_number, 'მიუთითეთ სატრანსპორტო საშუალების სახელმწიფო ნომერი')
+        end
+        if self.driver_tin.nil? or self.driver_tin.strip.empty?
+          RS.append_validation_error(@validation_errors, :driver_tin, 'მძღოლის პირადი ნომერი უნდა იყოს მითითებული')
+        end
+        if self.check_driver_tin
+          unless RS.is_valid_personal_tin(self.driver_tin)
+            RS.append_validation_error(@validation_errors, :driver_tin, 'მძღოლის პირადი ნომერი არასწორია')
+          end
+        else
+          if self.driver_name.nil? or self.driver_name.strip.empty?
+            RS.append_validation_error(@validation_errors, :driver_name, 'ჩაწერეთ მძღოლის სახელი')
+          end
+        end
+      elsif self.transport_type_id == RS::TransportType::OTHERS
+        if self.transport_type_name.nil? or self.transport_type_name.strip.empty?
+          RS.append_validation_error(@validation_errors, :transport_type_name, 'მიუთითეთ სატრანსპორტო საშუალების დასახელება')
+        end
+      end
+    end
+
+    # ამოწმებს მისამართებს
+    def validate_addresses
+      if self.start_address.nil? or self.start_address.strip.empty?
+        RS.append_validation_error(@validation_errors, :start_address, 'საწყისი მისამართი განუსაზღვრელია')
+      end
+      if self.end_address.nil? or self.end_address.strip.empty?
+        RS.append_validation_error(@validation_errors, :end_address, 'საბოლოო მისამართი განუსაზღვრელია')
+      end
+    end
+
+    # საქონლის პოზიციების შემოწმება
+    def validate_items
+      if self.items.nil? or self.items.empty?
+        RS.append_validation_error(@validation_errors, :items, 'ერთი საქონელი მაინც უნდა იყოს განსაზღვრული')
+        return
+      end
+      bar_codes = []
+      repeated_bar_codes = []
+      self.items.each do |item|
+        item.validate
+        @items_valid = false unless item.valid?
+        if not item.bar_code.nil? and not item.bar_code.strip.empty?
+          if bar_codes.include?(item.bar_code)
+            repeated_bar_codes << item.bar_code unless repeated_bar_codes.include?(item.bar_code)
+          else
+            bar_codes << item.bar_code
+          end
+        end
+      end
+      unless repeated_bar_codes.empty?
+        RS.append_validation_error(@validation_errors, :items, "დუბლირებული შტრიხ-კოდები: #{repeated_bar_codes.join(', ')}")
+      end
+    end
+
   end
 
   # ზედნადების შენახვის მეთოდი
