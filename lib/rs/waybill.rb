@@ -229,7 +229,7 @@ module RS
 
     # მყიდველის შემოწმება
     def validate_buyer
-      if self.buyer_tin.nil?
+      if self.buyer_tin.nil? or self.buyer_tin.strip.empty?
         RS.append_validation_error(@validation_errors, :buyer_tin, 'მყიდველის საიდენტიფიკაციო ნომერი განუსაზღვრელია')
       else
         if self.check_buyer_tin
