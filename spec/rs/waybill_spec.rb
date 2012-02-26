@@ -8,6 +8,12 @@ RSpec::Matchers.define :be_valid_personal_tin do #|expected|
   end
 end
 
+RSpec::Matchers.define :be_valid_corporate_tin do #|expected|
+  match do |actual|
+    RS.is_valid_corporate_tin(actual)
+  end
+end
+
 def validate_personal_tin(tin, valid=true)
   if valid
     context "#{tin} should be valid" do
@@ -22,11 +28,32 @@ def validate_personal_tin(tin, valid=true)
   end
 end
 
+def validate_corporate_tin(tin, valid=true)
+  if valid
+    context "#{tin} should be valid" do
+      subject{ tin }
+      it { should be_valid_corporate_tin }
+    end
+  else
+    context "#{tin} should NOT be valid" do
+      subject{ tin }
+      it { should_not be_valid_corporate_tin }
+    end
+  end
+end
+
 describe 'Personal TIN validation' do
   validate_personal_tin('12345678901',  true)
   validate_personal_tin('1234567890',   false)
   validate_personal_tin('123456789012', false)
   validate_personal_tin('1234567890A', false)
+end
+
+describe 'Corporate TIN validation' do
+  validate_corporate_tin('123456789',  true)
+  validate_corporate_tin('1234567890', false)
+  validate_corporate_tin('12345678',   false)
+  validate_corporate_tin('12345678A',  false)
 end
 
 def waybill_skeleton(params = {})

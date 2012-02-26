@@ -8,6 +8,14 @@ module RS
     tin =~ /^[0-9]{11}$/
   end
 
+  # ამოწმებს თუ რამდენად სწორია საწარმოს საიდენტიფიკაციო ნომრის ჩანაწერი
+  # (გარდა ინდ. მეწარმისა).
+  # საწარმოს საიდენტიფიკაციო ნომერი უნდა შედგებოდს ზუსტად 9 ციფრისაგან.
+  def self.is_valid_corporate_tin(tin)
+    tin =~ /^[0-9]{9}$/
+  end
+
+
   # ეს არის ზედნადების ხაზი საქონლისთვის.
   class WaybillItem
     attr_accessor :id, :prod_name, :unit_id, :unit_name, :quantity, :price, :bar_code, :excise_id
