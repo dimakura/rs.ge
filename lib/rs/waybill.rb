@@ -2,6 +2,12 @@
 
 module RS
 
+  # ამოწმებს თუ რამდენად სწორია პირადი ნომრის ჩანაწერი.
+  # პირადი ნომერი უნდა შედგებოდს ზუსტად 11 ციფრისაგან.
+  def self.is_valid_personal_tin(tin)
+    tin =~ /^[0-9]{11}$/
+  end
+
   # ეს არის ზედნადების ხაზი საქონლისთვის.
   class WaybillItem
     attr_accessor :id, :prod_name, :unit_id, :unit_name, :quantity, :price, :bar_code, :excise_id

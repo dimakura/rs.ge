@@ -2,6 +2,33 @@
 require 'spec_helper'
 require 'rs'
 
+RSpec::Matchers.define :be_valid_personal_tin do #|expected|
+  match do |actual|
+    RS.is_valid_personal_tin(actual)
+  end
+end
+
+def validate_personal_tin(tin, valid=true)
+  if valid
+    context "#{tin} should be valid" do
+      subject{ tin }
+      it { should be_valid_personal_tin }
+    end
+  else
+    context "#{tin} should NOT be valid" do
+      subject{ tin }
+      it { should_not be_valid_personal_tin }
+    end
+  end
+end
+
+describe 'Personal TIN validation' do
+  validate_personal_tin('12345678901',  true)
+  validate_personal_tin('1234567890',   false)
+  validate_personal_tin('123456789012', false)
+  validate_personal_tin('1234567890A', false)
+end
+
 def waybill_skeleton(params = {})
   waybill = RS::Waybill.new
   waybill.id = params[:id]
