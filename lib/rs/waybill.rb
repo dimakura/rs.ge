@@ -83,7 +83,7 @@ module RS
         RS.append_validation_error(@validation_errors, :price, 'ფასი არ უნდა იყოს უარყოფითი')
       end
       if self.bar_code.nil? or self.bar_code.strip.empty?
-        RS.append_validation_error(@validation_errors, :price, 'საქონლის შტრიხ-კოდი უნდა იყოს განსაზღვრული')
+        RS.append_validation_error(@validation_errors, :bar_code, 'საქონლის შტრიხ-კოდი უნდა იყოს განსაზღვრული')
       end
     end
 
