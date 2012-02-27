@@ -101,7 +101,8 @@ module RS
   class Waybill
     TRANSPORTATION_PAID_BY_BUYER  = 1
     TRANSPORTATION_PAID_BY_SELLER = 2
-    STATUS_DELETED = -1
+    STATUS_DELETED  = -1
+    STATUS_DEACTIVATED = -2
     STATUS_SAVED   =  0
     STATUS_ACTIVE  =  1
     STATUS_CLOSED  =  2
@@ -397,6 +398,7 @@ module RS
   end
 
   # ზედნადების წაშლა.
+  # ეს მეთოდი არ გამოდგება აქტიური/დასრულებული ზედნადების წასაშლელად.
   #
   # გადაეცემა შემდეგი პარამეტრები:
   # waybill_id -- ზედნადების ID
@@ -412,6 +414,25 @@ module RS
     end
     #puts response.to_hash
     response.to_hash[:del_waybill_response][:del_waybill_result].to_i == 1
+  end
+
+  # აქტიური/დასრულებული ზედნადების გაუქმება.
+  # ეს მეთოდი არ გამოდგება შენახული ზედნადების გასაუქმებლად.
+  #
+  # გადაეცემა შემდეგი პარამეტრები:
+  # waybill_id -- ზედნადების ID
+  # su -- სერვისის მომხმარებელი
+  # sp -- სერვისის მომხმარებლის პაროლი
+  #
+  # აბრუნებს <code>true</code> თუ წაიშალა.
+  def self.deactivate_waybill(params)
+    RS.validate_presence_of(params, 'waybill_id', 'su', 'sp')
+    client = RS.waybill_service
+    response = client.request 'ref_waybill' do |soap|
+      soap.body = params.merge({:order => ['su', 'sp', 'waybill_id']})
+    end
+    #puts response.to_hash
+    response.to_hash[:ref_waybill_response][:ref_waybill_result].to_i == 1
   end
 
 end
