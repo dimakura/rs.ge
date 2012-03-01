@@ -4,6 +4,7 @@ require 'rs/version'
 require 'rs/sys'
 require 'rs/dict'
 require 'rs/waybill'
+require 'rs/print'
 
 module RS
   # ელქტრონული ზედნადების ფორმის WSDL მისამართი

@@ -23,4 +23,5 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency 'savon'
   s.add_runtime_dependency 'httpi'
+  s.add_runtime_dependency 'prawn', '~>0.12'
 end
