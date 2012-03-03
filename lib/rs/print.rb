@@ -9,7 +9,6 @@ module RS
 
   def self.print_waybill(waybill, file)
     WaybillPDF.generate file, :page_size => 'A4', :margin => [15, 15] do |pdf|
-      # TODO: adding some syntax here
       render_waybill waybill, pdf
     end
   end
@@ -19,14 +18,17 @@ module RS
   HIGHLIGHT = 'eeeeee'
 
   def self.render_waybill(waybill, pdf)
-    pdf.change_font :default, 8
-    render_cell1(waybill, pdf)
+    pdf.change_font :default, 7
+    render_cell_01(waybill, pdf)
   end
 
-  def self.render_cell1(waybill, pdf)
-    items = [['სასაქონლო ზედნადები №', '1', '', waybill.number]]
-    tbl = pdf.make_table items, :cell_style => {:padding => 4, :align => :center}, :column_widths => [250, 15, 5, 100] do
-      column(0).style({:align => :right, :borders => []})
+  def self.render_cell_01(waybill, pdf)
+    items = [['', '1', 'სასაქონლო ზედნადები №', waybill.number]]
+    cols = [0, 18, 120, 100]
+    cols_width = cols.inject {|sum, n| sum + n }
+    cols[0] = (pdf.bounds.width - cols_width) / 2 # place table in center
+    tbl = pdf.make_table items, :cell_style => {:padding => 4, :align => :center}, :column_widths => cols do
+      column(0).style({:borders => []})
       column(1).style({:background_color => HIGHLIGHT})
       column(2).style({:borders => []})
     end
