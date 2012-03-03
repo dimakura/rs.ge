@@ -108,6 +108,7 @@ module RS
     STATUS_CLOSED  =  2
     attr_accessor :id, :type, :status, :parent_id, :number
     attr_accessor :seller_id # გამყიდველის უნიკალური კოდი
+    attr_accessor :seller_tin, :seller_name
     attr_accessor :buyer_tin, :check_buyer_tin, :buyer_name
     attr_accessor :seller_info, :buyer_info # გამყიდველის/მყიდველის თანამდებობა, სახელი და გვარი
     attr_accessor :driver_tin, :check_driver_tin, :driver_name
