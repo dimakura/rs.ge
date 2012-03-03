@@ -5,10 +5,9 @@ require 'rs'
 describe 'printing waybill PDF' do
   before(:all) do
     @waybill = waybill_skeleton
-    #@file = File.new File.expand_path('tmp/waybill.pdf')
-    RS.print_waybill(@waybill, file)
-
+    @path = File.expand_path('tmp/waybill.pdf')
+    RS.print_waybill(@waybill, @path)
   end
-  subject { file }
-  it { should == 'file' }
+  subject { @waybill }
+  it { should_not be_nil }
 end
