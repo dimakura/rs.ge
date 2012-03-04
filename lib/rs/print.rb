@@ -145,6 +145,7 @@ module RS
       row(1).style(:padding => 2)
     end
     index = from
+    nil_from = nil_to = nil
     while true do
       item = waybill.items[index]
       item_table = render_item(index - from, item, col_widths, pdf)
@@ -154,7 +155,19 @@ module RS
       else
         break
       end
+      if item.nil?
+        nil_from = pdf.y - 5 if nil_from.nil?
+        nil_to = pdf.y - 5
+      end
       index += 1
+    end
+    if nil_from and nil_from > nil_to
+      pdf.stroke_color('ff0000')
+      [[10, nil_from, pdf.bounds.width - 10, nil_from],
+       [10, nil_from, pdf.bounds.width - 10, nil_to],
+       [10, nil_to, pdf.bounds.width - 10, nil_to],
+       [10, nil_to, pdf.bounds.width - 10, nil_from],].each { |p| pdf.stroke_line(*p) }
+      pdf.stroke_color('000000')
     end
     index
   end
