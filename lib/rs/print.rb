@@ -30,11 +30,12 @@ module RS
   def self.render_waybill(waybill, pdf)
     pdf.change_font :default, DEF_FONT_SIZE
     render_cell_01(waybill, pdf)
-    pdf.move_down 5
+    pdf.move_down 10
     render_cell_02_and_03(waybill, pdf)
     pdf.move_down 10
     render_cells_04_and_05(waybill, pdf)
-    pdf.move_down 5
+    pdf.move_down 10
+    render_cells_06_07_and_08(waybill, pdf)
     
   end
 
@@ -80,6 +81,25 @@ module RS
       column(1).style(:borders => [])
       row(1).style(:size => SMALL_FONT_SIZE)
     end
+  end
+
+  def self.render_cells_06_07_and_08(waybill, pdf)
+    items1 = [['6', 'ოპერაციის შინაარსი', RS::WaybillType::NAMES[waybill.transport_type_id]]]
+    tbl1 = pdf.make_table items1, :cell_style => {:align => :center}, :column_widths => [NUM_CELL_WIDTH, 70, 100] do
+      column(0).style(:background_color => HIGHLIGHT)
+      column(1).style(:borders => [], :size => DEF_FONT_SIZE - 1)
+    end
+    items2 = [['7', '', waybill.start_address], ['', '', 'ტრანსპორტირების დაწყების ადგილი (მისამართი)'],
+              ['8', '', waybill.end_address  ], ['', '', 'ტრანსპორტირების დასრულების ადგილი (მისამართი)']]
+    tbl2 = pdf.make_table items2, :column_widths => [NUM_CELL_WIDTH, 5, pdf.bounds.width - NUM_CELL_WIDTH - 5 - 10 - tbl1.width] do
+      column(0).style(:align => :center)
+      column(1).style(:borders => [])
+      column(0).row(0).style(:background_color => HIGHLIGHT)
+      column(0).row(2).style(:background_color => HIGHLIGHT)
+      row(1).style(:align => :center, :size => SMALL_FONT_SIZE, :padding => [0, 0, 5, 0], :borders => [])
+      row(3).style(:align => :center, :size => SMALL_FONT_SIZE, :padding => 0, :borders => [])
+    end
+    pdf.table [[tbl1, '', tbl2]], :column_widths => [nil, 10, nil], :cell_style => {:borders => []}
   end
 
   def self.tax_code_box(pdf, title, number, tax_code, caption_width = 90)
