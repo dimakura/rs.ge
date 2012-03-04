@@ -31,6 +31,8 @@ module RS
     render_cells_06_07_and_08(waybill, pdf)
     pdf.move_down 10
     render_cells_09_and_10(waybill, pdf)
+    pdf.move_down 10
+    render_cells_11_and_12(waybill, pdf)
   end
 
   def self.render_cell_01(waybill, pdf)
@@ -111,6 +113,19 @@ module RS
     end
   end
 
+  def self.render_cells_11_and_12(waybill, pdf)
+    t11 = tax_code_box(pdf, 'სატრანსპორტო საშუალების მძღოლის პირადი ნომერი', '11', waybill.driver_tin, :caption_size => DEF_FONT_SIZE - 1)
+    t12A = pdf.make_table [['12', '', number_format(waybill.transportation_cost)], ['', '', 'თანხა ლარებში']], :column_widths => [NUM_CELL_WIDTH, 5, 100], :cell_style => {:padding => 4, :align => :center} do
+      column(1).style(:borders => [])
+      column(0).row(0).style(:background_color => HIGHLIGHT)
+      row(1).style(:borders => [], :size => SMALL_FONT_SIZE, :padding => 0)
+    end
+    t12 = pdf.make_table [['გამყიდველის (გამგზავნის) / მყიდველის (მიმღების) მიერ გაწეული ტრანსპორტირების ხარჯი', t12A]], :cell_style => {:borders => [], :padding => 0}, :column_widths => [150] do
+      column(0).style(:size => DEF_FONT_SIZE - 1)
+    end
+    pdf.table [[t11, '', t12]], :cell_style => {:borders => []}
+  end
+
   # Resize the first column so that the rest of the table to be placed in the center of the given area.
   def self.place_table_into_center(column_widths, pdf)
     tbl_width = column_widths.inject {|sum, n| sum + n }
@@ -133,7 +148,7 @@ module RS
     caption_width = opts[:caption_width] || 90
     table = pdf.make_table [[title, t1]], :cell_style => {:padding => 0, :borders => []}, :column_widths => [caption_width] do
       column(0).style(:valign => :center)
-      columns(0).style(:size => opts[:caption_size]) if opts[:caption_size]
+      column(0).style(:size => opts[:caption_size]) if opts[:caption_size]
     end
     table
   end
