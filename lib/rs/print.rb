@@ -119,16 +119,23 @@ module RS
   end
 
   # Prepare table with tax code.
-  def self.tax_code_box(pdf, title, number, tax_code, caption_width = 90)
+  def self.tax_code_box(pdf, title, number, tax_code, opts = {})
+    # tax code table
     tax_chars = empty?(tax_code) ? [' '] * 11 : tax_code.split(//)
     tax_chars = tax_chars[0..11] if tax_chars.size > 11
-    items = [[title, number, ''] + tax_chars]
-    widths = [caption_width, NUM_CELL_WIDTH, 5] + ([12] * tax_chars.size)
-    pdf.make_table(items, :cell_style => {:padding => 4, :align => :center}, :column_widths => widths) do
-      column(0).style(:align => :left, :borders => [])
-      column(1).style({:background_color => HIGHLIGHT})
-      column(2).style(:borders => [])
+    items = [[number, ''] + tax_chars]
+    widths = [NUM_CELL_WIDTH, 5] + ([12] * tax_chars.size)
+    t1 = pdf.make_table items, :cell_style => {:padding => 4, :align => :center}, :column_widths => widths do
+      column(0).style({:background_color => HIGHLIGHT})
+      column(1).style(:borders => [])
     end
+    # combine with caption
+    caption_width = opts[:caption_width] || 90
+    table = pdf.make_table [[title, t1]], :cell_style => {:padding => 0, :borders => []}, :column_widths => [caption_width] do
+      column(0).style(:valign => :center)
+      columns(0).style(:size => opts[:caption_size]) if opts[:caption_size]
+    end
+    table
   end
 
 end
