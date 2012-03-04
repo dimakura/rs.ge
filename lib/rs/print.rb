@@ -18,7 +18,9 @@ module RS
   HIGHLIGHT = 'eeeeee'
   NUM_CELL_WIDTH = 18
   DEF_FONT_SIZE = 7
+  SMALLER_FONT_SIZE = 6
   SMALL_FONT_SIZE = 5
+  FOOTER_HEIGHT = 250
 
   def self.render_waybill(waybill, pdf)
     pdf.change_font :default, DEF_FONT_SIZE
@@ -33,6 +35,16 @@ module RS
     render_cells_09_and_10(waybill, pdf)
     pdf.move_down 10
     render_cells_11_and_12(waybill, pdf)
+    pdf.move_down 20
+    # items
+    pdf.change_font :serif, DEF_FONT_SIZE + 2
+    pdf.text 'სასაქონლო ზედნადების ცხრილი', :align => :center
+    pdf.move_down 10
+    pdf.change_font
+    last_index = render_items waybill, 0, pdf
+    # footer
+    pdf.move_down 20
+    render_footer(waybill, pdf)
   end
 
   def self.render_cell_01(waybill, pdf)
@@ -124,6 +136,47 @@ module RS
       column(0).style(:size => DEF_FONT_SIZE - 1)
     end
     pdf.table [[t11, '', t12]], :cell_style => {:borders => []}
+  end
+
+  def self.render_items(waybill, from, pdf)
+    col_widths = [20, pdf.bounds.width - 20 - 55*5, 55, 55, 55, 55, 55]
+    items = [['№', 'საქონლის დასახელება', 'საქონლის კოდი', 'საქონლის ზომის ერთეული', 'საქონლის რაოდენობა', 'საქონლის ერთეულის ფასი*', 'საქონლის ფასი*'], ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII']]
+    pdf.table items, :column_widths => col_widths, :cell_style => {:align => :center, :valign => :center, :size => SMALLER_FONT_SIZE} do
+      row(1).style(:padding => 2)
+    end
+    index = from
+    while true do
+      item = waybill.items[index]
+      item_table = render_item(index - from, item, col_widths, pdf)
+      y = pdf.y - item_table.height
+      if y > FOOTER_HEIGHT
+        item_table.draw
+      else
+        break
+      end
+      index += 1
+    end
+    index
+  end
+
+  def self.render_item(num, item, widths, pdf)
+    if item
+      items = [[num + 1, item.prod_name, item.bar_code, item.unit_name, number_format(item.quantity, 5), number_format(item.price), number_format(item.quantity * item.price)]]
+    else
+      items = [[' ']*7]
+    end
+    pdf.make_table items, :column_widths => widths, :cell_style => {:size => SMALLER_FONT_SIZE} do
+      column(0).style(:align => :right)
+      column(2).style(:align => :center)
+      column(3).style(:align => :center)
+      column(4).style(:align => :right)
+      column(5).style(:align => :right)
+      column(6).style(:align => :right)
+    end
+  end
+
+  def self.render_footer(waybill, pdf)
+    
   end
 
   # Resize the first column so that the rest of the table to be placed in the center of the given area.
