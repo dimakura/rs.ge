@@ -40,10 +40,10 @@ module RS
     pdf.change_font :serif, DEF_FONT_SIZE + 2
     pdf.text 'სასაქონლო ზედნადების ცხრილი', :align => :center
     pdf.move_down 10
-    pdf.change_font
+    pdf.change_font :default, DEF_FONT_SIZE
     last_index = render_items waybill, 0, pdf
     # footer
-    pdf.move_down 20
+    pdf.move_down 5
     render_footer(waybill, pdf)
   end
 
@@ -176,10 +176,24 @@ module RS
   end
 
   def self.render_footer(waybill, pdf)
-    
+    render_cell_13(waybill, pdf)
+    # TODO:
   end
 
-  # Resize the first column so that the rest of the table to be placed in the center of the given area.
+  def self.render_cell_13(waybill, pdf)
+    total = 0
+    waybill.items.each {|item| total += item.price * item.quantity }
+    items = [['13', '', "#{number_format total} ლარი", '', C12::KA::tokenize(total*1.0, :currency => 'ლარი', :currency_minor => 'თეთრი')]]
+    pdf.table items, :column_widths => [NUM_CELL_WIDTH, 5, 120, 5, pdf.bounds.width - NUM_CELL_WIDTH - 130] do
+      column(0).style(:background_color => HIGHLIGHT)
+      column(1).style(:borders => [])
+      column(3).style(:borders => [])
+    end
+    pdf.move_down 2
+    pdf.text 'მიწოდებული საქონლის მთლიანი თანხა (ციფრებით და სიტყვიერად)', :align => :center, :size => SMALL_FONT_SIZE
+  end
+
+  # Resize the first column so that the rest of the table to be placed in the center of the area.
   def self.place_table_into_center(column_widths, pdf)
     tbl_width = column_widths.inject {|sum, n| sum + n }
     column_widths[0] = (pdf.bounds.width - tbl_width) / 2
