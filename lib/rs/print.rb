@@ -36,15 +36,28 @@ module RS
     pdf.move_down 10
     render_cells_11_and_12(waybill, pdf)
     pdf.move_down 20
-    # items
+    # items and footer
     pdf.change_font :serif, DEF_FONT_SIZE + 2
     pdf.text 'სასაქონლო ზედნადების ცხრილი', :align => :center
     pdf.move_down 10
     pdf.change_font :default, DEF_FONT_SIZE
     last_index = render_items waybill, 0, pdf
-    # footer
     pdf.move_down 5
-    render_footer(waybill, pdf)
+    render_footer(waybill, pdf, 0, last_index)
+    render_remaining_items(waybill, last_index + 1, pdf)
+  end
+
+  def self.render_remaining_items(waybill, from_index, pdf)
+    return if waybill.items.size < from_index
+    pdf.start_new_page
+    pdf.change_font :serif, 10
+    pdf.text "სასაქონლო ზედნადები №#{waybill.number}", :align => :center
+    pdf.change_font :default, DEF_FONT_SIZE
+    pdf.move_down 20
+    last_index = render_items waybill, from_index, pdf
+    pdf.move_down 5
+    render_footer(waybill, pdf, from_index, last_index)
+    render_remaining_items(waybill, last_index + 1, pdf)
   end
 
   def self.render_cell_01(waybill, pdf)
@@ -153,13 +166,15 @@ module RS
       if y > FOOTER_HEIGHT
         item_table.draw
       else
+        index -= 1 unless item.nil?
         break
       end
       if item.nil?
         nil_from = pdf.y - 5 if nil_from.nil?
         nil_to = pdf.y - 5
+      else
+        index += 1
       end
-      index += 1
     end
     if nil_from and nil_from > nil_to
       pdf.stroke_color('ff0000')
@@ -188,8 +203,8 @@ module RS
     end
   end
 
-  def self.render_footer(waybill, pdf)
-    render_cell_13(waybill, pdf)
+  def self.render_footer(waybill, pdf, from, to)
+    render_cell_13(waybill, pdf, from, to)
     pdf.move_down 20
     render_cells_14_and_15(waybill, pdf)
     pdf.move_down 5
@@ -202,9 +217,9 @@ module RS
     pdf.text '* დღგ-ს გადამხდელთათვის დღგ-ს ჩათვლით, აქციზის გადამხდელთათვის აქციზურ საქონელზე დღგ-ს და აქციზის ჩათვლით', :size => SMALLER_FONT_SIZE
   end
 
-  def self.render_cell_13(waybill, pdf)
+  def self.render_cell_13(waybill, pdf, from, to)
     total = 0
-    waybill.items.each {|item| total += item.price * item.quantity }
+    waybill.items[from..to].each {|item| total += item.price * item.quantity }
     items = [['13', '', "#{number_format total} ლარი", '', C12::KA::tokenize(total*1.0, :currency => 'ლარი', :currency_minor => 'თეთრი')]]
     pdf.table items, :column_widths => [NUM_CELL_WIDTH, 5, 120, 5, pdf.bounds.width - NUM_CELL_WIDTH - 130] do
       column(0).style(:background_color => HIGHLIGHT)

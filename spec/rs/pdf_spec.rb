@@ -11,6 +11,7 @@ describe 'printing waybill PDF' do
     @waybill.seller_name = 'შპს ც12'
     @waybill.delivery_date = Time.now
     @waybill.comment = 'ეს არის სატესტო ზედნადები'
+    @waybill.items = @waybill.items * 100
     @path = File.expand_path('tmp/waybill.pdf')
     RS.print_waybill(@waybill, @path)
   end
