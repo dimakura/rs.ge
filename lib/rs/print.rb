@@ -20,13 +20,6 @@ module RS
   DEF_FONT_SIZE = 7
   SMALL_FONT_SIZE = 5
 
-  # Resize the first column so that the rest of the table to be placed in the center of the given area.
-  def self.place_table_into_center(column_widths, pdf)
-    tbl_width = column_widths.inject {|sum, n| sum + n }
-    column_widths[0] = (pdf.bounds.width - tbl_width) / 2
-    column_widths
-  end
-
   def self.render_waybill(waybill, pdf)
     pdf.change_font :default, DEF_FONT_SIZE
     render_cell_01(waybill, pdf)
@@ -36,7 +29,8 @@ module RS
     render_cells_04_and_05(waybill, pdf)
     pdf.move_down 10
     render_cells_06_07_and_08(waybill, pdf)
-    
+    pdf.move_down 10
+    render_cells_09_and_10(waybill, pdf)
   end
 
   def self.render_cell_01(waybill, pdf)
@@ -84,7 +78,7 @@ module RS
   end
 
   def self.render_cells_06_07_and_08(waybill, pdf)
-    items1 = [['6', 'ოპერაციის შინაარსი', RS::WaybillType::NAMES[waybill.transport_type_id]]]
+    items1 = [['6', 'ოპერაციის შინაარსი', RS::WaybillType::NAMES[waybill.type]]]
     tbl1 = pdf.make_table items1, :cell_style => {:align => :center}, :column_widths => [NUM_CELL_WIDTH, 70, 100] do
       column(0).style(:background_color => HIGHLIGHT)
       column(1).style(:borders => [], :size => DEF_FONT_SIZE - 1)
@@ -102,6 +96,29 @@ module RS
     pdf.table [[tbl1, '', tbl2]], :column_widths => [nil, 10, nil], :cell_style => {:borders => []}
   end
 
+  def self.render_cells_09_and_10(waybill, pdf)
+    items = [['', '9', '', RS::TransportType::NAMES[waybill.transport_type_id], '', '10', '', waybill.car_number],
+             ['', '',  '', 'ტრანსპორტირების სახე', '', '', '', 'სატრანსპორტო საშუალების სახელმწიფო ნომერი']]
+    column_widths = place_table_into_center [0, NUM_CELL_WIDTH, 5, 120, 10, NUM_CELL_WIDTH, 5, 120], pdf
+    pdf.table items, :column_widths => column_widths, :cell_style => {:align => :center, :padding => 4} do
+      column(0).style(:borders => [])
+      column(2).style(:borders => [])
+      column(4).style(:borders => [])
+      column(6).style(:borders => [])
+      row(0).column(1).style(:background_color => HIGHLIGHT)
+      row(0).column(5).style(:background_color => HIGHLIGHT)
+      row(1).style(:size => SMALL_FONT_SIZE, :borders => [], :padding => 0)
+    end
+  end
+
+  # Resize the first column so that the rest of the table to be placed in the center of the given area.
+  def self.place_table_into_center(column_widths, pdf)
+    tbl_width = column_widths.inject {|sum, n| sum + n }
+    column_widths[0] = (pdf.bounds.width - tbl_width) / 2
+    column_widths
+  end
+
+  # Prepare table with tax code.
   def self.tax_code_box(pdf, title, number, tax_code, caption_width = 90)
     tax_chars = empty?(tax_code) ? [' '] * 11 : tax_code.split(//)
     tax_chars = tax_chars[0..11] if tax_chars.size > 11
