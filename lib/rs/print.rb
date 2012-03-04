@@ -183,7 +183,10 @@ module RS
     render_cells_16_and_17(waybill, pdf)
     pdf.move_down 20
     render_cell_18(waybill, pdf)
-    # TODO:
+    pdf.move_down 5
+    render_cell_19(waybill, pdf)
+    pdf.move_down 10
+    pdf.text '* დღგ-ს გადამხდელთათვის დღგ-ს ჩათვლით, აქციზის გადამხდელთათვის აქციზურ საქონელზე დღგ-ს და აქციზის ჩათვლით', :size => SMALLER_FONT_SIZE
   end
 
   def self.render_cell_13(waybill, pdf)
@@ -240,6 +243,15 @@ module RS
       column(4).style(:borders => [])
       row(0).style(:align => :center)
       row(1).style(:borders => [], :align => :center, :size => SMALL_FONT_SIZE, :padding => 2)
+    end
+  end
+
+  def self.render_cell_19(waybill, pdf)
+    items = [['19', '', waybill.comment], ['', '', 'შენიშვნა']]
+    pdf.table items, :column_widths => [NUM_CELL_WIDTH, 5, pdf.bounds.width - NUM_CELL_WIDTH - 5] do
+      column(0).row(0).style(:background_color => HIGHLIGHT)
+      column(1).row(0).style(:borders => [])
+      row(1).style(:borders => [], :size => SMALL_FONT_SIZE, :align => :center, :padding => 2)
     end
   end
 
