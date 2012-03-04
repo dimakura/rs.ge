@@ -177,10 +177,11 @@ module RS
 
   def self.render_footer(waybill, pdf)
     render_cell_13(waybill, pdf)
-    pdf.move_down 10
+    pdf.move_down 20
     render_cells_14_and_15(waybill, pdf)
     pdf.move_down 5
     render_cells_16_and_17(waybill, pdf)
+    pdf.move_down 20
     # TODO:
   end
 
@@ -203,7 +204,7 @@ module RS
     items = [['14', '', waybill.seller_info, '', '15', '', waybill.buyer_info], ['','', 'გამყიდველი (გამგზავნი) / საქონლის ჩაბარებაზე უფლებამოსილი პირი (თანამდებობა, სახელი და გვარი)', '', '', '', 'მყიდველი (მიმღები), საქონლის ჩაბარებაზე უფლებამოსილი პირი (თანამდებობა, სახელი და გვარი)']]
     w = (pdf.bounds.width - 2 * NUM_CELL_WIDTH - 20) / 2
     pdf.table items, :column_widths => [NUM_CELL_WIDTH, 5, w, 10, NUM_CELL_WIDTH, 5, w], :cell_style => {:align => :center} do
-      row(1).style(:borders => [], :size => SMALL_FONT_SIZE, :padding => 0)
+      row(1).style(:borders => [], :size => SMALL_FONT_SIZE, :padding => 2)
       row(0).column(1).style(:borders => [])
       row(0).column(3).style(:borders => [])
       row(0).column(5).style(:borders => [])
@@ -213,7 +214,17 @@ module RS
   end
 
   def self.render_cells_16_and_17(waybill, pdf)
-    # TODO:
+    items = [['', '16', '', '', '', '17', '', ''], ['', '', '', 'ხელმოწერა', '', '', '', 'ხელმოწერა']]
+    widths = place_table_into_center [0, NUM_CELL_WIDTH, 5, 150, 10, NUM_CELL_WIDTH, 5, 150], pdf
+    pdf.table items, :column_widths => widths do
+      column(0).style(:borders => [])
+      row(0).column(1).style(:background_color => HIGHLIGHT)
+      row(0).column(5).style(:background_color => HIGHLIGHT)
+      column(2).style(:borders => [])
+      column(4).style(:borders => [])
+      column(6).style(:borders => [])
+      row(1).style(:borders => [], :size => SMALL_FONT_SIZE, :padding => 2, :align => :center)
+    end
   end
 
   # Resize the first column so that the rest of the table to be placed in the center of the area.
