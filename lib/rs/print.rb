@@ -182,6 +182,7 @@ module RS
     pdf.move_down 5
     render_cells_16_and_17(waybill, pdf)
     pdf.move_down 20
+    render_cell_18(waybill, pdf)
     # TODO:
   end
 
@@ -224,6 +225,21 @@ module RS
       column(4).style(:borders => [])
       column(6).style(:borders => [])
       row(1).style(:borders => [], :size => SMALL_FONT_SIZE, :padding => 2, :align => :center)
+    end
+  end
+
+  def self.render_cell_18(waybill, pdf)
+    d = waybill.delivery_date ? C12::KA.format_date(waybill.delivery_date) : ' '
+    t = waybill.delivery_date ? waybill.delivery_date.strftime('%H:%M') : ' '
+    items = [['', '18', 'მიწოდებული საქონლის ჩაბარების', d, '', t], ['', '', '', 'თარიღი (რიცხვი, თვე, წელი)', '', 'დრო (საათი, წუთი)']]
+    widths = place_table_into_center [0, NUM_CELL_WIDTH, 150, 130, 5, 50], pdf
+    pdf.table items, :column_widths => widths do
+      column(0).style(:borders => [])
+      row(0).column(1).style(:background_color => HIGHLIGHT)
+      column(2).style(:borders => [])
+      column(4).style(:borders => [])
+      row(0).style(:align => :center)
+      row(1).style(:borders => [], :align => :center, :size => SMALL_FONT_SIZE, :padding => 2)
     end
   end
 
