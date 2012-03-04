@@ -34,7 +34,8 @@ module RS
     render_cell_02_and_03(waybill, pdf)
     pdf.move_down 10
     render_cells_04_and_05(waybill, pdf)
-
+    pdf.move_down 5
+    
   end
 
   def self.render_cell_01(waybill, pdf)
@@ -73,7 +74,7 @@ module RS
     widths = [tbl1.width, pdf.bounds.width/2 - tbl1.width, tbl2.width]
     pdf.table items, :cell_style => {:padding => 0, :borders => []}, :column_widths => widths
     pdf.move_down 5
-    items = [[waybill.seller_name, '', waybill.buyer_name], ['დასახელება, ან სახელი და გვარი', '', 'დასახელება, ან სახელი და გვარი']]
+    items = [[nvl(waybill.seller_name, ''), '', nvl(waybill.buyer_name, '')], ['დასახელება, ან სახელი და გვარი', '', 'დასახელება, ან სახელი და გვარი']]
     pdf.table items, :cell_style => {:padding => 0, :borders => [], :align => :center}, :column_widths => [pdf.bounds.width/2 - 5, 10, pdf.bounds.width/2 - 5] do
       row(0).style(:borders => [:bottom], :padding => 5, :size => DEF_FONT_SIZE + 1)
       column(1).style(:borders => [])
@@ -82,7 +83,7 @@ module RS
   end
 
   def self.tax_code_box(pdf, title, number, tax_code, caption_width = 90)
-    tax_chars = tax_code ? tax_code.split(//) : [' '] * 11
+    tax_chars = empty?(tax_code) ? [' '] * 11 : tax_code.split(//)
     tax_chars = tax_chars[0..11] if tax_chars.size > 11
     items = [[title, number, ''] + tax_chars]
     widths = [caption_width, NUM_CELL_WIDTH, 5] + ([12] * tax_chars.size)
