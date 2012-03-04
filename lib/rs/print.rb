@@ -177,6 +177,10 @@ module RS
 
   def self.render_footer(waybill, pdf)
     render_cell_13(waybill, pdf)
+    pdf.move_down 10
+    render_cells_14_and_15(waybill, pdf)
+    pdf.move_down 5
+    render_cells_16_and_17(waybill, pdf)
     # TODO:
   end
 
@@ -187,10 +191,29 @@ module RS
     pdf.table items, :column_widths => [NUM_CELL_WIDTH, 5, 120, 5, pdf.bounds.width - NUM_CELL_WIDTH - 130] do
       column(0).style(:background_color => HIGHLIGHT)
       column(1).style(:borders => [])
+      column(2).style(:align => :center)
       column(3).style(:borders => [])
+      column(4).style(:align => :center)
     end
     pdf.move_down 2
     pdf.text 'მიწოდებული საქონლის მთლიანი თანხა (ციფრებით და სიტყვიერად)', :align => :center, :size => SMALL_FONT_SIZE
+  end
+
+  def self.render_cells_14_and_15(waybill, pdf)
+    items = [['14', '', waybill.seller_info, '', '15', '', waybill.buyer_info], ['','', 'გამყიდველი (გამგზავნი) / საქონლის ჩაბარებაზე უფლებამოსილი პირი (თანამდებობა, სახელი და გვარი)', '', '', '', 'მყიდველი (მიმღები), საქონლის ჩაბარებაზე უფლებამოსილი პირი (თანამდებობა, სახელი და გვარი)']]
+    w = (pdf.bounds.width - 2 * NUM_CELL_WIDTH - 20) / 2
+    pdf.table items, :column_widths => [NUM_CELL_WIDTH, 5, w, 10, NUM_CELL_WIDTH, 5, w], :cell_style => {:align => :center} do
+      row(1).style(:borders => [], :size => SMALL_FONT_SIZE, :padding => 0)
+      row(0).column(1).style(:borders => [])
+      row(0).column(3).style(:borders => [])
+      row(0).column(5).style(:borders => [])
+      row(0).column(0).style(:background_color => HIGHLIGHT)
+      row(0).column(4).style(:background_color => HIGHLIGHT)
+    end
+  end
+
+  def self.render_cells_16_and_17(waybill, pdf)
+    # TODO:
   end
 
   # Resize the first column so that the rest of the table to be placed in the center of the area.
