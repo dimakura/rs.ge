@@ -87,7 +87,9 @@ module RS
   end
 
   def self.render_cell_02_and_03(waybill, pdf)
-    items1 = [['', '2', '', C12::KA.format_date(waybill.activate_date), '', '3', '', waybill.activate_date.strftime('%H:%M')]]
+    d = C12::KA.format_date(waybill.activate_date)
+    t = waybill.activate_date ? waybill.activate_date.strftime('%H:%M') : ''
+    items1 = [['', '2', '', d, '', '3', '', t]]
     items2 = [['', '', 'თარიღი (რიცხვი, თვე, წელი)', '', '', 'დრო (საათი, წუთი)']]
     cols1 = place_table_into_center [0, NUM_CELL_WIDTH, 5, 80, 32, NUM_CELL_WIDTH, 5, 80], pdf
     cols2 = place_table_into_center [0, NUM_CELL_WIDTH + 5, 80, 32, NUM_CELL_WIDTH + 5, 80], pdf
