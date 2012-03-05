@@ -107,7 +107,7 @@ module RS
     widths = [tbl1.width, pdf.bounds.width/2 - tbl1.width, tbl2.width]
     pdf.table items, :cell_style => {:padding => 0, :borders => []}, :column_widths => widths
     pdf.move_down 5
-    items = [[nvl(waybill.seller_name, ''), '', nvl(waybill.buyer_name, '')], ['დასახელება, ან სახელი და გვარი', '', 'დასახელება, ან სახელი და გვარი']]
+    items = [[C12.nvl(waybill.seller_name, ''), '', C12.nvl(waybill.buyer_name, '')], ['დასახელება, ან სახელი და გვარი', '', 'დასახელება, ან სახელი და გვარი']]
     pdf.table items, :cell_style => {:padding => 0, :borders => [], :align => :center}, :column_widths => [pdf.bounds.width/2 - 5, 10, pdf.bounds.width/2 - 5] do
       row(0).style(:borders => [:bottom], :padding => 5, :size => DEF_FONT_SIZE + 1)
       column(1).style(:borders => [])
@@ -151,7 +151,7 @@ module RS
 
   def self.render_cells_11_and_12(waybill, pdf)
     t11 = tax_code_box(pdf, 'სატრანსპორტო საშუალების მძღოლის პირადი ნომერი', '11', waybill.driver_tin, :caption_size => DEF_FONT_SIZE - 1)
-    t12A = pdf.make_table [['12', '', number_format(waybill.transportation_cost)], ['', '', 'თანხა ლარებში']], :column_widths => [NUM_CELL_WIDTH, 5, 100], :cell_style => {:padding => 4, :align => :center} do
+    t12A = pdf.make_table [['12', '', C12.number_format(waybill.transportation_cost)], ['', '', 'თანხა ლარებში']], :column_widths => [NUM_CELL_WIDTH, 5, 100], :cell_style => {:padding => 4, :align => :center} do
       column(1).style(:borders => [])
       column(0).row(0).style(:background_color => HIGHLIGHT)
       row(1).style(:borders => [], :size => SMALL_FONT_SIZE, :padding => 0)
@@ -200,7 +200,7 @@ module RS
 
   def self.render_item(num, item, widths, pdf)
     if item
-      items = [[num + 1, item.prod_name, item.bar_code, item.unit_name, number_format(item.quantity, 5), number_format(item.price), number_format(item.quantity * item.price)]]
+      items = [[num + 1, item.prod_name, item.bar_code, item.unit_name, C12.number_format(item.quantity, 5), C12.number_format(item.price), C12.number_format(item.quantity * item.price)]]
     else
       items = [[' ']*7]
     end
@@ -231,7 +231,7 @@ module RS
   def self.render_cell_13(waybill, pdf, from, to)
     total = 0
     waybill.items[from..to].each {|item| total += item.price * item.quantity }
-    items = [['13', '', "#{number_format total} ლარი", '', C12::KA::tokenize(total*1.0, :currency => 'ლარი', :currency_minor => 'თეთრი')]]
+    items = [['13', '', "#{C12.number_format total} ლარი", '', C12::KA::tokenize(total*1.0, :currency => 'ლარი', :currency_minor => 'თეთრი')]]
     pdf.table items, :column_widths => [NUM_CELL_WIDTH, 5, 120, 5, pdf.bounds.width - NUM_CELL_WIDTH - 130] do
       column(0).style(:background_color => HIGHLIGHT)
       column(1).style(:borders => [])
@@ -304,7 +304,7 @@ module RS
   # Prepare table with tax code.
   def self.tax_code_box(pdf, title, number, tax_code, opts = {})
     # tax code table
-    tax_chars = empty?(tax_code) ? [' '] * 11 : tax_code.split(//)
+    tax_chars = C12.empty?(tax_code) ? [' '] * 11 : tax_code.split(//)
     tax_chars = tax_chars[0..11] if tax_chars.size > 11
     items = [[number, ''] + tax_chars]
     widths = [NUM_CELL_WIDTH, 5] + ([12] * tax_chars.size)
