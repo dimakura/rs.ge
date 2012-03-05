@@ -6,8 +6,13 @@ module RS
 
   def self.print_waybill(waybill, file, opts = {})
     C12::PDF::Document.generate file, :page_size => 'A4', :margin => [15, 15] do |pdf|
-      render_waybill waybill, pdf, opts
+      render_waybill_internal waybill, pdf, opts
     end
+  end
+
+  def self.render_waybill(waybill, opts = {})
+    pdf = C12::PDF::Document.new :page_size => 'A4', :margin => [15, 15]
+    render_waybill_internal waybill, pdf, opts
   end
 
   private
@@ -19,7 +24,7 @@ module RS
   SMALL_FONT_SIZE = 5
   FOOTER_HEIGHT = 250
 
-  def self.render_waybill(waybill, pdf, opts = {})
+  def self.render_waybill_internal(waybill, pdf, opts = {})
     pdf.change_font :default, DEF_FONT_SIZE
     render_cell_01(waybill, pdf)
     pdf.move_down 10
@@ -55,7 +60,6 @@ module RS
         pdf.text txt
       end
     end
-    
   end
 
   def self.render_remaining_items(waybill, from_index, pdf)
