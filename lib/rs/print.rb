@@ -4,12 +4,9 @@ require 'c12-commons'
 
 module RS
 
-  class WaybillPDF < C12::PDF::Document
-  end
-
-  def self.print_waybill(waybill, file)
-    WaybillPDF.generate file, :page_size => 'A4', :margin => [15, 15] do |pdf|
-      render_waybill waybill, pdf
+  def self.print_waybill(waybill, file, opts = {})
+    C12::PDF::Document.generate file, :page_size => 'A4', :margin => [15, 15] do |pdf|
+      render_waybill waybill, pdf, opts
     end
   end
 
@@ -22,7 +19,7 @@ module RS
   SMALL_FONT_SIZE = 5
   FOOTER_HEIGHT = 250
 
-  def self.render_waybill(waybill, pdf)
+  def self.render_waybill(waybill, pdf, opts = {})
     pdf.change_font :default, DEF_FONT_SIZE
     render_cell_01(waybill, pdf)
     pdf.move_down 10
@@ -45,6 +42,20 @@ module RS
     pdf.move_down 5
     render_footer(waybill, pdf, 0, last_index)
     render_remaining_items(waybill, last_index + 1, pdf)
+    # numerate pages
+    pages = pdf.page_count
+    (1..pages).each do |i|
+      pdf.go_to_page i
+      pdf.bounding_box [0,0], :width => 300, :height => 15 do
+        pdf.text opts[:bottom_text], :inline_format => true
+      end if opts[:bottom_text]
+      txt = "გვერდი #{i} / #{pages}-დან"
+      txt_w = pdf.width_of txt
+      pdf.bounding_box [pdf.bounds.right - pdf.bounds.left - txt_w, 0], :width => txt_w, :height => 15 do
+        pdf.text txt
+      end
+    end
+    
   end
 
   def self.render_remaining_items(waybill, from_index, pdf)

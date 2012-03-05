@@ -13,7 +13,7 @@ describe 'printing waybill PDF' do
     @waybill.comment = 'ეს არის სატესტო ზედნადები'
     @waybill.items = @waybill.items * 100
     @path = File.expand_path('tmp/waybill.pdf')
-    RS.print_waybill(@waybill, @path)
+    RS.print_waybill(@waybill, @path, :bottom_text => 'მომზადებულია <u><color rgb="0000FF"><link href="http://invoice.ge">http://invoice.ge</link></color></u>-ზე')
   end
   subject { @waybill }
   it { should_not be_nil }
