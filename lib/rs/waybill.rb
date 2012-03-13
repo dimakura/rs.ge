@@ -333,7 +333,7 @@ module RS
     end
     hash_results = response.to_hash[:save_waybill_response][:save_waybill_result][:result]
     if hash_results[:status].to_i == 0
-      waybill.id = hash_results[:id].to_i
+      waybill.id = hash_results[:id].to_i == 0 ? nil : hash_results[:id]
       waybill.error_code = 0
       items_hash = hash_results[:goods_list][:goods]
       items_hash = [items_hash] if items_hash.instance_of? Hash

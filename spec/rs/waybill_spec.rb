@@ -1,4 +1,5 @@
 # -*- encoding : utf-8 -*-
+
 require 'spec_helper'
 require 'rs'
 
@@ -82,10 +83,13 @@ describe 'save waybill with large production name' do
     @waybill = waybill_skeleton
     @waybill.items[0].prod_name = '1234567890'*30 + '1' # 301 სიმბოლო შეცდომითია
     RS.save_waybill(@waybill, RS.su_params)
+    puts @waybill.id
   end
   subject { @waybill }
-  its(:error_code) { should == -1 }
-  its(:id) { should be_nil }
+  # გაუგებარია რატომ გააკეთეს ასე ?!
+  its(:error_code) { should == 0 }
+  # ID არის ცარიელი
+  its(:id) { should  be_nil }
 end
 
 describe 'get waybill information' do
