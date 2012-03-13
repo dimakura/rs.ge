@@ -71,6 +71,7 @@ def waybill_skeleton(params = {})
     waybill.check_driver_tin = params[:check_driver_tin]
   end
   waybill.transportation_cost = params[:transportation_cost] || 0
+  waybill.transportation_cost_payer =params[:transportation_cost_payer] || RS::Waybill::TRANSPORTATION_PAID_BY_BUYER 
 
   if params[:items]
     items = []
