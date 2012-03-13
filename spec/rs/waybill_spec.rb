@@ -83,7 +83,7 @@ describe 'save waybill with large production name' do
     @waybill = waybill_skeleton
     @waybill.items[0].prod_name = '1234567890'*30 + '1' # 301 სიმბოლო შეცდომითია
     RS.save_waybill(@waybill, RS.su_params)
-    puts @waybill.id
+    #puts @waybill.id
   end
   subject { @waybill }
   # გაუგებარია რატომ გააკეთეს ასე ?!
