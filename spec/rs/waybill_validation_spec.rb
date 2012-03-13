@@ -127,3 +127,20 @@ describe 'waybill item validation' do
     end
   end
 end
+
+describe 'validation with remote' do
+  before(:all) do
+    @waybill = waybill_skeleton(:driver_tin => '02001000490', :driver_name => 'Dimitri Kurashvili', :check_driver_tin => true, :buyer_tin => '02001000490', :buyer_name => 'Dimitri Kurashvili')
+    @waybill.validate(RS.su_params.merge(:remote => true))
+    #puts @waybill.validation_errors[:driver_name]
+    #puts @waybill.validation_errors[:driver_tin]
+    #puts @waybill.validation_errors[:buyer_name]
+    #puts @waybill.validation_errors[:buyer_tin]
+  end
+  subject { @waybill.validation_errors }
+  it { should_not be_empty }
+  it("should have illegal driver_name") { subject[:driver_name].should_not be_nil }
+  it("driver_tin is OK") { subject[:driver_tin].should be_nil }
+  it("should have illegal buyer name") { subject[:buyer_name].should_not be_nil }
+  it("buyer_tin is OK") { subject[:buyer_tin].should be_nil }
+end
