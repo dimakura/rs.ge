@@ -93,4 +93,37 @@ describe 'waybill item validation' do
   end
   subject { @item }
   it { should_not be_valid }
+  specify do
+    validable_test('prod_name is missing', @item, :prod_name, true)
+    validable_test('bar_code is missing', @item, :bar_code, true)
+    validable_test('unit is missing', @item, :unit_id, true)
+    validable_test('unit name missing is ok', @item, :unit_name, false)
+    validable_test('quantity is missing', @item, :quantity, true)
+    validable_test('price is missing', @item, :price, true)
+    validable_test('prod_name added', @item, :prod_name, false) do |item|
+      item.prod_name = 'პამიდორი'
+    end
+    validable_test('bar_code added', @item, :bar_code, false) do |item|
+      item.bar_code = '123'
+    end
+    validable_test('unit_id added', @item, :unit_id, false) do |item|
+      item.unit_id = RS::WaybillUnit::OTHERS
+    end
+    validable_test('unit name not defined: it is a problem now', @item, :unit_name, true)
+    validable_test('unit name added', @item, :unit_name, false) do |item|
+      item.unit_name = 'kg'
+    end
+    validable_test('quant < 0', @item, :quantity, true) do |item|
+      item.quantity = -1
+    end
+    validable_test('quant > 0', @item, :quantity, false) do |item|
+      item.quantity = 1
+    end
+    validable_test('price < 0', @item, :price, true) do |item|
+      item.price = -10
+    end
+    validable_test('price > 0', @item, :price, false) do |item|
+      item.price = 10
+    end
+  end
 end

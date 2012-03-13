@@ -59,12 +59,12 @@ module RS
 
     # ამოწმებს ამ კლასს შემდეგი შეცდომების არსებობაზე:
     #
-    # 1) საქონლის დასახელება უნდა იყოს მითითებული
-    # 2) საქონლის ზომის ერთეული უნდა იყოს მითითებული
-    # 3) თუ ზომის ერთეულია "სხვა", ზომის ერთეულის სახელიც უნდა იყოს მითითებული
-    # 4) რაოდენობა > 0
-    # 5) ფასი >= 0
-    # 6) შტრიხ-კოდი უნდა იყოს მითითებული
+    # # საქონლის დასახელება უნდა იყოს მითითებული
+    # # შტრიხ-კოდი უნდა იყოს მითითებული
+    # # საქონლის ზომის ერთეული უნდა იყოს მითითებული
+    # # თუ ზომის ერთეულია "სხვა", ზომის ერთეულის სახელიც უნდა იყოს მითითებული
+    # # რაოდენობა > 0
+    # # ფასი >= 0
     def validate
       @validation_errors = {}
       if self.prod_name.nil? or self.prod_name.strip.empty?
@@ -74,7 +74,7 @@ module RS
         RS.append_validation_error(@validation_errors, :unit_id, 'ზომის ერთეული არაა განსაზღვრული')
       end
       if self.unit_id == RS::WaybillUnit::OTHERS and (self.unit_name.nil? or self.unit_name.strip.empty?)
-        RS.append_validation_error(@validation_errors, :unit_id, 'ზომის ერთეულის სახელი არაა განსაზღვრული')
+        RS.append_validation_error(@validation_errors, :unit_name, 'ზომის ერთეულის სახელი არაა განსაზღვრული')
       end
       if self.quantity.nil? or self.quantity <= 0
         RS.append_validation_error(@validation_errors, :quantity, 'რაოდენობა უნდა იყოს მეტი 0-ზე')
