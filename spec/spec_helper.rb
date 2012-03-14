@@ -87,12 +87,12 @@ def waybill_skeleton(params = {})
     end
   else
     item = RS::WaybillItem.new
-    item.prod_name = 'სატესტო საქონელი'
+    item.prod_name = 'ბალი ალუბალი წითელი'
     item.unit_id = 99
-    item.unit_name = 'ერთეული'
-    item.quantity = 2
+    item.unit_name = 'კილოგრამი'
+    item.quantity = 10
     item.price = 5
-    item.bar_code = '123'
+    item.bar_code = '001'
     items = [item]
   end
   waybill.items = items
