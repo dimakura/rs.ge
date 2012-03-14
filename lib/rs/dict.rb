@@ -83,6 +83,7 @@ module RS
   # sp -- სერვისის მომხმარებლის პაროლი
   # normilize -- კი/არა, გამოიყენოს თუ არა სახელების ნორმალიზებული მნიშვნელობები (საწყისად ნორმალიზებულია)
   def self.get_excise_codes(params)
+    RS.ensure_open_user(params)
     RS.validate_presence_of(params, 'su', 'sp')
     client = RS.waybill_service
     response = client.request 'get_akciz_codes' do
@@ -110,6 +111,7 @@ module RS
   # su -- სერვისის მომხმარებლის სახელი
   # sp -- სერვისის მომხმარებლის პაროლი
   def self.get_waybill_types(params)
+    RS.ensure_open_user(params)
     RS.validate_presence_of(params, 'su', 'sp')
     client = RS.waybill_service
     response = client.request 'get_waybill_types' do
@@ -134,6 +136,7 @@ module RS
   # su -- სერვისის მომხმარებლის სახელი
   # sp -- სერვისის მომხმარებლის პაროლი
   def self.get_waybill_units(params)
+    RS.ensure_open_user(params)
     RS.validate_presence_of(params, 'su', 'sp')
     client = RS.waybill_service
     response = client.request 'get_waybill_units' do
@@ -158,6 +161,7 @@ module RS
   # su -- სერვისის მომხმარებლის სახელი
   # sp -- სერვისის მომხმარებლის პაროლი
   def self.get_transport_types(params)
+    RS.ensure_open_user(params)
     RS.validate_presence_of(params, 'su', 'sp')
     client = RS.waybill_service
     response = client.request 'get_trans_types' do

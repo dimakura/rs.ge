@@ -13,6 +13,12 @@ module RS
   # ელექტრონული ა/ფ WSDL მისამართი
   INVOICE_SERVICE_URL = 'https://www.revenue.mof.ge/ntosservice/ntosservice.asmx?WSDL'
 
+  # მომხმარებელი, რომელიც შეგიძლიათ გამოიყენოთ ღია სერვისებში.
+  OPEN_SU = 'dimitri1979'
+
+  # პაროლის ღია მომხმარებლისთვის.
+  OPEN_SP = '123456'
+
   # შეცდომის კლასი
   class Error < RuntimeError
   end
@@ -30,6 +36,19 @@ module RS
   def self.invoice_service
     Savon::Client.new do
       wsdl.document = INVOICE_SERVICE_URL
+    end
+  end
+
+  # ამოწმებს პარამეტრების მნიშვნელობას su და sp
+  # და თუ ისინი არაა განსაზღვრული, მიანიჭებს ღია
+  # მომხმარებლის პარამეტრებს.
+  # ეს სასარგებლოა ისეთი მონაცემების მისაღებად,
+  # რომელიც არაა უშუალოდ დაკავშირებული ორგანიზაციის
+  # საქმიანობოსთან.
+  def self.ensure_open_user(params)
+    unless params.include? 'su'
+      params['su'] = OPEN_SU
+      params['sp'] = OPEN_SP
     end
   end
 

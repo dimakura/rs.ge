@@ -116,6 +116,7 @@ module RS
   # sp -- პაროლი
   # tin -- საიდენტიფიკაციო ნომერი
   def self.get_name_from_tin(params)
+    RS.ensure_open_user(params)
     RS.validate_presence_of(params, 'su', 'sp', 'tin')
     client = RS.waybill_service
     response = client.request 'get_name_from_tin' do
