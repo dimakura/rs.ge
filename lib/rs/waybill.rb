@@ -378,7 +378,7 @@ module RS
     RS.validate_presence_of(params, 'waybill_id', 'su', 'sp')
     client = RS.waybill_service
     response = client.request 'get_waybill' do |soap|
-      soap.body = params.merge({:order! => ['su', 'sp', 'waybill_id']})
+      soap.body = params.merge({:order => ['su', 'sp', 'waybill_id']})
     end
     #puts response.to_hash[:get_waybill_response][:get_waybill_result][:waybill]
     Waybill.init_from_hash(response.to_hash[:get_waybill_response][:get_waybill_result][:waybill])
