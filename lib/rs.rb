@@ -47,7 +47,7 @@ module RS
   # რომელიც არაა უშუალოდ დაკავშირებული ორგანიზაციის
   # საქმიანობოსთან.
   def self.ensure_open_user(params)
-    unless params.include? 'su'
+    unless params['su']
       params['su'] = OPEN_SU
       params['sp'] = OPEN_SP
     end
