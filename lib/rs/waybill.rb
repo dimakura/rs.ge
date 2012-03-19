@@ -316,15 +316,23 @@ module RS
     def validate_remote(opts)
       # driver validation
       if self.transport_type_id == RS::TransportType::VEHICLE and self.check_driver_tin
-        driver_name = RS.get_name_from_tin('su' => opts['su'], 'sp' => opts['sp'], 'tin' => self.driver_tin)
-        RS.append_validation_error(@validation_errors, :driver_tin, "საიდ. ნომერი ვერ მოიძებნა: #{self.driver_tin}") if driver_name.nil?
-        RS.append_validation_error(@validation_errors, :driver_name, "მძღოლის სახელია: #{driver_name}") if driver_name and driver_name != self.driver_name
+        unless self.driver_tin.nil? or self.driver_tin.strip.empty?
+          driver_name = RS.get_name_from_tin('su' => opts['su'], 'sp' => opts['sp'], 'tin' => self.driver_tin)
+          RS.append_validation_error(@validation_errors, :driver_tin, "საიდ. ნომერი ვერ მოიძებნა: #{self.driver_tin}") if driver_name.nil?
+          RS.append_validation_error(@validation_errors, :driver_name, "მძღოლის სახელია: #{driver_name}") if driver_name and driver_name != self.driver_name
+        else
+          RS.append_validation_error(@validation_errors, :driver_tin, "მძღოლის პირადი ნომერი არაა მითითებული.")
+        end
       end
       # buyer validation
       if self.check_buyer_tin
-        buyer_name = RS.get_name_from_tin('su' => opts['su'], 'sp' => opts['sp'], 'tin' => self.buyer_tin)
-        RS.append_validation_error(@validation_errors, :buyer_tin, "საიდ. ნომერი ვერ მოიძებნა: #{self.buyer_tin}") if buyer_name.nil?
-        RS.append_validation_error(@validation_errors, :buyer_name, "მყიდველის სახელია: #{buyer_name}") if buyer_name != self.buyer_name
+        unless self.buyer_tin.nil? or self.buyer_tin.strip.empty?
+          buyer_name = RS.get_name_from_tin('su' => opts['su'], 'sp' => opts['sp'], 'tin' => self.buyer_tin)
+          RS.append_validation_error(@validation_errors, :buyer_tin, "საიდ. ნომერი ვერ მოიძებნა: #{self.buyer_tin}") if buyer_name.nil?
+          RS.append_validation_error(@validation_errors, :buyer_name, "მყიდველის სახელია: #{buyer_name}") if buyer_name != self.buyer_name
+        else
+          RS.append_validation_error(@validation_errors, :buyer_tin, "მყიდველის პირადი ნომერი არაა მითითებული.")
+        end
       end
     end
 
