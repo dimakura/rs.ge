@@ -266,6 +266,9 @@ module RS
           unless RS.is_valid_personal_tin(self.driver_tin)
             RS.append_validation_error(@validation_errors, :driver_tin, 'მძღოლის პირადი ნომერი არასწორია')
           end
+          unless RS.valid_vehicle_number?(self.car_number)
+            RS.append_validation_error(@validation_errors, :car_number, 'არასწორი მანქანის ნომერი: ჩაწერეთ ABC123 ფორმატში!')
+          end
         else
           if self.driver_name.nil? or self.driver_name.strip.empty?
             RS.append_validation_error(@validation_errors, :driver_name, 'ჩაწერეთ მძღოლის სახელი')
