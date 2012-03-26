@@ -6,6 +6,7 @@ require 'rs/dict'
 require 'rs/waybill'
 require 'rs/print'
 require 'rs/invoice'
+require 'rs/car'
 
 module RS
   # ელქტრონული ზედნადების ფორმის WSDL მისამართი
@@ -72,5 +73,4 @@ module RS
     end
     params['attributes!'] = attributes unless attributes.empty?
   end
-
 end
