@@ -75,14 +75,14 @@ def waybill_skeleton(params = {})
 
   if params[:items]
     items = []
-    params[:items].each do |item|
+    params[:items].each do |it|
       item = RS::WaybillItem.new
-      item.prod_name = item[:name]
-      item.unit_id = item[:unit_id]
-      item.unit_name = item[:unit_name]
-      item.quantity = item[:quantity]
-      item.price = item[:price]
-      item.bar_code = item[:code]
+      item.prod_name = it[:name]
+      item.unit_id = it[:unit_id]
+      item.unit_name = it[:unit_name]
+      item.quantity = it[:quantity]
+      item.price = it[:price]
+      item.bar_code = it[:code]
       items << item
     end
   else
