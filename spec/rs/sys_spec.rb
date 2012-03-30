@@ -16,11 +16,18 @@ describe 'get service users' do
   before(:all) do
     @org = RS::TEST_ORG1
     @users = RS.get_service_users(RS.auth_params)
+    @user = nil
+    @users.each do |user|
+      if user.ip
+        @user = user
+        break
+      end
+    end
   end
   subject { @users }
   it { should_not be_empty }
   context 'one of the users' do
-    subject { @users.first }
+    subject { @user }
     it('should not have empty ID') { subject.id.should_not be_nil }
     it('should not have empty USER_NAME') { subject.user_name.should_not be_nil }
     it('should not have empty PAYER_ID') { subject.payer_id.should_not be_nil }
