@@ -15,3 +15,5 @@ describe 'save invoice (only for closed waybill)' do
   its(:invoice_id) { should_not be_nil }
   its(:invoice_id) { should > 0 }
 end
+
+# TODO: როდესაც არაა დღგ-ს გადამხდელი ვერ აგზავნი?!

@@ -51,13 +51,13 @@ describe 'create waybill, activate and close it, then try to deactivate' do
     subject { @waybill }
     its(:status) { should == RS::Waybill::STATUS_CLOSED }
   end
-  context 'could not deactivate closed waybill !!' do
+  context 'closed waybill is diactivable too' do
     before(:all) do
       params = RS.su_params.merge('waybill_id' => @waybill.id)
       RS.deactivate_waybill(params)
       @waybill = RS.get_waybill(params)
     end
     subject { @waybill }
-    its(:status) { should == RS::Waybill::STATUS_CLOSED }
+    its(:status) { should == RS::Waybill::STATUS_DEACTIVATED }
   end
 end
