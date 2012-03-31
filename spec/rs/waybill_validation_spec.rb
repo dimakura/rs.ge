@@ -81,6 +81,9 @@ describe 'waybill validation' do
     validable_test('fixing end address', @waybill, :end_address, false) do |waybill|
       waybill.end_address = 'Sokhumi'
     end
+    validable_test('waybill_type == WITHOUT_TRANSPORTATION', @waybill, :type, true) do |waybill|
+      waybill.type = RS::WaybillType::WITHOUT_TRANSPORTATION
+    end
     # items
     validable_test('items are missing', @waybill, :items, true)
   end

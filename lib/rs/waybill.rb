@@ -296,6 +296,10 @@ module RS
       if self.end_address.nil? or self.end_address.strip.empty?
         RS.append_validation_error(@validation_errors, :end_address, 'საბოლოო მისამართი განუსაზღვრელია')
       end
+      if not self.start_address.nil? and not self.end_address.nil? and
+        self.start_address.strip != self.end_address.strip and self.type == RS::WaybillType::WITHOUT_TRANSPORTATION
+        RS.append_validation_error(@validation_errors, :type, '"ტრანსპორტირების გარეშე" დაუშვებელია, როდესაც საწყისი მისამართი არ ემთხვევა საბოლოოს.')
+      end
     end
 
     # საქონლის პოზიციების შემოწმება
