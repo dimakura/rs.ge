@@ -26,7 +26,7 @@ module RS
 
   # ეს არის ზედნადების ხაზი საქონლისთვის.
   class WaybillItem
-    attr_accessor :id, :prod_name, :unit_id, :unit_name, :quantity, :price, :bar_code, :excise_id
+    attr_accessor :id, :prod_name, :unit_id, :unit_name, :quantity, :price, :bar_code, :excise_id, :vat_type
 
     # აბრუნებს ამ ხაზის XML წარმოდგენას.
     # @param xml XML builder-ის კლასი
@@ -41,6 +41,7 @@ module RS
         b.AMOUNT self.quantity * self.price
         b.BAR_CODE self.bar_code
         b.A_ID (self.excise_id ? self.excise_id : 0)
+        b.VAT_TYPE (self.vat_type || Waybill::VAT_COMMON)
       end
     end
 
@@ -106,6 +107,12 @@ module RS
     STATUS_SAVED   =  0
     STATUS_ACTIVE  =  1
     STATUS_CLOSED  =  2
+    # ჩვეულებრივი
+    VAT_COMMON = 0
+    # ნულოვანი
+    VAT_ZERO   = 1
+    # დაუბეგრავი
+    VAT_NONE   = 2
     attr_accessor :id, :type, :status, :parent_id, :number
     attr_accessor :seller_id # გამყიდველის უნიკალური კოდი
     attr_accessor :seller_tin, :seller_name

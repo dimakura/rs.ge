@@ -132,21 +132,21 @@ end
 
 describe 'get bar codes' do
   before(:all) do
-    RS.save_bar_code(RS.su_params.merge({'bar_code' => 'TV1', 'prod_name' => 'tv set 1', 'unit_id' => RS::WaybillUnit::OTHERS, 'unit_name' => 'box'}))
-    RS.save_bar_code(RS.su_params.merge({'bar_code' => 'TV2', 'prod_name' => 'tv set 2', 'unit_id' => RS::WaybillUnit::OTHERS, 'unit_name' => 'box'}))
+    RS.save_bar_code(RS.su_params.merge({'bar_code' => 'rs_TV1', 'prod_name' => 'tv set 1', 'unit_id' => RS::WaybillUnit::OTHERS, 'unit_name' => 'box'}))
+    RS.save_bar_code(RS.su_params.merge({'bar_code' => 'rs_TV2', 'prod_name' => 'tv set 2', 'unit_id' => RS::WaybillUnit::OTHERS, 'unit_name' => 'box'}))
   end
   context "look up first code" do
     before(:all) do
-      @codes = RS.get_bar_codes(RS.su_params.merge({'bar_code' => 'TV1'}))
+      @codes = RS.get_bar_codes(RS.su_params.merge({'bar_code' => 'rs_TV1'}))
     end
     subject { @codes }
     it { should_not be_nil }
     it { should_not be_empty }
     its(:size) { should == 1 }
-    context 'TV1 bar code' do
+    context 'rs_TV1 bar code' do
       subject { @codes.first }
       it { should be_instance_of RS::BarCode }
-      its(:code) { should == 'TV1' }
+      its(:code) { should == 'rs_TV1' }
       its(:name) { should == 'tv set 1' }
       its(:unit_id) { should == RS::WaybillUnit::OTHERS }
       its(:excise_id) { should be_nil }
@@ -154,24 +154,24 @@ describe 'get bar codes' do
   end
   context "lookup both codes" do
     before(:all) do
-      @codes = RS.get_bar_codes(RS.su_params.merge({'bar_code' => 'TV'}))
+      @codes = RS.get_bar_codes(RS.su_params.merge({'bar_code' => 'rs_TV'}))
     end
     subject { @codes }
     it { should_not be_nil }
     it { should_not be_empty }
     its(:size) { should == 2 }
-    context 'TV1 bar code' do
+    context 'rs_TV1 bar code' do
       subject { @codes.first }
       it { should be_instance_of RS::BarCode }
-      its(:code) { should == 'TV1' }
+      its(:code) { should == 'rs_TV1' }
       its(:name) { should == 'tv set 1' }
       its(:unit_id) { should == RS::WaybillUnit::OTHERS }
       its(:excise_id) { should be_nil }
     end
-    context 'TV2 bar code' do
+    context 'rs_TV2 bar code' do
       subject { @codes[1] }
       it { should be_instance_of RS::BarCode }
-      its(:code) { should == 'TV2' }
+      its(:code) { should == 'rs_TV2' }
       its(:name) { should == 'tv set 2' }
       its(:unit_id) { should == RS::WaybillUnit::OTHERS }
       its(:excise_id) { should be_nil }

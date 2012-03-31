@@ -56,7 +56,7 @@ def waybill_skeleton(params = {})
   waybill.buyer_name = params[:buyer_name] || 'სატესტო სატესტო'
   waybill.start_address = params[:start_address] || 'თბილისი'
   waybill.end_address   = params[:end_address] || 'სოხუმი'
-  waybill.transport_type_id = params[:transport_type] || RS::TransportType::VEHICLE
+  waybill.transport_type_id = params[:transport_type_id] || RS::TransportType::VEHICLE
   waybill.start_date = params[:start_date] || Time.now
   waybill.comment = params[:comment] #|| 'comment'
   if waybill.transport_type_id == RS::TransportType::VEHICLE
@@ -83,6 +83,7 @@ def waybill_skeleton(params = {})
       item.quantity = it[:quantity]
       item.price = it[:price]
       item.bar_code = it[:code]
+      item.vat_type = it[:vat_type]
       items << item
     end
   else
@@ -91,8 +92,9 @@ def waybill_skeleton(params = {})
     item.unit_id = 99
     item.unit_name = 'კილოგრამი'
     item.quantity = 10
-    item.price = 5
+    item.price = 3
     item.bar_code = '001'
+    item.vat_type = RS::Waybill::VAT_COMMON
     items = [item]
   end
   waybill.items = items

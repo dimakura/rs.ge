@@ -193,3 +193,17 @@ describe 'delete saved waybill' do
     its(:status) { should == RS::Waybill::STATUS_DELETED }
   end
 end
+
+describe '"ტრანსპორტირების გარეშე" ზედნადები განსხვავებული მისამართებით' do
+  before(:all) do
+    Savon.log = true
+    @waybill = waybill_skeleton(:transport_type_id => RS::WaybillType::WITHOUT_TRANSPORTATION, :start_address => 'აბაშა', :end_address => ' თბილისი')
+    RS.save_waybill(@waybill, RS.su_params)
+    @resp = @waybill.error_code
+  end
+  after(:all) do
+    Savon.log = false
+  end
+  subject { @resp }
+  it { should == -1036 }
+end
