@@ -103,6 +103,7 @@ describe 'getting transport types' do
   subject { @types }
   it { should_not be_nil }
   it { should_not be_empty }
+  its(:size) { should == 5 }
   context 'first type' do
     subject { @types.first }
     it { should_not be_nil }

@@ -48,8 +48,9 @@ module RS
     VEHICLE = 1
     RAILWAY = 2
     AIR     = 3
+    TRAILER = 5
     OTHERS  = 4
-    NAMES   = { VEHICLE => 'საავტომობილო', RAILWAY => 'სარკინიგზო', AIR => 'საავიაციო', OTHERS => 'სხვა' }
+    NAMES   = { VEHICLE => 'საავტომობილო', RAILWAY => 'სარკინიგზო', AIR => 'საავიაციო', TRAILER => 'მისაბმელი', OTHERS => 'სხვა' }
 
     attr_accessor :id, :name
 
