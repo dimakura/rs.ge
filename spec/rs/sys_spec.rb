@@ -31,7 +31,7 @@ describe 'get service users' do
     it('should not have empty ID') { subject.id.should_not be_nil }
     it('should not have empty USER_NAME') { subject.user_name.should_not be_nil }
     it('should not have empty PAYER_ID') { subject.payer_id.should_not be_nil }
-    it('should have correct IP') { subject.ip.should match IP_PATTERN }
+    #it('should have correct IP') { subject.ip.should match IP_PATTERN }
     it('should have some NAME') { subject.name.should_not be_nil }
   end
 end
