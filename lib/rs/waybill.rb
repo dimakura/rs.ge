@@ -308,22 +308,22 @@ module RS
         RS.append_validation_error(@validation_errors, :items, 'ერთი საქონელი მაინც უნდა იყოს განსაზღვრული')
         return
       end
-      bar_codes = []
-      repeated_bar_codes = []
+      #bar_codes = []
+      #repeated_bar_codes = []
       self.items.each do |item|
         item.validate
         @items_valid = false unless item.valid?
-        if not item.bar_code.nil? and not item.bar_code.strip.empty?
-          if bar_codes.include?(item.bar_code)
-            repeated_bar_codes << item.bar_code unless repeated_bar_codes.include?(item.bar_code)
-          else
-            bar_codes << item.bar_code
-          end
-        end
+        #if not item.bar_code.nil? and not item.bar_code.strip.empty?
+        #  if bar_codes.include?(item.bar_code)
+        #    repeated_bar_codes << item.bar_code unless repeated_bar_codes.include?(item.bar_code)
+        #  else
+        #    bar_codes << item.bar_code
+        #  end
+        #end
       end
-      unless repeated_bar_codes.empty?
-        RS.append_validation_error(@validation_errors, :items, "დუბლირებული შტრიხ-კოდები: #{repeated_bar_codes.join(', ')}")
-      end
+      #unless repeated_bar_codes.empty?
+      #  RS.append_validation_error(@validation_errors, :items, "დუბლირებული შტრიხ-კოდები: #{repeated_bar_codes.join(', ')}")
+      #end
     end
 
     # ამოწმებს მყიდველის და მძღოლის შესაბამისობას მათ საიდენტიფიკაციო კოდებთან.
