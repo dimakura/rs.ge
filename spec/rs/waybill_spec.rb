@@ -86,9 +86,7 @@ describe 'save waybill with large production name' do
     #puts @waybill.id
   end
   subject { @waybill }
-  # გაუგებარია რატომ გააკეთეს ასე ?!
-  its(:error_code) { should == 0 }
-  # ID არის ცარიელი
+  its(:error_code) { should == -4001 }
   its(:id) { should  be_nil }
 end
 
