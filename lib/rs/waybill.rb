@@ -102,17 +102,20 @@ module RS
   class Waybill
     TRANSPORTATION_PAID_BY_BUYER  = 1
     TRANSPORTATION_PAID_BY_SELLER = 2
+
     STATUS_DELETED  = -1
     STATUS_DEACTIVATED = -2
     STATUS_SAVED   =  0
     STATUS_ACTIVE  =  1
     STATUS_CLOSED  =  2
-    # ჩვეულებრივი
+
+    # ჩვეულებრივი დღგ-ს განაკვეთი
     VAT_COMMON = 0
-    # ნულოვანი
+    # ნულოვანი დღგ-ს განაკვეთი
     VAT_ZERO   = 1
-    # დაუბეგრავი
+    # დაუბეგრავი დღგ-ს განაკვეთი
     VAT_NONE   = 2
+
     attr_accessor :id, :type, :status, :parent_id, :number
     attr_accessor :seller_id # გამყიდველის უნიკალური კოდი
     attr_accessor :seller_tin, :seller_name
