@@ -13,6 +13,7 @@ module RS
       soap.body = params2
     end
     waybill.invoice_id = response[:save_invoice_response][:out_inv_id].to_i
+    response[:save_invoice_response][:save_invoice_result].to_i
   end
 
 end
