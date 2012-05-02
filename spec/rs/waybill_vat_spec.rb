@@ -14,7 +14,7 @@ describe 'კლიენტი დღგ-ს განაკვეთით' do
     @error = RS.save_waybill_invoice(@waybill, RS.su_params)
     #Savon.log = false
     @waybill = RS.get_waybill(RS.su_params.merge('waybill_id' => @waybill.id))
-    puts "#{@waybill.number} -- #{@waybill.invoice_id}"
+    #puts "#{@waybill.number} -- #{@waybill.invoice_id}"
   end
   subject { @error }
   it { should == 0 }
