@@ -3,6 +3,7 @@ require 'savon'
 require 'rs/version'
 
 # models
+require 'rs/models/waybill'
 
 # requests
 require 'rs/requests/base_request'
