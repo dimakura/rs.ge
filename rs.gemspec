@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_development_dependency 'rspec', '~> 2'
-  s.add_runtime_dependency 'savon'
+  s.add_runtime_dependency 'savon', '0.9.9'
   s.add_runtime_dependency 'httpi'
   s.add_runtime_dependency 'prawn', '~>0.12'
   s.add_runtime_dependency 'c12-commons', '~> 0.0.5'
