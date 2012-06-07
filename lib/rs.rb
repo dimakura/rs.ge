@@ -17,11 +17,4 @@ module RS
   VAT_ZERO   = 1
   # This constant indicates that no vat tariff applies.
   VAT_NONE   = 2
-
-  # Main error type.
-  ERR_MAIN = 1
-  # Detail error type.
-  ERR_DETAIL = 2
-  # VAT invoice error type.
-  ERR_INVOICE = 3
 end

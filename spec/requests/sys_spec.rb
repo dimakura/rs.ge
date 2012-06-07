@@ -45,3 +45,16 @@ describe 'working with service user' do
     specify { subject[:user].should_not be_nil }
   end
 end
+
+describe 'get error codes' do
+  before(:all) do
+    @errors = RS.sys.error_codes(SU_PARAMS)
+  end
+  subject { @errors }
+  it { should_not be_nil }
+  it { should_not be_empty }
+  context 'known error codes' do
+    subject { @errors[-2001] }
+    it { should == 'პროდუქტის დასახელება დიდია' }
+  end
+end
