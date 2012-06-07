@@ -11,7 +11,7 @@ describe 'getting own IP address' do
   it { should match /([0-9]{1,3}\.){3}[0-9]{1,3}/ }
 end
 
-describe 'create service user' do
+describe 'working with service user' do
   before(:all) do
     @username = "user_#{Time.now.to_i}_#{rand(100)}"
     @password = '123456'
