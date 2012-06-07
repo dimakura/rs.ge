@@ -6,9 +6,9 @@ require 'rs/version'
 require 'rs/models/waybill'
 
 # requests
-require 'rs/requests/base_request'
-require 'rs/requests/dict_request'
-require 'rs/requests/sys_request'
+require 'rs/requests/base'
+require 'rs/requests/dict'
+require 'rs/requests/sys'
 
 module RS
   # This constant indicates 18% vat tariff.
