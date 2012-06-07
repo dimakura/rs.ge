@@ -28,6 +28,21 @@ module RS
       response.to_hash[:create_service_user_response][:create_service_user_result]
     end
 
+    # Update service user.
+    #
+    # * `username` -- login for the main user
+    # * `password` -- password for the main user
+    # * `ip` -- your IP address
+    # * `name` -- some name for this user/ip configuration
+    # * `su` -- user login
+    # * `sp` -- user's passwrod
+    def update_user(opts = {})
+      validate_presence_of(opts, :username, :password, :ip, :name, :su, :sp)
+      response = waybill_client.request 'update_service_user' do
+        soap.body = {'user_name' => opts[:username], 'user_password' => opts[:password], 'ip' => opts[:ip], 'name' => opts[:name], 'su' => opts[:su], 'sp' => opts[:sp]}
+      end
+      response.to_hash[:update_service_user_response][:update_service_user_result]
+    end
   end
 
   class << self

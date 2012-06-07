@@ -20,4 +20,12 @@ describe 'create service user' do
   end
   subject { @resp }
   it { should == true }
+  describe 'update service user' do
+    before(:all) do
+      @new_password = 'new_password_123456'
+      @resp = RS.sys.update_user(USER01.merge(ip: @ip, name: 'test', su: @username, sp: @new_password))
+    end
+    subject { @resp }
+    it { should == true }
+  end
 end
