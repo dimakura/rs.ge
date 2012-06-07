@@ -33,12 +33,11 @@ module RS
 
   end
 
-  # Returns the instance of WaybillUnitRequest class.
-  def self.units
-    RS::WaybillUnitRequest.instance
-  end
-
   class << self
+    # Returns the instance of WaybillUnitRequest class.
+    def units
+      RS::WaybillUnitRequest.instance
+    end
     alias_method :unit, :units
   end
 end
