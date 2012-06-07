@@ -5,6 +5,22 @@ module RS
   # Unit, which cannot be found in main list.
   UNIT_OTHERS = 99
 
+  WAYBILL_TYPE_INNER = 1
+  WAYBILL_TYPE_TRANS = 2
+  WAYBILL_TYPE_WITHOUT_TRANS = 3
+  WAYBILL_TYPE_DISTR = 4
+  WAYBILL_TYPE_RETRN = 5
+  WAYBILL_TYPE_SUBWB = 6
+
+  WAYBILL_TYPES = {
+    WAYBILL_TYPE_INNER => 'შიდა გადაზიდვა',
+    WAYBILL_TYPE_TRANS => 'ტრანსპორტირებით',
+    WAYBILL_TYPE_WITHOUT_TRANS => 'ტრანსპორტირების გარეშე',
+    WAYBILL_TYPE_DISTR => 'დისტრიბუცია',
+    WAYBILL_TYPE_RETRN => 'უკან დაბრუნება',
+    WAYBILL_TYPE_SUBWB => 'ქვე-ზედნადები'
+  }
+
   class DictionaryRequest < BaseRequest
     include Singleton
 

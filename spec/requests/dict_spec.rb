@@ -25,6 +25,7 @@ describe 'getting waybill types' do
   subject { @types }
   it { should_not be_nil }
   it { should_not be_empty }
+  its(:size) { should == RS::WAYBILL_TYPES.size }
 end
 
 describe 'getting payer name from tin' do
