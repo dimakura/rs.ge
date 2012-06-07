@@ -20,7 +20,7 @@ module RS
     # * `name` -- some name for this user/ip configuration
     # * `su` -- new user login
     # * `sp` -- new user password
-    def create_user(opts = {})
+    def create_user(opts)
       validate_presence_of(opts, :username, :password, :ip, :name, :su, :sp)
       response = waybill_client.request 'create_service_user' do
         soap.body = {'user_name' => opts[:username], 'user_password' => opts[:password], 'ip' => opts[:ip], 'name' => opts[:name], 'su' => opts[:su], 'sp' => opts[:sp]}
@@ -36,7 +36,7 @@ module RS
     # * `name` -- some name for this user/ip configuration
     # * `su` -- user login
     # * `sp` -- user's passwrod
-    def update_user(opts = {})
+    def update_user(opts)
       validate_presence_of(opts, :username, :password, :ip, :name, :su, :sp)
       response = waybill_client.request 'update_service_user' do
         soap.body = {'user_name' => opts[:username], 'user_password' => opts[:password], 'ip' => opts[:ip], 'name' => opts[:name], 'su' => opts[:su], 'sp' => opts[:sp]}
@@ -56,7 +56,7 @@ module RS
     # ```
     # {payer: 'payer unique ID', user: 'user unique ID'}
     # ```
-    def check_user(opts = {})
+    def check_user(opts)
       validate_presence_of(opts, :su, :sp)
       response = waybill_client.request 'chek_service_user' do
         soap.body = {'su' => opts[:su], 'sp' => opts[:sp] }
