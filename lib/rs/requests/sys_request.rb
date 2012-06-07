@@ -43,6 +43,31 @@ module RS
       end
       response.to_hash[:update_service_user_response][:update_service_user_result]
     end
+
+    # Check service user. Also used for getting user's ID and payer's ID.
+    #
+    # possible parameters:
+    #
+    # `su` -- service username
+    # `sp` -- service password
+    # 
+    # Returns hash with the following structure:
+    #
+    # ```
+    # {payer: 'payer unique ID', user: 'user unique ID'}
+    # ```
+    def check_user(opts = {})
+      validate_presence_of(opts, :su, :sp)
+      response = waybill_client.request 'chek_service_user' do
+        soap.body = {'su' => opts[:su], 'sp' => opts[:sp] }
+      end
+      if response[:chek_service_user_response][:chek_service_user_result]
+        payer_id = response[:chek_service_user_response][:un_id]
+        user_id  = response[:chek_service_user_response][:s_user_id]
+        {payer: payer_id, user: user_id}
+      end
+    end
+
   end
 
   class << self
@@ -50,4 +75,5 @@ module RS
       RS::SysRequest.instance
     end
   end
+
 end
