@@ -2,9 +2,8 @@
 require 'singleton'
 
 module RS
-  # Request object, used for processing waybill units.
-  # 
-  # Use RS.unit or RS.units call to access instance of this class.
+  # Request which is used for processing waybill units.
+  #
   class WaybillUnitRequest < BaseRequest
     include Singleton
 
