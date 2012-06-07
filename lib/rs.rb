@@ -6,6 +6,7 @@ require 'rs/version'
 require 'rs/models/waybill'
 
 # requests
+require 'rs/requests/config'
 require 'rs/requests/base'
 require 'rs/requests/dict'
 require 'rs/requests/sys'
