@@ -2,13 +2,10 @@
 require 'singleton'
 
 module RS
-  # Request which is used for processing waybill units.
-  #
-  class WaybillUnitRequest < BaseRequest
+  class DictionaryRequest < BaseRequest
     include Singleton
 
-    # Returns all units.
-    def all(opts = {})
+    def units(opts = {})
       validate_presence_of(opts, :su, :sp)
       response = waybill_client.request 'get_waybill_units' do
         soap.body = { 'su' => opts[:su], 'sp' => opts[:sp] }
@@ -33,10 +30,8 @@ module RS
   end
 
   class << self
-    # Returns the instance of WaybillUnitRequest class.
-    def units
-      RS::WaybillUnitRequest.instance
+    def dict
+      RS::DictionaryRequest.instance
     end
-    alias_method :unit, :units
   end
 end

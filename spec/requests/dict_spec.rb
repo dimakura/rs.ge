@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe 'getting waybill units' do
   before(:all) do
-    @units = RS.units.all(SU_PARAMS)
+    @units = RS.dict.units(SU_PARAMS)
   end
   subject { @units }
   it { should_not be_nil }

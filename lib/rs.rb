@@ -7,7 +7,7 @@ require 'rs/models/waybill_unit'
 
 # requests
 require 'rs/requests/base_request'
-require 'rs/requests/waybill_unit_request'
+require 'rs/requests/dict_request'
 require 'rs/requests/sys_request'
 
 module RS
