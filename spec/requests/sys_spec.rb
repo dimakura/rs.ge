@@ -8,4 +8,5 @@ describe 'check IP response' do
   subject { @ip }
   it { should_not be_nil }
   it { should_not be_empty }
+  it { should match /([0-9]{1,3}\.){3}[0-9]{1,3}/ }
 end
