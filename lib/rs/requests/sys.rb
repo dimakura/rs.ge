@@ -69,7 +69,7 @@ module RS
     end
 
     # Returns error codes.
-    def error_codes(opts)
+    def error_codes(opts = {})
       validate_presence_of(opts, :su, :sp)
       response = waybill_client.request 'get_error_codes' do
         soap.body = {'su' => opts[:su], 'sp' => opts[:sp] }

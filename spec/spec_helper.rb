@@ -19,4 +19,6 @@ end
 # Test options.
 
 USER01 = {username: 'tbilisi', password: '123456'}
-SU_PARAMS = {su: 'dimitri1979', sp: '123456'}
+
+RS.config.su = 'dimtiri1979'
+RS.config.sp = '123456'

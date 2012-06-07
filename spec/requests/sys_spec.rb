@@ -48,7 +48,7 @@ end
 
 describe 'get error codes' do
   before(:all) do
-    @errors = RS.sys.error_codes(SU_PARAMS)
+    @errors = RS.sys.error_codes
   end
   subject { @errors }
   it { should_not be_nil }

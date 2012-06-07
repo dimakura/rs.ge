@@ -18,8 +18,8 @@ class RS::BaseRequest
   # Validates presence of specified keys in the #{params} hash.
   def validate_presence_of(params, *keys)
     [:su, :sp].each do |sym|
-      if keys.include?(sym) and params[:sym].blank?
-        params[:sym] = RS.config.send(sym) || DEFAULTS[sym]
+      if keys.include?(sym) and params[sym].blank?
+        params[sym] = RS.config.send(sym)
       end
     end
     diff = keys - params.keys
