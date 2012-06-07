@@ -8,18 +8,13 @@ describe 'getting waybill units' do
   subject { @units }
   it { should_not be_nil }
   it { should_not be_empty }
-  context 'first unit' do
-    subject { @units.first }
-    it { should be_instance_of RS::WaybillUnit }
-    its(:id) { should_not be_nil }
-    its(:name) { should_not be_nil }
+  context 'kg' do
+    subject { @units[2] }
+    it { should == 'კგ' }
   end
-  context 'last unit' do
-    subject { @units.last }
-    it { should be_instance_of RS::WaybillUnit }
-    its(:id) { should_not be_nil }
-    its(:id) { should == RS::WaybillUnit::OTHERS }
-    its(:name) { should_not be_nil }
+  context 'others' do
+    subject { @units[RS::UNIT_OTHERS] }
+    it { should == 'სხვა' }
   end
 end
 

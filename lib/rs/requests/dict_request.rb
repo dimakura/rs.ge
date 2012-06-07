@@ -11,7 +11,12 @@ module RS
       response = waybill_client.request 'get_waybill_units' do
         soap.body = { 'su' => opts[:su], 'sp' => opts[:sp] }
       end
-      extract_units_from_response(response)
+      resp = response.to_hash[:get_waybill_units_response][:get_waybill_units_result][:waybill_units][:waybill_unit]
+      units = {}
+      resp.each do |unit|
+        units[unit[:id].to_i] = unit[:name]
+      end
+      units
     end
 
     # Returns name of the 
@@ -26,15 +31,7 @@ module RS
     private
 
     def extract_units_from_response(response)
-      units = []
-      units_hash = response.to_hash[:get_waybill_units_response][:get_waybill_units_result][:waybill_units][:waybill_unit]
-      units_hash.each do |hash|
-        unit = WaybillUnit.new
-        unit.id = hash[:id].to_i
-        unit.name = hash[:name]
-        units << unit
-      end
-      units
+      
     end
 
   end
