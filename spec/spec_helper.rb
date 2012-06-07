@@ -16,6 +16,7 @@ RSpec.configure do |config|
   config.include(RSpec::Matchers)
 end
 
-# Test user parameters.
+# Test options.
 
-SU_PARAMS = {:su => 'dimitri1979', :sp => '123456'}
+USER01 = {username: 'tbilisi', password: '123456'}
+SU_PARAMS = {su: 'dimitri1979', sp: '123456'}
