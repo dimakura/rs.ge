@@ -28,6 +28,16 @@ describe 'getting waybill types' do
   its(:size) { should == RS::WAYBILL_TYPES.size }
 end
 
+describe 'getting transport types' do
+  before(:all) do
+    @types = RS.dict.transport_types(SU_PARAMS)
+  end
+  subject { @types }
+  it { should_not be_nil }
+  it { should_not be_empty }
+  its(:size) { should == RS::TRANSPORT_TYPES.size }
+end
+
 describe 'getting payer name from tin' do
   before(:all) do
     @name = RS.dict.get_name_from_tin(SU_PARAMS.merge(tin: '02001000490'))
