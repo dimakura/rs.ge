@@ -18,7 +18,7 @@ end
 
 # Test options.
 
-USER01 = {username: 'tbilisi', password: '123456'}
+USER01 = {id: 46362, username: 'tbilisi', password: '123456', payer: 731937}
 
 RS.config.su = 'dimtiri1979'
 RS.config.sp = '123456'
