@@ -251,4 +251,83 @@ class RS::Waybill < RS::Validable
     self.transport_type_name = hash[:trans_txt]
     self.comment = hash[:comment]
   end
+
+  def validate
+    self.errors = {}
+    self.items.each { |it| it.validate }
+    validate_buyer
+    validate_transport
+    validate_addresses
+    validate_remote if config.validate_remote
+  end
+
+  def valid?
+    self.items.each { |it| return false unless it.valid? }
+    super.valid?
+  end
+
+  private
+
+  def validate_buyer
+    if self.buyer_tin.blank?
+      add_error(:buyer_tin, 'მყიდველის საიდენტიფიკაციო ნომერი განუსაზღვრელია')
+    else
+      if self.check_buyer_tin
+        add_error(:buyer_tin, 'საიდენტიფიკაციო ნომერი უნდა შედგებოდეს 9 ან 11 ციფრისაგან') if !RS.dict.personal_tin?(self.buyer_tin) and !RS.corporate_tin?(self.buyer_tin)
+      else
+        add_error(:buyer_name, 'განსაზღვრეთ მყიდველის სახელი') if self.buyer_name.blank?
+      end
+    end
+  end
+
+  def validate_transport
+    if self.transport_type_id == RS::TRANS_VEHICLE
+      add_error(:car_number, 'მიუთითეთ სატრანსპორტო საშუალების სახელმწიფო ნომერი') if self.car_number.blank?
+      add_error(:driver_tin, 'მძღოლის პირადი ნომერი უნდა იყოს მითითებული') if self.driver_tin.blank?
+      if self.check_driver_tin
+        add_error(:driver_tin, 'მძღოლის პირადი ნომერი არასწორია') unless RS.dict.personal_tin?(self.driver_tin)
+        # unless RS.valid_vehicle_number?(self.car_number)
+        #   RS.append_validation_error(@validation_errors, :car_number, 'არასწორი მანქანის ნომერი: ჩაწერეთ ABC123 ფორმატში!')
+        # end
+      else
+        add_error(:driver_name, 'ჩაწერეთ მძღოლის სახელი') if self.driver_name.blank?
+      end
+    elsif self.transport_type_id == RS::TRANS_OTHER
+      add_error(:transport_type_name, 'მიუთითეთ სატრანსპორტო საშუალების დასახელება') if self.transport_type_name.blank?
+    end
+  end
+
+  def validate_addresses
+    add_error(:start_address, 'საწყისი მისამართი განუსაზღვრელია') if self.start_address.blank?
+    add_error(:end_address,   'საბოლოო მისამართი განუსაზღვრელია') if self.end_address.blank?
+    if not self.start_address.blank? and not self.end_address.blank? and
+      self.start_address.strip != self.end_address.strip and
+      self.type == RS::WAYBILL_TYPE_WITHOUT_TRANS
+      add_error(:type, '"ტრანსპორტირების გარეშე" დაუშვებელია, როდესაც საწყისი მისამართი არ ემთხვევა საბოლოოს.')
+    end
+  end
+
+  def validate_remote
+    # driver
+    if self.transport_type_id == RS::WAYBILL_TYPE_TRANS and self.check_driver_tin
+      unless self.driver_tin.blank?
+        driver_name = RS.dict.get_name_from_tin(tin: self.driver_tin)
+        add_error(:driver_tin, "საიდ. ნომერი ვერ მოიძებნა: #{self.driver_tin}") if driver_name.nil?
+        add_error(:driver_name, "მძღოლის სახელია: #{driver_name}") if driver_name and driver_name.split.join(' ') != self.driver_name.split.join(' ')
+      else
+        add_error(:driver_tin, "მძღოლის პირადი ნომერი არაა მითითებული.")
+      end
+    end
+    # buyer
+    if self.check_buyer_tin
+      unless self.buyer_tin.blank?
+        buyer_name = RS.dict.get_name_from_tin(tin: self.buyer_tin)
+        add_error(:buyer_tin, "საიდ. ნომერი ვერ მოიძებნა: #{self.buyer_tin}") if buyer_name.nil?
+        add_error(:buyer_name, "მყიდველის სახელია: #{buyer_name}") if buyer_name and buyer_name.split.join(' ') != self.buyer_name.split.join(' ')
+      else
+        add_error(:buyer_tin, "მყიდველის პირადი ნომერი არაა მითითებული.")
+      end
+    end
+  end
+
 end

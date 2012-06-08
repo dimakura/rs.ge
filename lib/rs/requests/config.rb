@@ -7,7 +7,7 @@ module RS
   class Config
     include Singleton
 
-    attr_accessor :sp, :su
+    attr_accessor :sp, :su, :validate_remote
   end
 
   class << self
