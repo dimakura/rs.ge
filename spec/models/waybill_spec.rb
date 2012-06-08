@@ -84,3 +84,5 @@ describe 'WaybillItem validation' do
     it { should_not have_error_field :price }
   end
 end
+
+# TODO: test Waybill validation
