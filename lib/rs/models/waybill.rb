@@ -23,7 +23,7 @@ class RS::Validable
   end
 end
 
-# Class for waybill validation.
+# Waybill item class.
 class RS::WaybillItem < RS::Validable
   # Item ID.
   attr_accessor :id
@@ -82,5 +82,87 @@ class RS::WaybillItem < RS::Validable
     add_error(:quantity, 'რაოდენობა უნდა იყოს მეტი 0-ზე') if self.quantity.blank? or self.quantity <= 0
     add_error(:price, 'ფასი არ უნდა იყოს უარყოფითი') if self.price.blank? or self.price < 0
   end
+
+end
+
+# Waybill class.
+class RS::Waybill < RS::Validable
+  # Constant, which indicates, that transportation cost is paid by buyer.
+  TRANSPORTATION_PAID_BY_BUYER  = 1
+  # Constant, which indicates, that transportation cost is paid by seller.
+  TRANSPORTATION_PAID_BY_SELLER = 2
+
+  # Deleted waybill status.
+  STATUS_DELETED  = -1
+  # Deactivated waybill status.
+  STATUS_DEACTIVATED = -2
+  # Saved waybill status.
+  STATUS_SAVED   =  0
+  # Active waybill status.
+  STATUS_ACTIVE  =  1
+  # Closed (complete) waybill status.
+  STATUS_CLOSED  =  2
+
+  # ID of the waybill
+  attr_accessor :id
+  # Waybill type (see RS::WAYBILL_TYPES).
+  attr_accessor :type
+  # Waybill status.
+  attr_accessor :status
+  # Parent waybill (for subwaybills).
+  attr_accessor :parent_id
+  # Waybill number.
+  attr_accessor :number
+  # Waybill activation date.
+  attr_accessor :activate_date
+  # Waybill delivery date.
+  attr_accessor :delivery_date
+  # Unique ID of the seller
+  attr_accessor :seller_id
+  # Seller TIN.
+  attr_accessor :seller_tin
+  # Seller name.
+  attr_accessor :seller_name
+  # Buyer TIN.
+  attr_accessor :buyer_tin
+  # Whether buyer TIN should be validated.
+  # Use `false` for foreigner.
+  attr_accessor :check_buyer_tin
+  # Buyer name.
+  attr_accessor :buyer_name
+  # Information about a person, who sends this waybill.
+  attr_accessor :seller_info
+  # Information about a person, who receives this waybill.
+  attr_accessor :buyer_info
+  # Driver TIN.
+  attr_accessor :driver_tin
+  # Whether driver TIN should be validated.
+  # Use `false` for foreigner.
+  attr_accessor :check_driver_tin
+  # Driver name.
+  attr_accessor :driver_name
+  # Waybill start address.
+  attr_accessor :start_address
+  # Waybill end address.
+  attr_accessor :end_address
+  # Transportation cost.
+  attr_accessor :transportation_cost
+  # Who pays for transportation?
+  attr_accessor :transportation_cost_payer
+  # Transportation type (see RS::TRANSPORT_TYPES).
+  attr_accessor :transport_type_id
+  # Transportation name.
+  attr_accessor :transport_type_name
+  # Vehicle number.
+  attr_accessor :car_number
+  # ==> XXX: there should be some flag which indicates whether vehicle number should be checked
+  # Comment on this waybill.
+  attr_accessor :comment
+  # Waybill items.
+  attr_accessor :items
+  # Waybill error code.
+  attr_accessor :error_code
+  # Invoice ID, related to this waybill.
+  attr_accessor :invoice_id
 
 end
