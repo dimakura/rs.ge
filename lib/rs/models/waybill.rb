@@ -74,12 +74,13 @@ class RS::WaybillItem < RS::Validable
 
   # Validate this item.
   def validate
+    self.errors = {}
+    add_error(:bar_code, 'საქონლის შტრიხ-კოდი უნდა იყოს განსაზღვრული') if self.bar_code.blank?
     add_error(:prod_name, 'საქონლის სახელი არაა განსაზღვრული') if self.prod_name.blank?
     add_error(:unit_id, 'ზომის ერთეული არაა განსაზღვრული') if self.unit_id.blank?
     add_error(:unit_name, 'ზომის ერთეულის სახელი არაა განსაზღვრული') if self.unit_id == RS::UNIT_OTHERS and (self.unit_name.blank?)
     add_error(:quantity, 'რაოდენობა უნდა იყოს მეტი 0-ზე') if self.quantity.blank? or self.quantity <= 0
     add_error(:price, 'ფასი არ უნდა იყოს უარყოფითი') if self.price.blank? or self.price < 0
-    add_error(:bar_code, 'საქონლის შტრიხ-კოდი უნდა იყოს განსაზღვრული') if self.bar_code.blank?
   end
 
 end
