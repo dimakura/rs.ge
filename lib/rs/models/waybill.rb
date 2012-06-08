@@ -5,6 +5,12 @@ require 'active_support/all'
 class RS::Validable
   attr_accessor :errors, :warnings
 
+  def initialize(opts = {})
+    opts.each do |k, v|
+      instance_variable_set("@#{k}", v) unless v.nil?
+    end
+  end
+
   # Add error to the specified field.
   def add_error(fld, msg)
     self.errors = {} unless self.errors
