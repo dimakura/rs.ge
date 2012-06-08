@@ -43,6 +43,8 @@ class RS::WaybillItem < RS::Validable
   attr_accessor :excise_id
   # VAT type.
   attr_accessor :vat_type
+  # Mark this item for deletion.
+  attr_accessor :delete
 
   # Initialize WaybillItem from hash.
   def init_from_hash(hash)
@@ -65,6 +67,7 @@ class RS::WaybillItem < RS::Validable
       b.UNIT_TXT self.unit_name
       b.QUANTITY self.quantity
       b.PRICE self.price
+      b.STATUS self.delete ? -1 : +1
       b.AMOUNT self.quantity * self.price
       b.BAR_CODE self.bar_code
       b.A_ID (self.excise_id ? self.excise_id : 0)
@@ -190,7 +193,6 @@ class RS::Waybill < RS::Validable
       b.STATUS self.status
       b.SELER_UN_ID self.seller_id
       b.PAR_ID (self.parent_id ? self.parent_id : '')
-      ## XXX: b.FULL_AMOUNT
       b.CAR_NUMBER self.car_number
       ## XXX: b.WAYBILL_NUMBER 
       ## XXX: b.S_USER_ID
