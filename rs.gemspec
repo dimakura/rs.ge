@@ -23,4 +23,5 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'httpi'
   s.add_runtime_dependency 'prawn', '~>0.12'
   s.add_runtime_dependency 'c12-commons', '~> 0.0.5'
+  s.add_runtime_dependency 'active_support', '~> 3.0'
 end
