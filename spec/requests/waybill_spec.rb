@@ -2,11 +2,30 @@
 require 'spec_helper'
 
 def create_waybill(opts = {})
-  
+  RS::Waybill.new(id: opts[:id] || 0,
+    type: opts[:type] || RS::WAYBILL_TYPE_TRANS,
+    status: opts[:status] || RS::Waybill::STATUS_SAVED,
+    seller_id: USER01[:payer], seller_tin: USER01[:payer_tin], seller_name: USER01[:payer_name],
+    buyer_tin: opts[:buyer_tin] || '02001000490',
+    buyer_name: opts[:buyer_name] || 'დიმიტრი ყურაშვილი',
+    check_buyer_tin: true,
+    seller_info: opts[:seller_info], buyer_info: opts[:buyer_info],
+    driver_tin: opts[:dirver_tin] || '02001000490',
+    driver_name: opts[:dirver_name] || 'დიმიტრი ყურაშვილი',
+    check_driver_tin: true,
+    start_address: opts[:start_address] || 'ქ. აბაშა, კაჭარავას 35',
+    end_address: opts[:end_address] || 'ქ. სენაკი, თავისუფლების 10',
+    transportation_cost: opts[:transportation_cost] || 0,
+    transportation_cost_payer: opts[:transportation_cost_payer] || 1,
+    transport_type_id: opts[:transport_type_id] || RS::TRANS_VEHICLE,
+    car_number: opts[:car_number] || 'wdw842',
+    comment: opts[:comment], user_id: USER01[:id],
+    items: opts[:items]
+  )
 end
 
 def create_item(opts = {})
-  RS::WaybillItem.new( id: opts[:id] || 0,
+  RS::WaybillItem.new(id: opts[:id] || 0,
     bar_code: opts[:bar_code] || '001',
     prod_name: opts[:prod_name] || 'Tomato',
     unit_id: opts[:unit_id] || RS::UNIT_OTHERS,
@@ -20,15 +39,8 @@ end
 
 describe 'Save waybill' do
   before(:all) do
-    @waybill = RS::Waybill.new(id: 0, type: RS::WAYBILL_TYPE_TRANS, status: RS::Waybill::STATUS_SAVED,
-      seller_id: USER01[:payer], seller_tin: USER01[:payer_tin], seller_name: USER01[:payer_name],
-      buyer_tin: '02001000490', buyer_name: 'დიმიტრი ყურაშვილი', check_buyer_tin: true,
-      seller_info: 'ვიტალი ხორავა', buyer_info: 'გოდერძი მამიაშვილი',
-      driver_tin: '02001000490', check_driver_tin: true, driver_name: 'დიმიტრი ყურაშვილი',
-      start_address: 'ქ. აბაშა, კაჭარავას 35', end_address: 'ქ. სენაკი, თავისუფლების 10',
-      transportation_cost: 10, transportation_cost_payer: 1, transport_type_id: RS::TRANS_VEHICLE,
-      car_number: 'wdw842', comment: 'ჩემი კომენტარი', user_id: USER01[:id],
-      items: [create_item(bar_code: '001', prod_name: 'Tomato'), create_item(bar_code: '002', prod_name: 'Cucumber')])
+    items = [create_item(bar_code: '001', prod_name: 'Tomato'), create_item(bar_code: '002', prod_name: 'Cucumber')]
+    @waybill = create_waybill(items: items)
     RS.wb.save_waybill(@waybill)
   end
   context 'waybill' do
