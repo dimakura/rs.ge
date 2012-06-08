@@ -4,6 +4,7 @@ require 'singleton'
 module RS
   
   class WaybillRequest < BaseRequest
+    include Singleton
 
     # Save given waybill.
     def save_waybill(waybill, opts = {})
