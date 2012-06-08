@@ -165,4 +165,41 @@ class RS::Waybill < RS::Validable
   # Invoice ID, related to this waybill.
   attr_accessor :invoice_id
 
+  # Convert this waybill to XML.
+  def to_xml(xml)
+    xml.WAYBILL do |b|
+      b.GOODS_LIST do |g|
+        (self.items || []).each do |item|
+          item.to_xml g
+        end
+      end
+      b.ID (self.id ? self.id : 0)
+      b.TYPE self.type
+      b.BUYER_TIN self.buyer_tin
+      b.CHEK_BUYER_TIN (self.check_buyer_tin ? 1 : 0)
+      b.BUYER_NAME self.buyer_name
+      b.START_ADDRESS self.start_address
+      b.END_ADDRESS self.end_address
+      b.DRIVER_TIN self.driver_tin
+      b.CHEK_DRIVER_TIN (self.check_driver_tin ? 1 : 0)
+      b.DRIVER_NAME self.driver_name
+      b.TRANSPORT_COAST (self.transportation_cost ? self.transportation_cost : 0)
+      b.RECEPTION_INFO self.seller_info
+      b.RECEIVER_INFO self.buyer_info
+      b.DELIVERY_DATE (self.delivery_date ? self.delivery_date.strftime('%Y-%m-%dT%H:%M:%S') : '')
+      b.STATUS self.status
+      b.SELER_UN_ID self.seller_id
+      b.PAR_ID (self.parent_id ? self.parent_id : '')
+      ## XXX: b.FULL_AMOUNT
+      b.CAR_NUMBER self.car_number
+      ## XXX: b.WAYBILL_NUMBER 
+      ## XXX: b.S_USER_ID
+      b.BEGIN_DATE (self.activate_date ? self.activate_date.strftime('%Y-%m-%dT%H:%M:%S') : '')
+      b.TRAN_COST_PAYER (self.transportation_cost_payer ? self.transportation_cost_payer : Waybill::TRANSPORTATION_PAID_BY_BUYER)
+      b.TRANS_ID self.transport_type_id
+      b.TRANS_TXT self.transport_type_name
+      b.COMMENT self.comment
+    end
+  end
+
 end
