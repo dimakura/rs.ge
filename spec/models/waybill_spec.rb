@@ -85,4 +85,15 @@ describe 'WaybillItem validation' do
   end
 end
 
-# TODO: test Waybill validation
+describe 'Waybill validation' do
+  before(:all) do
+    @waybill = RS::Waybill.new
+    @waybill.validate
+  end
+  subject { @waybill }
+  it { should have_error_field :buyer_tin }
+  it { should_not have_error_field :buyer_name }
+  it { should have_error_field :start_address }
+  it { should have_error_field :end_address }
+  
+end

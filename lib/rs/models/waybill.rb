@@ -254,11 +254,11 @@ class RS::Waybill < RS::Validable
 
   def validate
     self.errors = {}
-    self.items.each { |it| it.validate }
+    self.items.each { |it| it.validate } if self.items
     validate_buyer
     validate_transport
     validate_addresses
-    validate_remote if config.validate_remote
+    validate_remote if RS.config.validate_remote
   end
 
   def valid?
