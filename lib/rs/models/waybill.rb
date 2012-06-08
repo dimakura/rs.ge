@@ -85,7 +85,6 @@ class RS::WaybillItem < RS::Validable
     add_error(:quantity, 'რაოდენობა უნდა იყოს მეტი 0-ზე') if self.quantity.blank? or self.quantity <= 0
     add_error(:price, 'ფასი არ უნდა იყოს უარყოფითი') if self.price.blank? or self.price < 0
   end
-
 end
 
 # Waybill class.
@@ -116,10 +115,14 @@ class RS::Waybill < RS::Validable
   attr_accessor :parent_id
   # Waybill number.
   attr_accessor :number
+  # Waybill creation date.
+  attr_accessor :create_date
   # Waybill activation date.
   attr_accessor :activate_date
   # Waybill delivery date.
   attr_accessor :delivery_date
+  # Waybill close date.
+  attr_accessor :close_date
   # Unique ID of the seller
   attr_accessor :seller_id
   # Seller TIN.
@@ -167,6 +170,10 @@ class RS::Waybill < RS::Validable
   attr_accessor :error_code
   # Invoice ID, related to this waybill.
   attr_accessor :invoice_id
+  # Full amount of this waybill.
+  attr_accessor :total
+  # Service user ID, who created this waybill.
+  attr_accessor :user_id
 
   # Convert this waybill to XML.
   def to_xml(xml)
@@ -204,4 +211,44 @@ class RS::Waybill < RS::Validable
     end
   end
 
+  # Initialize this waybill from given hash.
+  def init_from_hash(hash)
+    items_hash = hash[:goods_list][:goods]
+    items_hash = [items_hash] if items_hash.instance_of? Hash
+    self.items = []
+    items_hash.each do |item_hash|
+      item = WaybillItem.new
+      item.init_from_hash(item_hash)
+      self.items << item
+    end
+    self.id = hash[:id]
+    self.type = hash[:type].to_i
+    self.create_date = hash[:create_date]
+    self.buyer_tin = hash[:buyer_tin]
+    self.check_buyer_tin = hash[:chek_buyer_tin].to_i == 1
+    self.buyer_name = hash[:buyer_name]
+    self.start_address = hash[:start_address]
+    self.end_address = hash[:end_address]
+    self.driver_tin = hash[:driver_tin]
+    self.check_driver_tin = hash[:chek_driver_tin].to_i == 1
+    self.driver_name = hash[:driver_name]
+    self.transportation_cost = hash[:transport_coast].to_f
+    self.seller_info = hash[:reception_info]
+    self.buyer_info = hash[:receiver_info]
+    self.delivery_date = hash[:delivery_date] # delivery date
+    self.status = hash[:status].to_i
+    self.seller_id = hash[:seler_un_id].to_i
+    self.activate_date = hash[:activate_date]
+    self.parent_id = hash[:par_id]
+    self.total = hash[:full_amount]
+    self.car_number = hash[:car_number]
+    self.number = hash[:waybill_number]
+    self.close_date = hash[:close_date]
+    self.user_id = hash[:s_user_id].to_i
+    self.start_date = hash[:begin_date]
+    self.transportation_cost_payer = hash[:tran_cost_payer] ? hash[:tran_cost_payer].to_i : nil
+    self.transport_type_id = hash[:trans_id].to_i
+    self.transport_type_name = hash[:trans_txt]
+    self.comment = hash[:comment]
+  end
 end
