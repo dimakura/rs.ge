@@ -167,7 +167,7 @@ class RS::Waybill < RS::Validable
   attr_accessor :transport_type_name
   # Vehicle number.
   attr_accessor :car_number
-  # ==> XXX: there should be some flag which indicates whether vehicle number should be checked
+  # ==> XXX: there should be some flag which indicates whether vehicle number should be checked but documentation given no answer on this
   # Comment on this waybill.
   attr_accessor :comment
   # Waybill items.
@@ -207,7 +207,7 @@ class RS::Waybill < RS::Validable
       b.SELER_UN_ID self.seller_id
       b.PAR_ID (self.parent_id ? self.parent_id : '')
       b.CAR_NUMBER self.car_number
-      ## XXX: b.WAYBILL_NUMBER 
+      b.WAYBILL_NUMBER (self.number ? self.number : '')
       ## XXX: b.S_USER_ID
       b.BEGIN_DATE (self.activate_date ? self.activate_date.strftime('%Y-%m-%dT%H:%M:%S') : '')
       b.TRAN_COST_PAYER (self.transportation_cost_payer ? self.transportation_cost_payer : Waybill::TRANSPORTATION_PAID_BY_BUYER)
