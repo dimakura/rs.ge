@@ -71,3 +71,31 @@ describe 'Save waybill' do
     its(:delivery_date) { should be_nil }
   end
 end
+
+describe 'Resave waybill' do
+  before(:all) do
+    items = [create_item(bar_code: '100', prod_name: 'მობილური', price: 500, quantity: 1), create_item(bar_code: '101', prod_name: 'Kingston RAM/4GB/DDR3', price: 45, quantity: 2)]
+    @waybill = create_waybill(items: items)
+    RS.wb.save_waybill(@waybill)
+    @waybill = RS.wb.get_waybill(id: @waybill.id)
+    @initial_id = @waybill.id
+  end
+  context 'After initial save' do
+    subject { @waybill }
+    its(:total) { should == 590 }
+    specify { subject.items.size.should == 2 }
+  end
+  context 'Delete first item and update second' do
+    before(:all) do
+      @waybill.items[0].delete = true
+      @waybill.items[1].quantity = 3
+      @waybill.items[1].price = 50
+      RS.wb.save_waybill(@waybill)
+      @waybill = RS.wb.get_waybill(id: @waybill.id)
+    end
+    subject { @waybill }
+    its(:id) { should == @initial_id }
+    its(:total) { should == 150 }
+    specify { subject.items.size.should == 1 }
+  end
+end

@@ -77,7 +77,7 @@ class RS::WaybillItem < RS::Validable
       b.AMOUNT self.quantity * self.price
       b.BAR_CODE self.bar_code
       b.A_ID (self.excise_id ? self.excise_id : 0)
-      b.VAT_TYPE (self.vat_type || Waybill::VAT_COMMON)
+      b.VAT_TYPE (self.vat_type || RS::VAT_COMMON)
     end
   end
 
