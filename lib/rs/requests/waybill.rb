@@ -33,6 +33,17 @@ module RS
       end
     end
 
+    # Get saved waybill.
+    def get_waybill(opts = {})
+      validate_presence_of(opts, :id, :su, :sp)
+      response = waybill_client.request 'get_waybill' do
+        soap.body = {'su' => opts[:su], 'sp' => opts[:sp], 'waybill_id' => opts[:id]}
+      end
+      wb = RS::Waybill.new
+      #puts response.to_hash
+      wb.init_from_hash(response.to_hash[:get_waybill_response][:get_waybill_result][:waybill])
+    end
+
   end
 
   class << self

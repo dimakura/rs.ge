@@ -39,7 +39,7 @@ end
 
 describe 'Save waybill' do
   before(:all) do
-    items = [create_item(bar_code: '001', prod_name: 'Tomato'), create_item(bar_code: '002', prod_name: 'Cucumber')]
+    items = [create_item(bar_code: '001', prod_name: 'პამიდორი', price: 2, quantity: 5), create_item(bar_code: '002', prod_name: 'კიტრი', price: 3, quantity: 10)]
     @waybill = create_waybill(items: items)
     RS.wb.save_waybill(@waybill)
   end
@@ -53,5 +53,21 @@ describe 'Save waybill' do
     subject { @waybill.items.first }
     its(:id) { should_not be_nil }
     its(:id) { should > 0 }
+  end
+  context 'get this waybill' do
+    before(:all) do
+      @waybill = RS.wb.get_waybill(id: @waybill.id)
+    end
+    subject { @waybill }
+    it { should_not be_nil }
+    its(:id) { should > 0 }
+    its(:number) { should be_nil }
+    its(:status) { should == RS::Waybill::STATUS_SAVED }
+    its(:total) { should == 40 }
+    its(:create_date) { should_not be_nil }
+    its(:create_date) { should be_instance_of DateTime }
+    its(:activate_date) { should be_nil }
+    its(:close_date) { should be_nil }
+    its(:delivery_date) { should be_nil }
   end
 end

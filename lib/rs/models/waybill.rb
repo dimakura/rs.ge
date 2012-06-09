@@ -223,11 +223,11 @@ class RS::Waybill < RS::Validable
     items_hash = [items_hash] if items_hash.instance_of? Hash
     self.items = []
     items_hash.each do |item_hash|
-      item = WaybillItem.new
+      item = RS::WaybillItem.new
       item.init_from_hash(item_hash)
       self.items << item
     end
-    self.id = hash[:id]
+    self.id = hash[:id].to_i
     self.type = hash[:type].to_i
     self.create_date = hash[:create_date]
     self.buyer_tin = hash[:buyer_tin]
@@ -246,16 +246,17 @@ class RS::Waybill < RS::Validable
     self.seller_id = hash[:seler_un_id].to_i
     self.activate_date = hash[:activate_date]
     self.parent_id = hash[:par_id]
-    self.total = hash[:full_amount]
+    self.total = hash[:full_amount].to_f
     self.car_number = hash[:car_number]
     self.number = hash[:waybill_number]
     self.close_date = hash[:close_date]
     self.user_id = hash[:s_user_id].to_i
-    self.start_date = hash[:begin_date]
+    self.activate_date = hash[:begin_date]
     self.transportation_cost_payer = hash[:tran_cost_payer] ? hash[:tran_cost_payer].to_i : nil
     self.transport_type_id = hash[:trans_id].to_i
     self.transport_type_name = hash[:trans_txt]
     self.comment = hash[:comment]
+    self
   end
 
   def validate
