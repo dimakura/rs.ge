@@ -206,13 +206,27 @@ describe 'Close waybill' do
 end
 
 describe 'Delete waybill' do
-  before(:all) do
-    @waybill = create_waybill(items: [create_item])
-    RS.wb.save_waybill(@waybill)
-    @resp = RS.wb.delete_waybill(id: @waybill.id)
-    @waybill = RS.wb.get_waybill(id: @waybill.id)
+  context 'save and delete' do
+    before(:all) do
+      @waybill = create_waybill(items: [create_item])
+      RS.wb.save_waybill(@waybill)
+      @resp = RS.wb.delete_waybill(id: @waybill.id)
+      @waybill = RS.wb.get_waybill(id: @waybill.id)
+    end
+    subject { @waybill }
+    specify { @resp.should == true }
+    its(:status) { should == RS::Waybill::STATUS_DELETED }
   end
-  subject { @waybill }
-  specify { @resp.should == true }
-  its(:status) { should == RS::Waybill::STATUS_DELETED }
+  context 'save, activate and delete' do
+    before(:all) do
+      @waybill = create_waybill(items: [create_item])
+      RS.wb.save_waybill(@waybill)
+      RS.wb.activate_waybill(id: @waybill.id)
+      @resp = RS.wb.delete_waybill(id: @waybill.id)
+      @waybill = RS.wb.get_waybill(id: @waybill.id)
+    end
+    subject { @waybill }
+    specify { @resp.should == false }
+    its(:status) { should == RS::Waybill::STATUS_ACTIVE }
+  end
 end
