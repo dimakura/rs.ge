@@ -2,7 +2,7 @@
 require 'singleton'
 
 module RS
-  
+
   class WaybillRequest < BaseRequest
     include Singleton
 
@@ -34,7 +34,7 @@ module RS
     end
 
     # Get saved waybill.
-    def get_waybill(opts = {})
+    def get_waybill(opts)
       validate_presence_of(opts, :id, :su, :sp)
       response = waybill_client.request 'get_waybill' do
         soap.body = {'su' => opts[:su], 'sp' => opts[:sp], 'waybill_id' => opts[:id]}
@@ -45,7 +45,7 @@ module RS
     end
 
     # Activate waybill.
-    def activate_waybill(opts = {})
+    def activate_waybill(opts)
       validate_presence_of(opts, :id, :su, :sp)
       if opts[:date]
         response = waybill_client.request 'send_waybil_vd' do
@@ -61,7 +61,7 @@ module RS
     end
 
     # Close waybill.
-    def close_waybill(opts = {})
+    def close_waybill(opts)
       validate_presence_of(opts, :su, :sp, :id)
       if opts[:date]
         response = waybill_client.request 'close_waybill_vd' do
@@ -74,6 +74,16 @@ module RS
         end
         response.to_hash[:close_waybill_response][:close_waybill_result].to_i == 1
       end
+    end
+
+    # Delete waybill.
+    # This operation is permitted only for waybill with RS::Waybill::STATUS_SAVED status.
+    def delete_waybill(opts)
+      validate_presence_of(opts, :id, :su, :sp)
+      response = waybill_client.request 'del_waybill' do |soap|
+        soap.body = {'su' => opts[:su], 'sp' => opts[:sp], 'waybill_id' => opts[:id]}
+      end
+      response.to_hash[:del_waybill_response][:del_waybill_result].to_i == 1
     end
 
   end
