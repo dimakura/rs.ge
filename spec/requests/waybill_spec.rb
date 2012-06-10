@@ -230,3 +230,18 @@ describe 'Delete waybill' do
     its(:status) { should == RS::Waybill::STATUS_ACTIVE }
   end
 end
+
+describe 'Deactivate waybill' do
+  context 'save, activate and deactivate waybill' do
+    before(:all) do
+      @waybill = create_waybill(items: [create_item])
+      RS.wb.save_waybill(@waybill)
+      RS.wb.activate_waybill(id: @waybill.id)
+      @resp = RS.wb.deactivate_waybill(id: @waybill.id)
+      @waybill = RS.wb.get_waybill(id: @waybill.id)
+    end
+    subject { @waybill }
+    specify { @resp.should == true }
+    its(:status) { should == RS::Waybill::STATUS_DEACTIVATED }
+  end
+end

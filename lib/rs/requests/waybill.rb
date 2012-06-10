@@ -86,6 +86,16 @@ module RS
       response.to_hash[:del_waybill_response][:del_waybill_result].to_i == 1
     end
 
+    # Deactivate waybill.
+    # This operation is permitted only for waybill with RS::Waybill::STATUS_ACTIVE or RS::Waybill::STATUS_CLOSED statuses.
+    def deactivate_waybill(opts)
+      validate_presence_of(opts, :id, :su, :sp)
+      response = waybill_client.request 'ref_waybill' do |soap|
+        soap.body = {'su' => opts[:su], 'sp' => opts[:sp], 'waybill_id' => opts[:id]}
+      end
+      response.to_hash[:ref_waybill_response][:ref_waybill_result].to_i == 1
+    end
+
   end
 
   class << self
