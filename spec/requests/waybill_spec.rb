@@ -131,12 +131,31 @@ describe 'Activate waybill' do
       @resp = RS.wb.activate_waybill(id: @waybill.id)
       @waybill = RS.wb.get_waybill(id: @waybill.id)
     end
-    subject { @waybill }
-    its(:id) { should_not be_nil }
-    its(:total) { should == 4800 }
-    its(:number) { should_not be_nil }
-    its(:number) { should == @resp }
-    its(:status) { should == RS::Waybill::STATUS_ACTIVE }
-    its(:activate_date) { should_not be_nil }
+    context 'analyze' do
+      subject { @waybill }
+      its(:id) { should_not be_nil }
+      specify { subject.items.size.should == 2 }
+      its(:total) { should == 4800 }
+      its(:number) { should_not be_nil }
+      its(:number) { should == @resp }
+      its(:status) { should == RS::Waybill::STATUS_ACTIVE }
+      its(:activate_date) { should_not be_nil }
+    end
+    context 'edit active waybill' do
+      before(:all) do
+        @waybill.items[1].delete = true
+        @waybill.items[0].quantity = 1
+        @waybill.items[0].price = 1000
+        RS.wb.save_waybill(@waybill)
+        @waybill = RS.wb.get_waybill(id: @waybill.id)
+      end
+      subject { @waybill }
+      specify { subject.items.size.should == 1 }
+      its(:total) { should == 1000 }
+      its(:status) { should == RS::Waybill::STATUS_ACTIVE }
+      its(:number) { should == @resp }
+    end
   end
 end
+
+
