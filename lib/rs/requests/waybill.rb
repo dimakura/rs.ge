@@ -44,6 +44,22 @@ module RS
       wb.init_from_hash(response.to_hash[:get_waybill_response][:get_waybill_result][:waybill])
     end
 
+    # Activate waybill.
+    def activate_waybill(opts = {})
+      validate_presence_of(opts, :id, :su, :sp)
+      if opts[:date]
+        response = waybill_client.request 'send_waybil_vd' do
+          soap.body = { 'su' => opts[:su], 'sp' => opts[:sp], 'begin_date' => opts[:date].strftime('%Y-%m-%dT%H:%M:%S'), 'waybill_id' => opts[:id] }
+        end
+        response.to_hash[:send_waybil_vd_response][:send_waybil_vd_result]
+      else
+        response = waybill_client.request 'send_waybill' do
+          soap.body = { 'su' => opts[:su], 'sp' => opts[:sp], 'waybill_id' => opts[:id] }
+        end
+        response.to_hash[:send_waybill_response][:send_waybill_result]
+      end
+    end
+
   end
 
   class << self

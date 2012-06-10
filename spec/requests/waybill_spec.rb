@@ -99,3 +99,44 @@ describe 'Resave waybill' do
     specify { subject.items.size.should == 1 }
   end
 end
+
+describe 'Activate waybill' do
+  context 'with begin_date' do
+    before(:all) do
+      items = [
+        create_item(bar_code: '001', prod_name: 'iPhone 4S 3G/32GB', price: 1800, quantity: 2),
+        create_item(bar_code: '002', prod_name: 'The New iPad 3G/16GB', price: 1200, quantity: 1)
+      ]
+      @waybill = create_waybill(items: items)
+      RS.wb.save_waybill(@waybill)
+      @resp = RS.wb.activate_waybill(id: @waybill.id, date: Time.now)
+      @waybill = RS.wb.get_waybill(id: @waybill.id)
+    end
+    subject { @waybill }
+    its(:id) { should_not be_nil }
+    its(:total) { should == 4800 }
+    its(:number) { should_not be_nil }
+    its(:number) { should == @resp }
+    its(:status) { should == RS::Waybill::STATUS_ACTIVE }
+    its(:activate_date) { should_not be_nil }
+  end
+  context 'without begin_date' do
+    before(:all) do
+      items = [
+        create_item(bar_code: '001', prod_name: 'iPhone 4S 3G/32GB', price: 1800, quantity: 2),
+        create_item(bar_code: '002', prod_name: 'The New iPad 3G/16GB', price: 1200, quantity: 1)
+      ]
+      @waybill = create_waybill(items: items)
+      RS.wb.save_waybill(@waybill)
+      @resp = RS.wb.activate_waybill(id: @waybill.id)
+      @waybill = RS.wb.get_waybill(id: @waybill.id)
+    end
+    subject { @waybill }
+    its(:id) { should_not be_nil }
+    its(:total) { should == 4800 }
+    its(:number) { should_not be_nil }
+    its(:number) { should == @resp }
+    its(:status) { should == RS::Waybill::STATUS_ACTIVE }
+    its(:activate_date) { should_not be_nil }
+  end
+end
