@@ -10,6 +10,9 @@ class RS::BaseRequest
   # Defaults
   DEFAULTS = {su: 'dimitri1979', sp: '123456'}
 
+  # Last error code.
+  attr_accessor :last_error_code
+
   # Getting Savon client.
   def waybill_client
     Savon::Client.new { wsdl.document = WAYBILL_SERVICE_URL }
