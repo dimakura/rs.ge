@@ -1,6 +1,25 @@
 # RS.GE web services
 
-This is a tiny API for working with [rs.ge](http://eservices.rs.ge) web-services from Ruby.
+This is a tiny API for working with [rs.ge](http://eservices.rs.ge) web-services in Ruby.
+
+## Configuration
+
+Configuration can be done using `RS.config` object. You can predefine `su` and `sp` parameters,
+which are used for 
+
+```ruby
+# configure service
+RS.config.su = 'my_service_username'
+RS.config.sp = 'my_service_password'
+```
+
+There is one more option, which can be used for configuration. Namely, `validate_remote` flag,
+which indicates if TIN numbers are validated remotely when  waybill is validated.
+
+```ruby
+# validate remotes (the default is false)
+RS.config.validate_remote = true
+```
 
 ## System methods
 
@@ -18,7 +37,7 @@ Before you can work with main API functions, you need to create a special user
 created = RS.sys.create_user(username: 'your_rs.ge_username', password: 'secret', ip: 'access_ip', name: 'name_of_this_user/ip_pair', su: 'new_user', sp: 'new_password'))
 ```
 
-All parameters in the example above are required. The method return `true` if the user creation was successfull.
+All parameters in the example above are required. The method returns `true` if the user creation was successfull.
 
 When you need to update your user (including password change), `update_user` method should be used:
 
