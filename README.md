@@ -4,8 +4,8 @@ This is a tiny API for working with [rs.ge](http://eservices.rs.ge) web-services
 
 ## Configuration
 
-Configuration can be done using `RS.config` object. You can predefine `su` and `sp` parameters,
-which are used for 
+Configuration is done using `RS.config` object.
+You can predefine `su` and `sp` parameters, which are required in almost every API call for user authentication:
 
 ```ruby
 # configure service
