@@ -5,7 +5,9 @@
 require 'savon'
 
 HTTPI.log = false
-Savon.log = false
+Savon.configure do |config|
+  config.log = false
+end
 
 # RSpec
 
