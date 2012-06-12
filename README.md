@@ -61,3 +61,34 @@ If the username/passowrd pair is correct, the following hash is returned:
 ```
 
 where `payer` is the unique ID of the payer, whom this user belongs to, and  `user` gives ID of the user itself.
+
+## Dictionary Calls
+
+You can get *units* using `units` method on dictionary object:
+
+```ruby
+units = RS.dict.units(su: su, sp: sp) # => returns {id: name} hash of units
+```
+
+Transport and waybill types can be obtained in the same way:
+
+```ruby
+transport_types = RS.dict.transport_types(su: su, sp: sp) # => {id: name}
+waybill_types   = RS.dict.waybill_types(su: su, sp: sp)   # => {id: name}
+```
+
+It should be noted, that transport and waybill types can be obtained without calling
+those remote method, by simply taking `RS::TRANSPORT_TYPES` and `RS::WAYBILL_TYPES`
+constants. This constants represent the current (relativly unchanged) set of
+transport and waybill types and may be changed by Revenue Service in the future.
+We'll try to update them accordingly, but there is no guarantee on exact match.
+
+The last method of `RS.dict` method is usefull for obtaining name of the
+person/organization by its TIN-number:
+
+```ruby
+name = RS.dict.get_name_from_tin(tin: '02001000490') # => 'დიმიტრი ყურაშვილი'
+```
+
+> Note, that we didn't used `su` and `sp` parameters in the last method call,
+> while we suppose they were predefined in `RS.config` object (see configuration section).
