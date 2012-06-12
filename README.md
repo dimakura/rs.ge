@@ -5,7 +5,8 @@ This is a tiny API for working with [rs.ge](http://eservices.rs.ge) web-services
 ## Configuration
 
 Configuration is done using `RS.config` object.
-You can predefine `su` and `sp` parameters, which are required in almost every API call for user authentication:
+You can predefine `su` and `sp` parameters (*service user* name and password),
+which are required in almost every API call for authentication:
 
 ```ruby
 # configure service
@@ -14,12 +15,14 @@ RS.config.sp = 'my_service_password'
 ```
 
 There is one more option, which can be used for configuration. Namely, `validate_remote` flag,
-which indicates if TIN numbers are validated remotely when  waybill is validated.
+which indicates if TIN numbers are validated remotely when a waybill is validated.
 
 ```ruby
 # validate remotes (the default is false)
 RS.config.validate_remote = true
 ```
+
+It's recommended to have this flag on `true`, unless performance considerations require the oposite.
 
 ## System methods
 
@@ -58,5 +61,3 @@ If the username/passowrd pair is correct, the following hash is returned:
 ```
 
 where `payer` is the unique ID of the payer, whom this user belongs to, and  `user` gives ID of the user itself.
-
-Payer ID is very important for futher processing.
