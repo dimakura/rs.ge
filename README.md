@@ -70,7 +70,7 @@ You can get *units* using `units` method on dictionary object:
 units = RS.dict.units(su: su, sp: sp) # => returns {id: name} hash of units
 ```
 
-Transport and waybill types can be obtained in the same way:
+*Transport* and *waybill types* can be obtained in the same way:
 
 ```ruby
 transport_types = RS.dict.transport_types(su: su, sp: sp) # => {id: name}
