@@ -22,7 +22,7 @@ which indicates if TIN numbers are validated remotely when a waybill is validate
 RS.config.validate_remote = true
 ```
 
-It's recommended to have this flag on `true`, unless performance considerations require the oposite.
+It's recommended to have this flag on `true`, unless performance considerations require the opposite.
 
 ## System methods
 
