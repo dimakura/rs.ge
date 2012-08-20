@@ -210,7 +210,7 @@ class RS::Waybill < RS::Validable
       b.WAYBILL_NUMBER (self.number ? self.number : '')
       ## XXX: b.S_USER_ID
       b.BEGIN_DATE (self.activate_date ? self.activate_date.strftime('%Y-%m-%dT%H:%M:%S') : '')
-      b.TRAN_COST_PAYER (self.transportation_cost_payer ? self.transportation_cost_payer : Waybill::TRANSPORTATION_PAID_BY_BUYER)
+      b.TRAN_COST_PAYER (self.transportation_cost_payer ? self.transportation_cost_payer : RS::Waybill::TRANSPORTATION_PAID_BY_BUYER)
       b.TRANS_ID self.transport_type_id
       b.TRANS_TXT self.transport_type_name
       b.COMMENT self.comment
