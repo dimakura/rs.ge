@@ -167,7 +167,6 @@ class RS::Waybill < RS::Validable
   attr_accessor :transport_type_name
   # Vehicle number.
   attr_accessor :car_number
-  # ==> XXX: there should be some flag which indicates whether vehicle number should be checked but documentation given no answer on this
   # Comment on this waybill.
   attr_accessor :comment
   # Waybill items.
@@ -322,7 +321,8 @@ class RS::Waybill < RS::Validable
         add_error(:driver_tin, "საიდ. ნომერი ვერ მოიძებნა: #{self.driver_tin}") if driver_name.nil?
         add_error(:driver_name, "მძღოლის სახელია: #{driver_name}") if driver_name and driver_name.split.join(' ') != self.driver_name.split.join(' ')
       else
-        add_error(:driver_tin, "მძღოლის პირადი ნომერი არაა მითითებული.")
+        # IMPORTANT! this validation is not "remote", so it's moved into non-remote part
+        # add_error(:driver_tin, "მძღოლის პირადი ნომერი არაა მითითებული.")
       end
     end
     # buyer
@@ -332,7 +332,8 @@ class RS::Waybill < RS::Validable
         add_error(:buyer_tin, "საიდ. ნომერი ვერ მოიძებნა: #{self.buyer_tin}") if buyer_name.nil?
         add_error(:buyer_name, "მყიდველის სახელია: #{buyer_name}") if buyer_name and buyer_name.split.join(' ') != self.buyer_name.split.join(' ')
       else
-        add_error(:buyer_tin, "მყიდველის პირადი ნომერი არაა მითითებული.")
+        # IMPORTANT! this validation is not "remote", so it's moved into non-remote part
+        # add_error(:buyer_tin, "მყიდველის პირადი ნომერი არაა მითითებული.")
       end
     end
   end
