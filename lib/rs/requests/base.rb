@@ -16,9 +16,14 @@ class RS::BaseRequest
   # Last error code.
   attr_accessor :last_error_code
 
-  # Getting Savon client.
+  # Getting waybill SOAP client.
   def waybill_client
     Savon::Client.new { wsdl.document = WAYBILL_SERVICE_URL }
+  end
+
+  # Getting waybill SOAP client.
+  def invoice_client
+    Savon::Client.new { wsdl.document = INVOICE_SERVICE_URL }
   end
 
   # Validates presence of specified keys in the #{params} hash.
