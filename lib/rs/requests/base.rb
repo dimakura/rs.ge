@@ -7,6 +7,9 @@ class RS::BaseRequest
   # Waybill service WSDL location.
   WAYBILL_SERVICE_URL = 'http://services.rs.ge/WayBillService/WayBillService.asmx?WSDL'
 
+  # Invoice service WSDL location.
+  INVOICE_SERVICE_URL = 'http://www.revenue.mof.ge/ntosservice/ntosservice.asmx?WSDL'
+
   # Defaults
   DEFAULTS = {su: 'dimitri1979', sp: '123456'}
 
