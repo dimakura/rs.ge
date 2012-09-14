@@ -22,5 +22,6 @@ end
 
 require 'helpers'
 
-RS.config.su = 'dimtiri1979'
-RS.config.sp = '123456'
+RS.config.su = RS::BaseRequest::DEFAULTS[:su]
+RS.config.sp = RS::BaseRequest::DEFAULTS[:sp]
+RS.config.payer_id = RS::BaseRequest::DEFAULTS[:payer_id]
