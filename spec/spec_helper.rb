@@ -24,4 +24,3 @@ require 'helpers'
 
 RS.config.su = RS::BaseRequest::DEFAULTS[:su]
 RS.config.sp = RS::BaseRequest::DEFAULTS[:sp]
-RS.config.payer_id = RS::BaseRequest::DEFAULTS[:payer_id]
