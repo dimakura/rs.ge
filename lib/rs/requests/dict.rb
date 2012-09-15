@@ -106,6 +106,10 @@ module RS
     def dict
       RS::DictionaryRequest.instance
     end
+
+    def dictionary
+      RS::DictionaryRequest.instance
+    end
   end
 
 end

@@ -118,6 +118,10 @@ module RS
     def wb
       RS::WaybillRequest.instance
     end
+
+    def waybill
+      RS::WaybillRequest.instance
+    end
   end
 
 end

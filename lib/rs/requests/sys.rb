@@ -87,6 +87,10 @@ module RS
     def sys
       RS::SysRequest.instance
     end
+
+    def system
+      RS::SysRequest.instance
+    end
   end
 
 end
