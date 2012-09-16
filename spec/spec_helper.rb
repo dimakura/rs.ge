@@ -22,5 +22,7 @@ end
 
 require 'helpers'
 
-RS.config.su = RS::BaseRequest::DEFAULTS[:su]
-RS.config.sp = RS::BaseRequest::DEFAULTS[:sp]
+RS.config.su  = RS::BaseRequest::DEFAULTS[:su]
+RS.config.sp  = RS::BaseRequest::DEFAULTS[:sp]
+DEFAULT_PAYER = RS::BaseRequest::DEFAULTS[:payer_id]
+DEFAULT_USER  = RS::BaseRequest::DEFAULTS[:user_id]
