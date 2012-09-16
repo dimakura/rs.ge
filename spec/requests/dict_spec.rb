@@ -46,6 +46,14 @@ describe 'getting payer name from tin' do
   it { should == 'დიმიტრი ყურაშვილი' }
 end
 
+describe 'payer_user_id testing' do
+  before(:all) do
+    @user_id = RS.dict.payer_user_id
+  end
+  subject { @user_id }
+  it { should == DEFAULT_USERID }
+end
+
 RSpec::Matchers.define :be_personal_tin do
   match { |actual| RS.dict.personal_tin?(actual) }
 end

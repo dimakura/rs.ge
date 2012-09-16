@@ -90,12 +90,12 @@ module RS
       response.to_hash[:get_name_from_tin_response][:get_name_from_tin_result]
     end
 
-    def payer_info(params = {})
+    def payer_user_id(params = {})
       validate_presence_of(params, :su, :sp)
       response = invoice_client.request 'chek' do
         soap.body = {'su' => params[:su], 'sp' => params[:sp]}
       end
-      response
+      response.to_hash[:chek_response][:user_id].to_i
     end
 
     # Checks whether given argument is a correct personal TIN.
