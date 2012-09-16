@@ -90,6 +90,14 @@ module RS
       response.to_hash[:get_name_from_tin_response][:get_name_from_tin_result]
     end
 
+    def payer_info(params = {})
+      validate_presence_of(params, :su, :sp)
+      response = invoice_client.request 'chek' do
+        soap.body = {'su' => params[:su], 'sp' => params[:sp]}
+      end
+      response
+    end
+
     # Checks whether given argument is a correct personal TIN.
     def personal_tin?(tin)
       tin =~ /^[0-9]{11}$/

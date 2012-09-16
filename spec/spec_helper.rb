@@ -11,7 +11,6 @@ end
 
 # RSpec
 
-require 'rs'
 require 'rspec'
 
 RSpec.configure do |config|
@@ -20,9 +19,16 @@ end
 
 # Test options.
 
+require 'rs'
 require 'helpers'
 
+TEST_USERNAME = 'tbilisi'
+TEST_PASSWORD = '123456'
 RS.config.su  = RS::BaseRequest::DEFAULTS[:su]
 RS.config.sp  = RS::BaseRequest::DEFAULTS[:sp]
 DEFAULT_PAYER = RS::BaseRequest::DEFAULTS[:payer_id]
 DEFAULT_USER  = RS::BaseRequest::DEFAULTS[:user_id]
+
+# ეს განახლება საჭიროა, რათა სატესტო მომხმარებელი მუშაობდეს იგივე IP მისამართიდან, საიდანაც ეშვება ეს ტესტები.
+# IP მისამართით შეზღუდვა მნიშვნელვანია ანგარიშ-ფაქტურის სერვისებისთვის!
+RS.sys.update_user(username: TEST_USERNAME, password: TEST_PASSWORD, ip: RS.sys.what_is_my_ip, name: 'invoice.ge', su: RS.config.su, sp: RS.config.sp)
