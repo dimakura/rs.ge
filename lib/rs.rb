@@ -4,6 +4,7 @@ require 'rs/version'
 
 # models
 require 'rs/models/waybill'
+require 'rs/models/factura'
 
 # requests
 require 'rs/requests/config'
