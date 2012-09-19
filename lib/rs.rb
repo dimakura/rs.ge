@@ -12,7 +12,7 @@ require 'rs/requests/base'
 require 'rs/requests/dict'
 require 'rs/requests/sys'
 require 'rs/requests/waybill'
-require 'rs/requests/invoice'
+require 'rs/requests/factura'
 
 module RS
   # This constant indicates 18% vat tariff.

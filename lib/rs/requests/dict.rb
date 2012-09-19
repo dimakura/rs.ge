@@ -81,6 +81,27 @@ module RS
       types
     end
 
+    # Returns user_id for the service users's payer.
+    def payer_user_id(params = {})
+      validate_presence_of(params, :su, :sp)
+      response = invoice_client.request 'chek' do
+        soap.body = {'su' => params[:su], 'sp' => params[:sp]}
+      end
+      response.to_hash[:chek_response][:user_id].to_i
+    end
+
+    # Returns information about payer (name, id) from it's TIN number.
+    def get_payer_info(params = {})
+      validate_presence_of(params, :su, :sp, :tin)
+      user_id = params[:user_id] || payer_user_id(params)
+      response = invoice_client.request 'get_un_id_from_tin' do
+        soap.body = {'user_id' => user_id, 'tin' => params[:tin], 'su' => params[:su], 'sp' => params[:sp]}
+      end.to_hash
+      p_id = response[:get_un_id_from_tin_response][:get_un_id_from_tin_result].to_i
+      name = response[:get_un_id_from_tin_response][:name]
+      {payer_id: p_id, name: name}
+    end
+
     # Returns name by given TIN number.
     def get_name_from_tin(params = {})
       validate_presence_of(params, :su, :sp, :tin)
@@ -88,14 +109,6 @@ module RS
         soap.body = params
       end
       response.to_hash[:get_name_from_tin_response][:get_name_from_tin_result]
-    end
-
-    def payer_user_id(params = {})
-      validate_presence_of(params, :su, :sp)
-      response = invoice_client.request 'chek' do
-        soap.body = {'su' => params[:su], 'sp' => params[:sp]}
-      end
-      response.to_hash[:chek_response][:user_id].to_i
     end
 
     # Checks whether given argument is a correct personal TIN.

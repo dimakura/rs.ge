@@ -54,6 +54,14 @@ describe 'payer_user_id testing' do
   it { should == DEFAULT_USERID }
 end
 
+describe 'getting payer information by its TIN number' do
+  before(:all) do
+    @info = RS.dict.get_payer_info(tin: '422430239')
+  end
+  subject { @info }
+  it { should_not be_nil }
+end
+
 RSpec::Matchers.define :be_personal_tin do
   match { |actual| RS.dict.personal_tin?(actual) }
 end
