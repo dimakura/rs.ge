@@ -63,7 +63,7 @@ describe 'Resave waybill' do
     specify { subject.items.size.should == 1 }
   end
 end
-
+ 
 describe 'Activate waybill' do
   context 'with begin_date' do
     before(:all) do
@@ -73,7 +73,7 @@ describe 'Activate waybill' do
       ]
       @waybill = create_waybill(items: items)
       RS.wb.save_waybill(@waybill)
-      @resp = RS.wb.activate_waybill(id: @waybill.id, date: Time.now)
+      @resp = RS.wb.activate_waybill(id: @waybill.id, date: Time.now + 1800)
       @waybill = RS.wb.get_waybill(id: @waybill.id)
     end
     subject { @waybill }
@@ -131,20 +131,20 @@ describe 'Close waybill' do
         create_item(bar_code: '001', prod_name: 'iPhone 4S 3G/32GB', price: 1800, quantity: 2),
         create_item(bar_code: '002', prod_name: 'The New iPad 3G/16GB', price: 1200, quantity: 1)
       ]
-      @waybill = create_waybill(items: items)
-      RS.wb.save_waybill(@waybill)
-      RS.wb.activate_waybill(id: @waybill.id, date: Time.now)
-      @resp = RS.wb.close_waybill(id: @waybill.id, date: Time.now)
-      @waybill = RS.wb.get_waybill(id: @waybill.id)
+      waybill = create_waybill(items: items)
+      RS.wb.save_waybill(waybill)
+      RS.wb.activate_waybill(id: waybill.id, date: Time.now + 1800)
+      @resp = RS.wb.close_waybill(id: waybill.id, date: Time.now + 3600)
+      @waybill = RS.wb.get_waybill(id: waybill.id)
     end
     subject { @waybill }
     its(:id) { should_not be_nil }
     its(:total) { should == 4800 }
     its(:number) { should_not be_nil }
-    specify { @resp.should == true }
     its(:status) { should == RS::Waybill::STATUS_CLOSED }
     its(:activate_date) { should_not be_nil }
     its(:delivery_date) { should_not be_nil }
+    specify { @resp.should == true }
   end
   context 'without delivery_date' do
     before(:all) do
