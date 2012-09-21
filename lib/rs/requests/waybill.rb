@@ -49,7 +49,7 @@ module RS
       validate_presence_of(opts, :id, :su, :sp)
       if opts[:date]
         response = waybill_client.request 'send_waybil_vd' do
-          soap.body = { 'su' => opts[:su], 'sp' => opts[:sp], 'begin_date' => opts[:date].strftime('%Y-%m-%dT%H:%M:%S'), 'waybill_id' => opts[:id] }
+          soap.body = { 'su' => opts[:su], 'sp' => opts[:sp], 'begin_date' => format_date(opts[:date]), 'waybill_id' => opts[:id] }
         end
         response.to_hash[:send_waybil_vd_response][:send_waybil_vd_result]
       else
@@ -65,7 +65,7 @@ module RS
       validate_presence_of(opts, :su, :sp, :id)
       if opts[:date]
         response = waybill_client.request 'close_waybill_vd' do
-          soap.body = { 'su' => opts[:su], 'sp' => opts[:sp], 'delivery_date' => opts[:date].strftime('%Y-%m-%dT%H:%M:%S'), 'waybill_id' => opts[:id] }
+          soap.body = { 'su' => opts[:su], 'sp' => opts[:sp], 'delivery_date' => format_date(opts[:date]), 'waybill_id' => opts[:id] }
         end
         response.to_hash[:close_waybill_vd_response][:close_waybill_vd_result].to_i == 1
       else
