@@ -4,9 +4,7 @@ require 'spec_helper'
 describe 'get factura' do
   context 'new factura' do
     before(:all) do
-      @factura = RS::Factura.new
-      @factura.seller_id = RS.config.payer_id
-      @factura.buyer_id = RS.dict.get_payer_info(tin: '12345678910')[:payer_id]
+      @factura = RS::Factura.new(seller_id: RS.config.payer_id, buyer_id: RS.dict.get_payer_info(tin: '12345678910')[:payer_id])
       RS.fact.save_factura(@factura)
       @factura = RS.fact.get_factura(id: @factura.id)
     end
@@ -28,13 +26,7 @@ describe 'get factura' do
     end
     context do
       before(:all) do
-        @item = RS::FacturaItem.new
-        @item.factura_id = @factura.id
-        @item.name = 'tomato'
-        @item.unit = 'kg'
-        @item.quantity = 10
-        @item.total = 100
-        @item.vat = 18
+        @item = RS::FacturaItem.new(factura_id: @factura.id, name: 'tomato', unit: 'kg', quantity: 10, total: 100, vat: 18)
         RS.fact.save_factura_item(@item)
       end
       subject { @item }
