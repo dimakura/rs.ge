@@ -20,8 +20,8 @@ module RS
         factura.number = hash[:f_number].to_i unless hash[:f_number].to_i == -1
         factura.operation_date = hash[:operation_dt]
         factura.registration_date = hash[:reg_dt]
-        factura.seller_id = hash[:seller_un_id].to_i
-        # factura.buyer_id = hash[:buyer_un_id].to_i
+        factura.seller_id = hash[:seller_un_id].to_i unless hash[:seller_un_id] == -1
+        factura.buyer_id = hash[:buyer_un_id].to_i unless hash[:buyer_un_id] == -1
         factura.status = hash[:status].to_i
         factura.waybill_number = hash[:overhead_no]
         factura.waybill_date = hash[:overhead_dt]

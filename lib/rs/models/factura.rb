@@ -11,7 +11,7 @@ class RS::Factura
   attr_accessor :operation_date
   attr_accessor :registration_date
   attr_accessor :seller_id
-  #attr_accessor :buyer_id
+  attr_accessor :buyer_id
   attr_accessor :status
   attr_accessor :waybill_number
   attr_accessor :waybill_date
