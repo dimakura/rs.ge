@@ -4,27 +4,26 @@ require 'spec_helper'
 describe 'get factura' do
   context 'new factura' do
     before(:all) do
-      @id = RS.fact.create_factura(date: Time.now)
-      @factura = RS.fact.get_factura(id: @id)
+      @factura = RS::Factura.new
+      @factura.seller_id = RS.config.payer_id
+      @factura.buyer_id = RS.dict.get_payer_info(tin: '12345678910')[:payer_id]
+      RS.fact.save_factura(@factura)
+      @factura = RS.fact.get_factura(id: @factura.id)
     end
-    context do
-      subject { @id }
-      it { should_not be_nil }
-      it { should > 0 }
-    end
-    context do
-      subject { @factura }
-      its(:id) { should == @id }
-      its(:index) { should == 'ეა-36'}
-      its(:number) { should be_nil }
-      its(:operation_date) { should_not be_nil }
-      its(:registration_date) { should_not be_nil }
-      its(:seller_id) { should == 731937 }
-      its(:status) { should == RS::Factura::STATUS_START }
-      its(:waybill_number) { should be_nil }
-      its(:waybill_date) { should_not be_nil }
-      its(:correction_of) { should be_nil }
-    end
+    subject { @factura }
+    its(:id) { should_not be_nil }
+    its(:id) { should > 0 }
+    its(:index) { should == 'ეა-36'}
+    its(:number) { should be_nil }
+    its(:operation_date) { should_not be_nil }
+    its(:registration_date) { should_not be_nil }
+    its(:seller_id) { should == 731937 }
+    its(:buyer_id) { should_not be_nil }
+    its(:buyer_id) { should == 1149251 }
+    its(:status) { should == RS::Factura::STATUS_START }
+    its(:waybill_number) { should be_nil }
+    its(:waybill_date) { should_not be_nil }
+    its(:correction_of) { should be_nil }
   end
   context do
     before(:all) do

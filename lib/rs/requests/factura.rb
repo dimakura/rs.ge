@@ -7,21 +7,22 @@ module RS
   class InvoiceRequest < BaseRequest
     include Singleton
 
-    def create_factura(opts = {})
-      validate_presence_of(opts, :user_id, :payer_id, :su, :sp, :date)
+    def save_factura(factura, opts = {})
+      validate_presence_of(opts, :user_id, :su, :sp)
       response = invoice_client.request 'save_invoice' do
         soap.body = {
           'user_id' => opts[:user_id],
-          'invois_id' => 0, 'operation_date' => format_date(opts[:date]),
-          'seller_un_id' => opts[:payer_id],
-          'buyer_un_id' => 0,
-          'overhead_no' => '', 'overhead_dt' => format_date(Time.now), # not USED actually
-          'b_s_user_id' => 0,
+          'invois_id' => factura.id || 0,
+          'operation_date' => format_date(factura.operation_date || Time.now),
+          'seller_un_id' => factura.seller_id || 0,
+          'buyer_un_id' => factura.buyer_id || 0,
+          'overhead_no' => '', 'overhead_dt' => format_date(Time.now), # this 2 parameters are not USED actually!!
+          'b_s_user_id' => factura.buyer_su_id || 0,
           'su' => opts[:su], 'sp' => opts[:sp]}
       end.to_hash
-      if response[:save_invoice_response][:save_invoice_result]
-        response[:save_invoice_response][:invois_id].to_i
-      end
+      resp = response[:save_invoice_response][:save_invoice_result]
+      factura.id = response[:save_invoice_response][:invois_id].to_i if resp
+      resp
     end
 
     def get_factura(opts = {})
