@@ -26,5 +26,5 @@ end
 class RS::FacturaItem
   attr_accessor :id, :factura_id
   attr_accessor :name, :unit
-  attr_accessor :quantity, :price, :total, :vat, :excise, :excise_id
+  attr_accessor :quantity, :total, :vat, :excise, :excise_id
 end

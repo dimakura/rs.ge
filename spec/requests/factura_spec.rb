@@ -10,20 +10,39 @@ describe 'get factura' do
       RS.fact.save_factura(@factura)
       @factura = RS.fact.get_factura(id: @factura.id)
     end
-    subject { @factura }
-    its(:id) { should_not be_nil }
-    its(:id) { should > 0 }
-    its(:index) { should == 'ეა-36'}
-    its(:number) { should be_nil }
-    its(:operation_date) { should_not be_nil }
-    its(:registration_date) { should_not be_nil }
-    its(:seller_id) { should == 731937 }
-    its(:buyer_id) { should_not be_nil }
-    its(:buyer_id) { should == 1149251 }
-    its(:status) { should == RS::Factura::STATUS_START }
-    its(:waybill_number) { should be_nil }
-    its(:waybill_date) { should_not be_nil }
-    its(:correction_of) { should be_nil }
+    context 'test header' do
+      subject { @factura }
+      its(:id) { should_not be_nil }
+      its(:id) { should > 0 }
+      its(:index) { should == 'ეა-36'}
+      its(:number) { should be_nil }
+      its(:operation_date) { should_not be_nil }
+      its(:registration_date) { should_not be_nil }
+      its(:seller_id) { should == 731937 }
+      its(:buyer_id) { should_not be_nil }
+      its(:buyer_id) { should == 1149251 }
+      its(:status) { should == RS::Factura::STATUS_START }
+      its(:waybill_number) { should be_nil }
+      its(:waybill_date) { should_not be_nil }
+      its(:correction_of) { should be_nil }
+    end
+    context do
+      before(:all) do
+        @item = RS::FacturaItem.new
+        @item.factura_id = @factura.id
+        @item.name = 'tomato'
+        @item.unit = 'kg'
+        @item.quantity = 10
+        @item.total = 100
+        @item.vat = 18
+        RS.fact.save_factura_item(@item)
+      end
+      subject { @item }
+      it { should_not be_nil }
+      its(:id) { should_not be_nil }
+      its(:id) { should > 0 }
+      its(:id) { should be_instance_of Fixnum }
+    end
   end
   context do
     before(:all) do

@@ -25,6 +25,28 @@ module RS
       resp
     end
 
+    def save_factura_item(item, opts = {})
+      validate_presence_of(opts, :user_id, :su, :sp)
+      response = invoice_client.request 'save_invoice_desc' do
+        soap.body = {
+          'user_id' => opts[:user_id],
+          'id' => item.id || 0,
+          'su' => opts[:su], 'sp' => opts[:sp],
+          'invois_id' => item.factura_id,
+          'goods' => item.name,
+          'g_unit' => item.unit,
+          'g_number' => item.quantity || 1,
+          'full_amount' => item.total || 0,
+          'drg_amount' => item.vat || 0,
+          'aqcizi_amount' => item.excise || 0,
+          'akciz_id' => item.excise_id || 0
+        }
+      end.to_hash
+      resp = response[:save_invoice_desc_response][:save_invoice_desc_result]
+      item.id = response[:save_invoice_desc_response][:id].to_i if resp
+      resp
+    end
+
     def get_factura(opts = {})
       validate_presence_of(opts, :id, :user_id, :su, :sp)
       response = invoice_client.request 'get_invoice' do
