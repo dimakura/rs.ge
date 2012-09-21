@@ -15,14 +15,10 @@ class RS::Factura
   STATUS_CONFIRMED_CANCELED = 7
 
   attr_accessor :id
-  attr_accessor :index
-  attr_accessor :number
-  attr_accessor :operation_date
-  attr_accessor :registration_date
-  attr_accessor :seller_id
-  attr_accessor :buyer_id
+  attr_accessor :index, :number
+  attr_accessor :operation_date, :registration_date
+  attr_accessor :seller_id, :buyer_id
   attr_accessor :status
-  attr_accessor :waybill_number
-  attr_accessor :waybill_date
+  attr_accessor :waybill_number, :waybill_date
   attr_accessor :correction_of
 end
