@@ -1,11 +1,12 @@
 # -*- encoding : utf-8 -*-
 require 'spec_helper'
 
+seller_id = RS.config.payer_id
 factura_buyer_id = RS.dict.get_payer_info(tin: '12345678910')[:payer_id]
 
 describe 'create factura with items' do
   before(:all) do
-    @factura = RS::Factura.new(seller_id: RS.config.payer_id, buyer_id: factura_buyer_id)
+    @factura = RS::Factura.new(seller_id: seller_id, buyer_id: factura_buyer_id)
     RS.fact.save_factura(@factura)
     @factura = RS.fact.get_factura(id: @factura.id)
   end
@@ -144,3 +145,24 @@ describe 'get factura' do
   end
 end
 
+describe 'send factura' do
+  before(:all) do
+    # factura & item
+    @factura = RS::Factura.new(seller_id: seller_id, buyer_id: factura_buyer_id)
+    RS.fact.save_factura(@factura)
+    @item = RS::FacturaItem.new(factura_id: @factura.id, name: 'tomato', unit: 'kg', quantity: 10, total: 100, vat: 18)
+    RS.fact.save_factura_item(@item)
+    # send factura
+    @resp = RS.fact.send_factura(id: @factura.id)
+    @factura = RS.fact.get_factura(id: @factura.id)
+  end
+  context do
+    subject { @resp }
+    it { should == true }
+  end
+  context do
+    subject { @factura }
+    it { should_not be_nil }
+    its(:status) { should == RS::Factura::STATUS_SENT }
+  end
+end
