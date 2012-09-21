@@ -101,9 +101,6 @@ module RS
         soap.body = { 'user_id' => opts[:user_id], 'inv_id' => opts[:id], 'status' => RS::Factura::STATUS_SENT, 'su' => opts[:su], 'sp' => opts[:sp] }
       end
       response[:change_invoice_status_response][:change_invoice_status_result]
-      #factura = get_factura(opts)
-      #factura.status = 
-      #:user_id, :su, :sp
     end
 
     private
