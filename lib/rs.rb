@@ -3,6 +3,7 @@ require 'savon'
 require 'rs/version'
 
 # models
+require 'rs/models/initializable'
 require 'rs/models/waybill'
 require 'rs/models/factura'
 

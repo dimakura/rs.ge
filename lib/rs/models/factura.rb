@@ -1,6 +1,8 @@
 # -*- encoding : utf-8 -*-
 
 class RS::Factura
+  include RS::Initializable
+
   # Source invoice -- პირველადი ა/ფ
   STATUS_START = 0
   STATUS_SENT  = 1
@@ -24,6 +26,8 @@ class RS::Factura
 end
 
 class RS::FacturaItem
+  include RS::Initializable
+
   attr_accessor :id, :factura_id
   attr_accessor :name, :unit
   attr_accessor :quantity, :total, :vat, :excise, :excise_id

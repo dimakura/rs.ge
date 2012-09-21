@@ -5,12 +5,6 @@ require 'active_support/all'
 class RS::Validable
   attr_accessor :errors, :warnings
 
-  def initialize(opts = {})
-    opts.each do |k, v|
-      instance_variable_set("@#{k}", v) unless v.nil?
-    end
-  end
-
   # Add error to the specified field.
   def add_error(fld, msg)
     self.errors = {} unless self.errors
@@ -31,6 +25,8 @@ end
 
 # Waybill item class.
 class RS::WaybillItem < RS::Validable
+  include RS::Initializable
+
   # Item ID.
   attr_accessor :id
   # Barcode for the production in this item,
@@ -95,6 +91,8 @@ end
 
 # Waybill class.
 class RS::Waybill < RS::Validable
+  include RS::Initializable
+
   # Constant, which indicates, that transportation cost is paid by buyer.
   TRANSPORTATION_PAID_BY_BUYER  = 1
   # Constant, which indicates, that transportation cost is paid by seller.
