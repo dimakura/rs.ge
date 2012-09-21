@@ -15,7 +15,7 @@ module RS
           'invois_id' => 0, 'operation_date' => format_date(opts[:date]),
           'seller_un_id' => opts[:payer_id],
           'buyer_un_id' => 0,
-          'overhead_no' => '', 'overhead_dt' => format_date(Time.now), # not used
+          'overhead_no' => '', 'overhead_dt' => format_date(Time.now), # not USED actually
           'b_s_user_id' => 0,
           'su' => opts[:su], 'sp' => opts[:sp]}
       end.to_hash
