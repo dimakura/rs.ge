@@ -87,6 +87,14 @@ module RS
       items
     end
 
+    def delete_factura_item(opts = {})
+      validate_presence_of(opts, :id, :factura_id, :su, :sp, :user_id)
+      response = invoice_client.request 'delete_invoice_desc' do
+        soap.body = { 'user_id' => opts[:user_id], 'id' => opts[:id], 'inv_id' => opts[:factura_id], 'su' => opts[:su], 'sp' => opts[:sp] }
+      end.to_hash
+      response[:delete_invoice_desc_response][:delete_invoice_desc_result]
+    end
+
     private
 
     def factura_item_from_hash(hash)

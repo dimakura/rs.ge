@@ -56,7 +56,7 @@ describe 'create factura with items' do
       it { should_not be_nil }
       its(:size) { should == 2 }
     end
-    context 'item 1' do
+    context 'first item' do
       subject { @items[0] }
       it { should_not be_nil }
       its(:id) { should > 0 }
@@ -68,6 +68,21 @@ describe 'create factura with items' do
       its(:vat) { should == 18 }
       its(:excise) { should == 0 }
       its(:excise_id) { should == 0 }
+    end
+  end
+  context 'delete first item' do
+    before(:all) do
+      @items = RS.fact.get_factura_items(id: @factura.id)
+      @resp  = RS.fact.delete_factura_item(id: @items.first.id, factura_id: @factura.id)
+      @items = RS.fact.get_factura_items(id: @factura.id)
+    end
+    context do
+      subject { @resp }
+      it { should == true }
+    end
+    context do
+      subject { @items }
+      its(:size) { should == 1 }
     end
   end
 end
