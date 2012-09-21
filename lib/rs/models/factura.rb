@@ -22,3 +22,9 @@ class RS::Factura
   attr_accessor :waybill_number, :waybill_date
   attr_accessor :correction_of
 end
+
+class RS::FacturaItem
+  attr_accessor :id, :factura_id
+  attr_accessor :name, :unit
+  attr_accessor :quantity, :price, :total, :vat, :excise, :excise_id
+end
