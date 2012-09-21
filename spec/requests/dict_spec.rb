@@ -51,7 +51,7 @@ describe 'payer_user_id testing' do
     @user_id = RS.dict.payer_user_id
   end
   subject { @user_id }
-  it { should == DEFAULT_USERID }
+  it { should == RS.config.user_id }
 end
 
 describe 'getting payer information by its TIN number' do

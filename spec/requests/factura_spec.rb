@@ -5,7 +5,7 @@ describe 'get factura' do
   context do
     before(:all) do
       @id = 16658260
-      @factura = RS.fact.get_factura(id: @id, user_id: DEFAULT_USERID)
+      @factura = RS.fact.get_factura(id: @id)
     end
     subject { @factura }
     it { should_not be_nil }
@@ -23,7 +23,7 @@ describe 'get factura' do
   context do
     before(:all) do
       @id = 16953719
-      @factura = RS.fact.get_factura(id: @id, user_id: DEFAULT_USERID)
+      @factura = RS.fact.get_factura(id: @id)
     end
     subject { @factura }
     it { should_not be_nil }
@@ -39,7 +39,7 @@ describe 'get factura' do
   context do
     before(:all) do
       @id = 16166575
-      @factura = RS.fact.get_factura(id: @id, user_id: DEFAULT_USERID)
+      @factura = RS.fact.get_factura(id: @id)
     end
     subject { @factura }
     it { should_not be_nil }
