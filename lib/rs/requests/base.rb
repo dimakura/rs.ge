@@ -38,4 +38,5 @@ class RS::BaseRequest
     diff = keys - params.keys
     raise ArgumentError, "The following parameter(s) not specified: #{diff.to_s[1..-2]}" unless diff.empty?
   end
+
 end
