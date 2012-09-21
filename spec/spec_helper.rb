@@ -27,7 +27,7 @@ TEST_PASSWORD = '123456'
 RS.config.su = RS::BaseRequest::DEFAULTS[:su]
 RS.config.sp = RS::BaseRequest::DEFAULTS[:sp]
 RS.config.user_id = RS::BaseRequest::DEFAULTS[:user_id]
-DEFAULT_PAYER  = RS::BaseRequest::DEFAULTS[:payer_id]
+RS.config.payer_id = RS::BaseRequest::DEFAULTS[:payer_id]
 
 # ეს განახლება საჭიროა, რათა სატესტო მომხმარებელი მუშაობდეს იგივე IP მისამართიდან, საიდანაც ეშვება ეს ტესტები.
 # IP მისამართით შეზღუდვა მნიშვნელვანია ანგარიშ-ფაქტურის სერვისებისთვის!
