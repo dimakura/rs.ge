@@ -29,7 +29,7 @@ class RS::BaseRequest
   # Validates presence of specified keys in the #{params} hash.
   def validate_presence_of(params, *keys)
     # XXX: do we always need this replacement???
-    [:su, :sp, :user_id].each do |sym|
+    [:su, :sp, :user_id, :payer_id].each do |sym|
       if keys.include?(sym) and params[sym].blank?
         params[sym] = RS.config.send(sym)
       end
@@ -37,6 +37,10 @@ class RS::BaseRequest
     # <-- XXX
     diff = keys - params.keys
     raise ArgumentError, "The following parameter(s) not specified: #{diff.to_s[1..-2]}" unless diff.empty?
+  end
+
+  def format_date(dt)
+    dt.strftime('%Y-%m-%dT%H:%M:%S')
   end
 
 end
