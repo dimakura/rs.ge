@@ -164,5 +164,7 @@ describe 'send factura' do
     subject { @factura }
     it { should_not be_nil }
     its(:status) { should == RS::Factura::STATUS_SENT }
+    its(:seria) { should_not be_blank }
+    its(:number) { should_not be_blank }
   end
 end
