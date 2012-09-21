@@ -3,7 +3,7 @@ require 'spec_helper'
 
 factura_buyer_id = RS.dict.get_payer_info(tin: '12345678910')[:payer_id]
 
-describe 'create factura and items' do
+describe 'create factura with items' do
   before(:all) do
     @factura = RS::Factura.new(seller_id: RS.config.payer_id, buyer_id: factura_buyer_id)
     RS.fact.save_factura(@factura)
@@ -25,7 +25,7 @@ describe 'create factura and items' do
     its(:waybill_date) { should_not be_nil }
     its(:correction_of) { should be_nil }
   end
-  context do
+  context 'add item 1' do
     before(:all) do
       @item = RS::FacturaItem.new(factura_id: @factura.id, name: 'tomato', unit: 'kg', quantity: 10, total: 100, vat: 18)
       RS.fact.save_factura_item(@item)
@@ -35,6 +35,40 @@ describe 'create factura and items' do
     its(:id) { should_not be_nil }
     its(:id) { should > 0 }
     its(:id) { should be_instance_of Fixnum }
+  end
+  context 'add item 2' do
+    before(:all) do
+      @item = RS::FacturaItem.new(factura_id: @factura.id, name: 'cucumber', unit: 'kg', quantity: 8, total: 80, vat: 14.4)
+      RS.fact.save_factura_item(@item)
+    end
+    subject { @item }
+    it { should_not be_nil }
+    its(:id) { should_not be_nil }
+    its(:id) { should > 0 }
+    its(:id) { should be_instance_of Fixnum }
+  end
+  context 'get factura items' do
+    before(:all) do
+      @items = RS.fact.get_factura_items(id: @factura.id)
+    end
+    context 'all items' do
+      subject { @items }
+      it { should_not be_nil }
+      its(:size) { should == 2 }
+    end
+    context 'item 1' do
+      subject { @items[0] }
+      it { should_not be_nil }
+      its(:id) { should > 0 }
+      its(:factura_id) { should == @factura.id }
+      its(:name) { should == 'tomato' }
+      its(:unit) { should == 'kg' }
+      its(:quantity) { should == 10 }
+      its(:total) { should == 100 }
+      its(:vat) { should == 18 }
+      its(:excise) { should == 0 }
+      its(:excise_id) { should == 0 }
+    end
   end
 end
 

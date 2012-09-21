@@ -70,6 +70,31 @@ module RS
       end
     end
 
+    def get_factura_items(opts = {})
+      validate_presence_of(opts, :id, :user_id, :su, :sp)
+      response = invoice_client.request 'get_invoice_desc' do
+        soap.body = { 'user_id' => opts[:user_id], 'invois_id' => opts[:id], 'su' => opts[:su], 'sp' => opts[:sp] }
+      end.to_hash
+      h_items = response[:get_invoice_desc_response][:get_invoice_desc_result][:diffgram][:document_element][:invoices_descs]
+      items = []
+      if h_items.kind_of?(Array)
+        h_items.each do |item|          
+          items << factura_item_from_hash(item)
+        end
+      elsif h_items.kind_of?(Hash)
+        items << factura_item_from_hash(h_items)
+      end
+      items
+    end
+
+    private
+
+    def factura_item_from_hash(hash)
+      RS::FacturaItem.new(id: hash[:id].to_i, factura_id: hash[:inv_id].to_i, name: hash[:goods], unit: hash[:g_unit],
+        quantity: hash[:g_number].to_f, total: hash[:full_amount].to_f, vat: hash[:drg_amount].to_f,
+        excise: hash[:aqcizi_amount].to_f, excise_id: hash[:akcis_id].to_i)
+    end
+
   end
 
   class << self
