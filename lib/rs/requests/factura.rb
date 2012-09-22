@@ -96,11 +96,7 @@ module RS
     end
 
     def send_factura(opts = {})
-      validate_presence_of(opts, :user_id, :id, :su, :sp)
-      response = invoice_client.request 'change_invoice_status' do
-        soap.body = { 'user_id' => opts[:user_id], 'inv_id' => opts[:id], 'status' => RS::Factura::STATUS_SENT, 'su' => opts[:su], 'sp' => opts[:sp] }
-      end
-      response[:change_invoice_status_response][:change_invoice_status_result]
+      change_factura_status(RS::Factura::STATUS_SENT, opts)
     end
 
     private
@@ -109,6 +105,14 @@ module RS
       RS::FacturaItem.new(id: hash[:id].to_i, factura_id: hash[:inv_id].to_i, name: hash[:goods], unit: hash[:g_unit],
         quantity: hash[:g_number].to_f, total: hash[:full_amount].to_f, vat: hash[:drg_amount].to_f,
         excise: hash[:aqcizi_amount].to_f, excise_id: hash[:akcis_id].to_i)
+    end
+
+    def change_factura_status(status, opts)
+      validate_presence_of(opts, :user_id, :id, :su, :sp)
+      response = invoice_client.request 'change_invoice_status' do
+        soap.body = { 'user_id' => opts[:user_id], 'inv_id' => opts[:id], 'status' => status, 'su' => opts[:su], 'sp' => opts[:sp] }
+      end
+      response[:change_invoice_status_response][:change_invoice_status_result]
     end
 
   end
