@@ -22,7 +22,7 @@ class RS::Factura
   attr_accessor :seller_id, :buyer_id, :buyer_su_id
   attr_accessor :status
   attr_accessor :waybill_number, :waybill_date
-  attr_accessor :correction_of
+  attr_accessor :correction_of, :correction_type
 end
 
 class RS::FacturaItem

@@ -65,7 +65,8 @@ module RS
         factura.status = hash[:status].to_i
         factura.waybill_number = hash[:overhead_no]
         factura.waybill_date = hash[:overhead_dt]
-        factura.correction_of hash[:k_id].to_i unless hash[:k_id].to_i == -1
+        factura.correction_of = hash[:k_id].to_i unless hash[:k_id].to_i == -1
+        factura.correction_type = hash[:k_type].to_i unless hash[:k_type].to_i == -1
         factura
       end
     end

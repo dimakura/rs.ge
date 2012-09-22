@@ -40,7 +40,6 @@ module RS
         soap.body = {'su' => opts[:su], 'sp' => opts[:sp], 'waybill_id' => opts[:id]}
       end
       wb = RS::Waybill.new
-      #puts response.to_hash
       wb.init_from_hash(response.to_hash[:get_waybill_response][:get_waybill_result][:waybill])
     end
 

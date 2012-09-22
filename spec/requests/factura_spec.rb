@@ -153,21 +153,20 @@ describe 'change factura statuses' do
     RS.fact.save_factura_item(@item)
   end
   context 'send factura' do
-      before(:all) do
-        @resp = RS.fact.send_factura(id: @factura.id)
-        @factura = RS.fact.get_factura(id: @factura.id)
-      end
-      context do
-        subject { @resp }
-        it { should == true }
-      end
-      context do
-        subject { @factura }
-        it { should_not be_nil }
-        its(:status) { should == RS::Factura::STATUS_SENT }
-        its(:index) { should_not be_blank }
-        its(:number) { should_not be_blank }
-      end 
+    before(:all) do
+      @resp = RS.fact.send_factura(id: @factura.id)
+      @factura = RS.fact.get_factura(id: @factura.id)
+    end
+    context do
+      subject { @resp }
+      it { should == true }
+    end
+    context do
+      subject { @factura }
+      it { should_not be_nil }
+      its(:status) { should == RS::Factura::STATUS_SENT }
+      its(:index) { should_not be_blank }
+      its(:number) { should_not be_blank }
     end
   end
 end
