@@ -96,6 +96,7 @@ module RS
     end
 
     def send_factura(opts = {})
+      # XXX: check status before send
       change_factura_status(RS::Factura::STATUS_SENT, opts)
     end
 

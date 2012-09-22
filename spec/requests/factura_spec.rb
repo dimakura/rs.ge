@@ -145,26 +145,29 @@ describe 'get factura' do
   end
 end
 
-describe 'send factura' do
+describe 'change factura statuses' do
   before(:all) do
-    # factura & item
     @factura = RS::Factura.new(seller_id: seller_id, buyer_id: factura_buyer_id)
     RS.fact.save_factura(@factura)
     @item = RS::FacturaItem.new(factura_id: @factura.id, name: 'tomato', unit: 'kg', quantity: 10, total: 100, vat: 18)
     RS.fact.save_factura_item(@item)
-    # send factura
-    @resp = RS.fact.send_factura(id: @factura.id)
-    @factura = RS.fact.get_factura(id: @factura.id)
   end
-  context do
-    subject { @resp }
-    it { should == true }
-  end
-  context do
-    subject { @factura }
-    it { should_not be_nil }
-    its(:status) { should == RS::Factura::STATUS_SENT }
-    its(:index) { should_not be_blank }
-    its(:number) { should_not be_blank }
+  context 'send factura' do
+      before(:all) do
+        @resp = RS.fact.send_factura(id: @factura.id)
+        @factura = RS.fact.get_factura(id: @factura.id)
+      end
+      context do
+        subject { @resp }
+        it { should == true }
+      end
+      context do
+        subject { @factura }
+        it { should_not be_nil }
+        its(:status) { should == RS::Factura::STATUS_SENT }
+        its(:index) { should_not be_blank }
+        its(:number) { should_not be_blank }
+      end 
+    end
   end
 end
