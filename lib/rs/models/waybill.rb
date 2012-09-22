@@ -267,7 +267,7 @@ class RS::Waybill < RS::Validable
 
   def valid?
     self.items.each { |it| return false unless it.valid? }
-    super.valid?
+    super
   end
 
   private
