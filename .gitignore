@@ -5,3 +5,5 @@ pkg/*
 coverage/*
 tmp/*
 *.swp
+
+spec/requests/factura_experimental_spec.rb
