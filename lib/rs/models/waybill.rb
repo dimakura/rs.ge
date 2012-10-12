@@ -165,6 +165,8 @@ class RS::Waybill < RS::Validable
   attr_accessor :transport_type_name
   # Vehicle number.
   attr_accessor :car_number
+  # Vehicle number: trailer's number.
+  attr_accessor :car_number_trailer
   # Comment on this waybill.
   attr_accessor :comment
   # Waybill items.
@@ -209,7 +211,11 @@ class RS::Waybill < RS::Validable
       b.BEGIN_DATE (self.activate_date ? self.activate_date.strftime('%Y-%m-%dT%H:%M:%S') : '')
       b.TRAN_COST_PAYER (self.transportation_cost_payer ? self.transportation_cost_payer : RS::Waybill::TRANSPORTATION_PAID_BY_BUYER)
       b.TRANS_ID self.transport_type_id
-      b.TRANS_TXT self.transport_type_name
+      if self.transport_type_id == RS::TRANS_VEHICLE
+        b.TRANS_TXT self.car_number_trailer
+      else
+        b.TRANS_TXT self.transport_type_name
+      end
       b.COMMENT self.comment
     end
   end
@@ -251,7 +257,11 @@ class RS::Waybill < RS::Validable
     self.activate_date = hash[:begin_date]
     self.transportation_cost_payer = hash[:tran_cost_payer] ? hash[:tran_cost_payer].to_i : nil
     self.transport_type_id = hash[:trans_id].to_i
-    self.transport_type_name = hash[:trans_txt]
+    if self.transport_type_id == RS::TRANS_VEHICLE
+      self.car_number_trailer = hash[:trans_txt]
+    else
+      self.transport_type_name = hash[:trans_txt]
+    end
     self.comment = hash[:comment]
     self
   end
