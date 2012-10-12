@@ -140,7 +140,7 @@ describe 'get factura' do
     its(:registration_date) { should_not be_nil }
     its(:seller_id) { should == 1149251 }
     its(:buyer_id) { should == 731937 }
-    its(:status) { should == RS::Factura::STATUS_CONFIRMED }
+    its(:status) { should == RS::Factura::STATUS_CORRECTED }
     its(:correction_of) { should be_nil }
   end
 end
