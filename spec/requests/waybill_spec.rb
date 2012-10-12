@@ -4,7 +4,7 @@ require 'spec_helper'
 describe 'Save waybill' do
   before(:all) do
     items = [create_item(bar_code: '001', prod_name: 'პამიდორი', price: 2, quantity: 5), create_item(bar_code: '002', prod_name: 'კიტრი', price: 3, quantity: 10)]
-    @waybill = create_waybill(items: items)
+    @waybill = create_waybill(transport_type_id: RS::TRANS_VEHICLE, car_number: 'abc123', car_number_trailer: 'de45', items: items)
     RS.wb.save_waybill(@waybill)
   end
   context 'waybill' do
@@ -33,6 +33,8 @@ describe 'Save waybill' do
     its(:activate_date) { should be_nil }
     its(:close_date) { should be_nil }
     its(:delivery_date) { should be_nil }
+    its(:car_number) { should == 'abc123' }
+    its(:car_number_trailer) { should == 'de45' }
   end
 end
 

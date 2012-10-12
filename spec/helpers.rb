@@ -22,6 +22,7 @@ def create_waybill(opts = {})
     transportation_cost_payer: opts[:transportation_cost_payer] || 1,
     transport_type_id: opts[:transport_type_id] || RS::TRANS_VEHICLE,
     car_number: opts[:car_number] || 'wdw842',
+    car_number_trailer: opts[:car_number_trailer] || '',
     comment: opts[:comment], user_id: USER01[:id],
     items: opts[:items]
   )
