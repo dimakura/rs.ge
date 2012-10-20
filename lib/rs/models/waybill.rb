@@ -334,7 +334,7 @@ class RS::Waybill < RS::Validable
 
   def validate_addresses
     add_error(:start_address, 'საწყისი მისამართი განუსაზღვრელია') if self.start_address.blank?
-    add_error(:end_address,   'საბოლოო მისამართი განუსაზღვრელია') if self.end_address.blank?
+    add_error(:end_address,   'საბოლოო მისამართი განუსაზღვრელია') if self.end_address.blank? and self.buyer_required?
     if not self.start_address.blank? and not self.end_address.blank? and
       self.start_address.strip != self.end_address.strip and
       self.type == RS::WAYBILL_TYPE_WITHOUT_TRANS
