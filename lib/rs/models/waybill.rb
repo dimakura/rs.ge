@@ -188,6 +188,10 @@ class RS::Waybill < RS::Validable
     self.type != RS::WAYBILL_TYPE_DISTR
   end
 
+  def seller_required?
+    self.type != RS::WAYBILL_TYPE_SUBWB
+  end
+
   # Convert this waybill to XML.
   def to_xml(xml)
     xml.WAYBILL do |b|
@@ -333,7 +337,7 @@ class RS::Waybill < RS::Validable
   end
 
   def validate_addresses
-    add_error(:start_address, 'საწყისი მისამართი განუსაზღვრელია') if self.start_address.blank?
+    add_error(:start_address, 'საწყისი მისამართი განუსაზღვრელია') if self.start_address.blank? and self.seller_required?
     add_error(:end_address,   'საბოლოო მისამართი განუსაზღვრელია') if self.end_address.blank? and self.buyer_required?
     if not self.start_address.blank? and not self.end_address.blank? and
       self.start_address.strip != self.end_address.strip and
