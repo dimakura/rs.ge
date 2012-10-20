@@ -184,6 +184,10 @@ class RS::Waybill < RS::Validable
     self.transport_type_id == RS::TRANS_VEHICLE || self.transport_type_id == RS::TRANS_VEHICLE_FRGN
   end
 
+  def buyer_required?
+    self.type != RS::WAYBILL_TYPE_DISTR
+  end
+
   # Convert this waybill to XML.
   def to_xml(xml)
     xml.WAYBILL do |b|
@@ -196,16 +200,16 @@ class RS::Waybill < RS::Validable
       b.TYPE self.type
 
       # buyer not sent for distrib order
-      if self.type == RS::WAYBILL_TYPE_DISTR
-        b.BUYER_TIN ''
-        b.CHEK_BUYER_TIN 0
-        b.BUYER_NAME ''
-        b.END_ADDRESS ''
-      else
+      if buyer_required?
         b.BUYER_TIN self.buyer_tin
         b.CHEK_BUYER_TIN (self.check_buyer_tin ? 1 : 0)
         b.BUYER_NAME self.buyer_name
         b.END_ADDRESS self.end_address
+      else
+        b.BUYER_TIN ''
+        b.CHEK_BUYER_TIN 0
+        b.BUYER_NAME ''
+        b.END_ADDRESS ''
       end
 
       # seller main info
@@ -299,6 +303,7 @@ class RS::Waybill < RS::Validable
   private
 
   def validate_buyer
+    return if not buyer_required?
     if self.buyer_tin.blank?
       add_error(:buyer_tin, 'მყიდველის საიდენტიფიკაციო ნომერი განუსაზღვრელია')
     else
@@ -311,7 +316,7 @@ class RS::Waybill < RS::Validable
   end
 
   def validate_transport
-    if self.transport_type_id == RS::TRANS_VEHICLE
+    if self.transport_vehicle?
       add_error(:car_number, 'მიუთითეთ სატრანსპორტო საშუალების სახელმწიფო ნომერი') if self.car_number.blank?
       add_error(:driver_tin, 'მძღოლის პირადი ნომერი უნდა იყოს მითითებული') if self.driver_tin.blank?
       if self.check_driver_tin
