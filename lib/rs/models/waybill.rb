@@ -296,6 +296,7 @@ class RS::Waybill < RS::Validable
     validate_buyer
     validate_transport
     validate_addresses
+    validate_parent
     validate_remote if RS.config.validate_remote
   end
 
@@ -368,6 +369,12 @@ class RS::Waybill < RS::Validable
         # IMPORTANT! this validation is not "remote", so it's moved into non-remote part
         # add_error(:buyer_tin, "მყიდველის პირადი ნომერი არაა მითითებული.")
       end
+    end
+  end
+
+  def validate_parent
+    if self.type == RS::WAYBILL_TYPE_SUBWB and self.parent_id.blank?
+      add_error(:parent_id, 'მთავარი ზედნადები განუსაზღვრელია ან არაა გაგზავნილი.')
     end
   end
 
