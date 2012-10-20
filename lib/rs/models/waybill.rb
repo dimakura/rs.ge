@@ -180,6 +180,10 @@ class RS::Waybill < RS::Validable
   # Service user ID, who created this waybill.
   attr_accessor :user_id
 
+  def transport_vehicle?
+    self.transport_type_id == RS::TRANS_VEHICLE || self.transport_type_id == RS::TRANS_VEHICLE_FRGN
+  end
+
   # Convert this waybill to XML.
   def to_xml(xml)
     xml.WAYBILL do |b|
@@ -190,11 +194,25 @@ class RS::Waybill < RS::Validable
       end
       b.ID (self.id ? self.id : 0)
       b.TYPE self.type
-      b.BUYER_TIN self.buyer_tin
-      b.CHEK_BUYER_TIN (self.check_buyer_tin ? 1 : 0)
-      b.BUYER_NAME self.buyer_name
+
+      # buyer not sent for distrib order
+      if self.type == RS::WAYBILL_TYPE_DISTR
+        b.BUYER_TIN ''
+        b.CHEK_BUYER_TIN 0
+        b.BUYER_NAME ''
+        b.END_ADDRESS ''
+      else
+        b.BUYER_TIN self.buyer_tin
+        b.CHEK_BUYER_TIN (self.check_buyer_tin ? 1 : 0)
+        b.BUYER_NAME self.buyer_name
+        b.END_ADDRESS self.end_address
+      end
+
+      # seller main info
+      b.SELER_UN_ID self.seller_id
+      b.PAR_ID (self.parent_id ? self.parent_id : '')
       b.START_ADDRESS self.start_address
-      b.END_ADDRESS self.end_address
+
       b.DRIVER_TIN self.driver_tin
       b.CHEK_DRIVER_TIN (self.check_driver_tin ? 1 : 0)
       b.DRIVER_NAME self.driver_name
@@ -203,15 +221,13 @@ class RS::Waybill < RS::Validable
       b.RECEIVER_INFO self.buyer_info
       b.DELIVERY_DATE (self.delivery_date ? self.delivery_date.strftime('%Y-%m-%dT%H:%M:%S') : '')
       b.STATUS self.status
-      b.SELER_UN_ID self.seller_id
-      b.PAR_ID (self.parent_id ? self.parent_id : '')
       b.CAR_NUMBER self.car_number
       b.WAYBILL_NUMBER (self.number ? self.number : '')
       ## XXX: b.S_USER_ID
       b.BEGIN_DATE (self.activate_date ? self.activate_date.strftime('%Y-%m-%dT%H:%M:%S') : '')
       b.TRAN_COST_PAYER (self.transportation_cost_payer ? self.transportation_cost_payer : RS::Waybill::TRANSPORTATION_PAID_BY_BUYER)
       b.TRANS_ID self.transport_type_id
-      if self.transport_type_id == RS::TRANS_VEHICLE
+      if self.transport_vehicle?
         b.TRANS_TXT self.car_number_trailer
       else
         b.TRANS_TXT self.transport_type_name
