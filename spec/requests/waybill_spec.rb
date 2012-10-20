@@ -212,11 +212,12 @@ describe 'Deactivate waybill' do
   end
 end
 
-describe 'Distrib waybill' do
+describe 'Distrib waybill -> sub waybill' do
   before(:all) do
     items = [create_item(bar_code: '001', prod_name: 'პამიდორი', price: 2, quantity: 5), create_item(bar_code: '002', prod_name: 'კიტრი', price: 3, quantity: 10)]
     @waybill = create_waybill(type: RS::WAYBILL_TYPE_DISTR, transport_type_id: RS::TRANS_VEHICLE, car_number: 'abc123', car_number_trailer: 'de45', items: items)
     RS.wb.save_waybill(@waybill)
+    RS.wb.activate_waybill(id: @waybill.id)
     @waybill = RS.wb.get_waybill(id: @waybill.id)
   end
   context 'waybill' do
@@ -225,5 +226,42 @@ describe 'Distrib waybill' do
     its(:id) { should > 0 }
     its(:type) { should == RS::WAYBILL_TYPE_DISTR }
     its(:buyer_tin) { should == nil }
+    its(:status) { should == RS::Waybill::STATUS_ACTIVE }
+  end
+  context 'create sub-waybill' do
+    before(:all) do
+      items = [create_item(bar_code: '001', prod_name: 'პამიდორი', price: 2, quantity: 2), create_item(bar_code: '002', prod_name: 'კიტრი', price: 3, quantity: 5)]
+      @sub_waybill = create_waybill(type: RS::WAYBILL_TYPE_SUBWB, parent_id: @waybill.id, items: items)
+      RS.wb.save_waybill(@sub_waybill)
+      RS.wb.activate_waybill(id: @sub_waybill.id)
+      @sub_waybill = RS.wb.get_waybill(id: @sub_waybill.id)
+    end
+    context do
+      subject { @sub_waybill }
+      its(:id) { should_not be_nil }
+      its(:id) { should > 0 }
+      its(:type) { should == RS::WAYBILL_TYPE_SUBWB }
+      its(:seller_id) { should == @waybill.seller_id }
+      its(:status) { should == RS::Waybill::STATUS_ACTIVE }
+      its(:parent_id) { should == @waybill.id }
+    end
+    context 'update sub-waybill (correct quantities)' do
+      before(:all) do
+        @sub_waybill.items[0].quantity = 5
+        RS.wb.save_waybill(@sub_waybill)
+      end
+      subject { @sub_waybill }
+      its(:error_code) { should == 0 }
+      specify { subject.items.first.quantity.should == 5 }
+    end
+    context 'update sub-waybill (incorrect quantities)' do
+      before(:all) do
+        @sub_waybill.items[0].quantity = 100
+        RS.wb.save_waybill(@sub_waybill)
+      end
+      subject { @sub_waybill }
+      # XXX: ეს ძალიან ცუდია! rs.ge სერვისი არ ამოწმებს ნაშთების უარყოფითობას
+      its(:error_code) { should == 0 }
+    end
   end
 end

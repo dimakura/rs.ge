@@ -268,7 +268,7 @@ class RS::Waybill < RS::Validable
     self.status = hash[:status].to_i
     self.seller_id = hash[:seler_un_id].to_i
     self.activate_date = hash[:activate_date]
-    self.parent_id = hash[:par_id]
+    self.parent_id = hash[:par_id] ? hash[:par_id].to_i : nil
     self.total = hash[:full_amount].to_f
     self.car_number = hash[:car_number]
     self.number = hash[:waybill_number]

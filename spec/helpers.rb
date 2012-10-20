@@ -24,7 +24,8 @@ def create_waybill(opts = {})
     car_number: opts[:car_number] || 'wdw842',
     car_number_trailer: opts[:car_number_trailer] || '',
     comment: opts[:comment], user_id: USER01[:id],
-    items: opts[:items]
+    items: opts[:items],
+    parent_id: opts[:parent_id]
   )
 end
 
