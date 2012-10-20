@@ -211,3 +211,19 @@ describe 'Deactivate waybill' do
     its(:status) { should == RS::Waybill::STATUS_DEACTIVATED }
   end
 end
+
+describe 'Distrib waybill' do
+  before(:all) do
+    items = [create_item(bar_code: '001', prod_name: 'პამიდორი', price: 2, quantity: 5), create_item(bar_code: '002', prod_name: 'კიტრი', price: 3, quantity: 10)]
+    @waybill = create_waybill(type: RS::WAYBILL_TYPE_DISTR, transport_type_id: RS::TRANS_VEHICLE, car_number: 'abc123', car_number_trailer: 'de45', items: items)
+    RS.wb.save_waybill(@waybill)
+    @waybill = RS.wb.get_waybill(id: @waybill.id)
+  end
+  context 'waybill' do
+    subject { @waybill }
+    its(:id) { should_not be_nil }
+    its(:id) { should > 0 }
+    its(:type) { should == RS::WAYBILL_TYPE_DISTR }
+    its(:buyer_tin) { should == nil }
+  end
+end
