@@ -265,3 +265,18 @@ describe 'Distrib waybill -> sub waybill' do
     end
   end
 end
+
+describe 'Return waybill' do
+  before(:all) do
+    items = [create_item(bar_code: '001', prod_name: 'პამიდორი', price: 2, quantity: 5), create_item(bar_code: '002', prod_name: 'კიტრი', price: 3, quantity: 10)]
+    @waybill = create_waybill(type: RS::WAYBILL_TYPE_RETRN, transport_type_id: RS::TRANS_VEHICLE, car_number: 'abc123', items: items)
+    RS.wb.save_waybill(@waybill)
+    RS.wb.activate_waybill(id: @waybill.id)
+    @waybill = RS.wb.get_waybill(id: @waybill.id)
+  end
+  subject { @waybill }
+  its(:type) { should == RS::WAYBILL_TYPE_RETRN }
+  its(:id) { should_not be_nil }
+  its(:id) { should > 0 }
+  its(:number) { should_not be_nil }
+end
