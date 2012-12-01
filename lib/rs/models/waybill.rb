@@ -313,7 +313,7 @@ class RS::Waybill < RS::Validable
       add_error(:buyer_tin, 'მყიდველის საიდენტიფიკაციო ნომერი განუსაზღვრელია')
     else
       if self.check_buyer_tin
-        add_error(:buyer_tin, 'საიდენტიფიკაციო ნომერი უნდა შედგებოდეს 9 ან 11 ციფრისაგან') if !RS.dict.personal_tin?(self.buyer_tin) and !RS.corporate_tin?(self.buyer_tin)
+        add_error(:buyer_tin, 'საიდენტიფიკაციო ნომერი უნდა შედგებოდეს 9 ან 11 ციფრისაგან') if !RS.dict.personal_tin?(self.buyer_tin) and !RS.dict.corporate_tin?(self.buyer_tin)
       else
         add_error(:buyer_name, 'განსაზღვრეთ მყიდველის სახელი') if self.buyer_name.blank?
       end
