@@ -14,7 +14,7 @@ describe 'create factura with items' do
     subject { @factura }
     its(:id) { should_not be_nil }
     its(:id) { should > 0 }
-    its(:index) { should == 'ეა-36'}
+    its(:index) { should == 'ეა-70'}
     its(:number) { should be_nil }
     its(:operation_date) { should_not be_nil }
     its(:registration_date) { should_not be_nil }
@@ -98,7 +98,7 @@ describe 'get factura' do
     subject { @factura }
     its(:id) { should_not be_nil }
     its(:id) { should > 0 }
-    its(:index) { should == 'ეა-36'}
+    its(:index) { should == 'ეა-70'}
     its(:number) { should be_nil }
     its(:operation_date) { should_not be_nil }
     its(:registration_date) { should_not be_nil }
@@ -119,12 +119,13 @@ describe 'get factura' do
     it { should_not be_nil }
     its(:id) { should == @id }
     its(:index) { should == 'ეა-36'}
-    #its(:number) { should == 269554 }
-    its(:number) { should be_nil }
+    its(:number) { should == 491549 }
+    #its(:number) { should be_nil }
     its(:operation_date) { should_not be_nil }
     its(:registration_date) { should_not be_nil }
     its(:seller_id) { should == 731937 }
-    its(:status) { should == RS::Factura::STATUS_START }
+    #its(:status) { should == RS::Factura::STATUS_START }
+    its(:status) { should == RS::Factura::STATUS_SENT }
     its(:correction_of) { should be_nil }
   end
   context do
