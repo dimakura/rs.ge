@@ -1,16 +1,12 @@
 # -*- encoding : utf-8 -*-
 
-# Savon (SOAP client)
-
 require 'savon'
-
 HTTPI.log = false
 Savon.configure do |config|
   config.log = false
 end
 
 # Test options.
-
 require 'rs'
 
 TEST_USERNAME = 'tbilisi'
