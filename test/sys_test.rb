@@ -13,6 +13,8 @@ class GeneralTest < Test::Unit::TestCase
     su = "invoice_ge_#{rand(1000)}"
     sp = '123456'
     assert RS.create_user(TEST_USER.merge(ip: RS.what_is_my_ip, name: 'invoice.ge test user', su: su, sp: sp)) == true
-    # TODO: check this user
+    check_result = RS.check_user(su: su, sp: sp)
+    assert_equal 731937, check_result[:payer]
+    assert check_result[:user] > 0
   end
 end

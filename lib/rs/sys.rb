@@ -11,6 +11,17 @@ module RS
     response.to_hash[:create_service_user_response][:create_service_user_result]
   end
 
+  def check_user(opts)
+    validate_presence_of(opts, :su, :sp)
+    response = waybill_client.call(:chek_service_user, message: { 'su' => opts[:su], 'sp' => opts[:sp] }).to_hash
+    if response[:chek_service_user_response][:chek_service_user_result]
+      payer_id = response[:chek_service_user_response][:un_id]
+      user_id  = response[:chek_service_user_response][:s_user_id]
+      { payer: payer_id.to_i, user: user_id.to_i }
+    end
+  end
+
   module_function :what_is_my_ip
   module_function :create_user
+  module_function :check_user
 end
