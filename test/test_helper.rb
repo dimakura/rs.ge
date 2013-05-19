@@ -2,3 +2,5 @@
 require 'test/unit'
 require 'savon'
 require 'rs'
+
+HTTPI.log = false
