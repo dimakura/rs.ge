@@ -1,6 +1,4 @@
 # -*- encoding : utf-8 -*-
-require 'rs/sys'
-
 module RS
   WAYBILL_SERVICE_URL = 'http://services.rs.ge/WayBillService/WayBillService.asmx?WSDL'
   INVOICE_SERVICE_URL = 'http://www.revenue.mof.ge/ntosservice/ntosservice.asmx?WSDL'
