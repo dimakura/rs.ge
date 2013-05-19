@@ -8,11 +8,11 @@ module RS
   end
 
   def waybill_client
-    Savon.client(wsdl: WAYBILL_SERVICE_URL)
+    Savon.client(wsdl: WAYBILL_SERVICE_URL, log: false)
   end
 
   def invoice_client
-    Savon.client(wsdl: INVOICE_SERVICE_URL)
+    Savon.client(wsdl: INVOICE_SERVICE_URL, log: false)
   end
 
   module_function :valid_tin?
