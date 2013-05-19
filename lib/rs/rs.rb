@@ -13,6 +13,23 @@ module RS
     Savon.client(wsdl: WAYBILL_SERVICE_URL)
   end
 
+  def invoice_client
+    Savon.client(wsdl: INVOICE_SERVICE_URL)
+  end
+
   module_function :valid_tin?
   module_function :waybill_client
+
+  protected
+
+  # Validates presence of specified keys in the `params` hash.
+  def validate_presence_of(params, *keys)
+    [:su, :sp, :user_id, :payer_id].each do |sym|
+      if keys.include?(sym) and params[sym].blank?
+        params[sym] = RS.config.send(sym)
+      end
+    end
+    diff = keys - params.keys
+    raise ArgumentError, "The following parameter(s) not specified: #{diff.to_s}" unless diff.empty?
+  end
 end
