@@ -6,9 +6,9 @@ module RS
 
   def create_user(opts)
     validate_presence_of(opts, :username, :password, :ip, :name, :su, :sp)
-    params = {'user_name' => opts[:username], 'user_password' => opts[:password], 'ip' => opts[:ip], 'name' => opts[:name], 'su' => opts[:su], 'sp' => opts[:sp]}
-    response = waybill_client.call 'create_service_user', params
-    puts response.to_hash # [:create_service_user_response][:create_service_user_result]
+    message = {'user_name' => opts[:username], 'user_password' => opts[:password], 'ip' => opts[:ip], 'name' => opts[:name], 'su' => opts[:su], 'sp' => opts[:sp]}
+    response = waybill_client.call :create_service_user, message: message
+    response.to_hash[:create_service_user_response][:create_service_user_result]
   end
 
   module_function :what_is_my_ip

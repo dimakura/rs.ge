@@ -32,4 +32,6 @@ module RS
     diff = keys - params.keys
     raise ArgumentError, "The following parameter(s) not specified: #{diff.to_s}" unless diff.empty?
   end
+
+  module_function :validate_presence_of
 end
