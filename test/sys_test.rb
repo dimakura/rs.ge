@@ -15,6 +15,10 @@ class GeneralTest < Test::Unit::TestCase
     assert RS.create_user(TEST_USER.merge(ip: RS.what_is_my_ip, name: 'invoice.ge test user', su: su, sp: sp)) == true
     check_result = RS.check_user(su: su, sp: sp)
     assert_equal 731937, check_result[:payer]
-    assert check_result[:user] > 0
+    user_id = check_result[:user]
+    assert user_id > 0
+    assert_nil RS.check_user(su: su, sp: 'wrongpassword')
+    assert RS.update_user(TEST_USER.merge(ip: RS.what_is_my_ip, name: 'invoice.ge test user', su: su, sp: 'newpassword')) == true
+    assert_equal user_id, RS.check_user(su: su, sp: 'newpassword')[:user]
   end
 end
