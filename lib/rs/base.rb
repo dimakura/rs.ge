@@ -17,6 +17,7 @@ module RS
 
   module_function :valid_tin?
   module_function :waybill_client
+  module_function :invoice_client
 
   protected
 
@@ -24,7 +25,7 @@ module RS
   def validate_presence_of(params, *keys)
     [:su, :sp, :user_id, :payer_id].each do |sym|
       if keys.include?(sym) and params[sym].blank?
-        params[sym] = RS.config.send(sym)
+        # params[sym] = RS.config.send(sym)
       end
     end
     diff = keys - params.keys
