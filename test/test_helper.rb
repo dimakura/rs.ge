@@ -1,16 +1,16 @@
 # -*- encoding : utf-8 -*-
-
+require 'test/unit'
 require 'savon'
-HTTPI.log = false
-Savon.configure do |config|
-  config.log = false
-end
+# HTTPI.log = false
+# Savon.configure do |config|
+#   config.log = false
+# end
 
 # Test options.
 require 'rs'
 
-TEST_USERNAME = 'tbilisi'
-TEST_PASSWORD = '123456'
+# TEST_USERNAME = 'tbilisi'
+# TEST_PASSWORD = '123456'
 # RS.config.su = RS::BaseRequest::DEFAULTS[:su]
 # RS.config.sp = RS::BaseRequest::DEFAULTS[:sp]
 # RS.config.user_id = RS::BaseRequest::DEFAULTS[:user_id]
