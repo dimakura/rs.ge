@@ -4,8 +4,8 @@ require 'test_helper'
 class DictionaryTest < Test::Unit::TestCase
   def test_get_oranizaton_info_from_tin
     info = RS.get_oranizaton_info_from_tin(TEST_SU.merge(user_id: TEST_USER_ID, tin: '204417363'))
-    # assert_equal 1, info[:id]
-    # assert_equal 'შპს ც12', info[:name]
+    assert_equal 246229, info[:id]
+    assert_equal 'შპს  ღვინის სამყარო - მამული XXI', info[:name]
   end
 
   def test_is_vat_payer
