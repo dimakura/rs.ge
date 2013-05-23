@@ -1,5 +1,7 @@
 # -*- encoding : utf-8 -*-
 module RS
+  UNITS_OTHER = 99
+
   def get_oranizaton_info_from_tin(opts)
     validate_presence_of(opts, :su, :sp, :tin, :user_id)
     message = { 'user_id' => opts[:user_id], 'tin' => opts[:tin], 'su' => opts[:su], 'sp' => opts[:sp] }
@@ -32,4 +34,5 @@ module RS
   module_function :get_oranizaton_info_from_tin
   module_function :is_vat_payer
   module_function :get_name_from_tin
+  module_function :get_units
 end

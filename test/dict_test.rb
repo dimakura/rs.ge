@@ -16,4 +16,11 @@ class DictionaryTest < Test::Unit::TestCase
     name = RS.get_name_from_tin(TEST_SU.merge(tin: '422430239'))
     assert_equal 'შპს ც12', name
   end
+
+  def test_get_units
+    units = RS.get_units(TEST_SU)
+    assert units.is_a?(Hash)
+    refute units.empty?
+    assert_equal 14, units.size
+  end
 end
