@@ -23,4 +23,15 @@ class DictionaryTest < Test::Unit::TestCase
     refute units.empty?
     assert_equal 14, units.size
   end
+
+  def test_get_excise_codes
+    codes = RS.get_excise_codes(TEST_SU)
+    assert_equal 278, codes.size
+    code0 = codes.first
+    refute_nil code0
+    assert_equal 224, code0.id
+    assert_equal 'ეთილის სპირტი', code0.name
+    assert_equal '2207', code0.code
+    assert_equal 2.6, code0.price
+  end
 end
