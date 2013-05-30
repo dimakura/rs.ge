@@ -12,9 +12,10 @@ module RS
 
     def initialize(h)
       @id = h[:id].to_i
-      @name = h[:title][0..(h[:title].index('(') - 1)].strip
-      @code = h[:sakon_kodi]
-      @unit = h[:measurement]
+      @code = h[:sakon_kodi].present? ? h[:sakon_kodi].strip : nil
+      index = h[:title].index("(#{@code})")
+      @name = h[:title][0..index - 1].strip
+      @unit = h[:measurement].present? ? h[:measurement].strip : nil
       @price = h[:akcis_ganakv].to_f
     end
   end
