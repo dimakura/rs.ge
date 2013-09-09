@@ -15,9 +15,12 @@ module RS
     Savon.client(wsdl: INVOICE_SERVICE_URL, log: false)
   end
 
+  def format_date(date); date.strftime('%Y-%m-%dT%H:%M:%S') end
+
   module_function :valid_tin?
   module_function :waybill_client
   module_function :invoice_client
+  module_function :format_date
 
   protected
 
