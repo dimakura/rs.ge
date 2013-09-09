@@ -4,7 +4,7 @@ module RS
   INVOICE_SERVICE_URL = 'http://www.revenue.mof.ge/ntosservice/ntosservice.asmx?WSDL'
 
   def valid_tin?(tin)
-    not not (tin =~ /^[0-9]{9}$|^[0-9]{11}$/)
+    not not (tin =~ /^[0-9]{6}$|^[0-9]{9}$|^[0-9]{11}$/)
   end
 
   def waybill_client

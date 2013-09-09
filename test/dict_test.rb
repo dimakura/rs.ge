@@ -8,6 +8,12 @@ class DictionaryTest < Test::Unit::TestCase
     assert_equal 'შპს  ღვინის სამყარო - მამული XXI', info[:name]
   end
 
+  def test_get_oranizaton_info_from_tin2
+    info = RS.get_oranizaton_info_from_tin(TEST_SU.merge(user_id: TEST_USER_ID, tin: '123015'))
+    assert_equal -122, info[:id]
+    assert_equal 'ვალტერ ვანგბერგი', info[:name]
+  end
+
   def test_is_vat_payer
     assert_equal true, RS.is_vat_payer(TEST_SU.merge(payer_id: 246229))
   end
