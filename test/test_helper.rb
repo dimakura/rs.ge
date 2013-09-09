@@ -1,5 +1,6 @@
 # -*- encoding : utf-8 -*-
 require 'test/unit'
+require 'active_support/core_ext/object/blank'
 require 'savon'
 require 'rs'
 
