@@ -5,30 +5,28 @@ module RS
     attr_accessor :seller_id, :buyer_id
   end
 
-  def create_factura(factura, opts = {})
+  def save_factura(factura, opts = {})
+    validate_presence_of(opts, :user_id, :su, :sp)
     if opts[:buyer_tin].present?
-      # opts[:buyer_id] = RS.get_oranizaton_info_from_tin(su: opts[:su], opts[:sp], tin: opts[:buyer_tin], user_id: user_id)[:id]
+      params = { su: opts[:su], sp: opts[:sp], tin: opts[:buyer_tin], user_id: opts[:user_id] }
+      factura.buyer_id = RS.get_oranizaton_info_from_tin(params)[:id]
     end
-    if opts[:user_id].blank?
-      # opts[:user_id] = RS.check_user(su: opts[:su], opts[:sp])[:user]
-    end
-    validate_presence_of(opts, :user_id, :su, :sp, :buyer_id, :seller_id)
+    raise 'define seller' if factura.seller_id.blank?
+    raise 'define buyer' if factura.buyer_id.blank?
     response = invoice_client.call(:save_invoice, message: {
       'user_id' => opts[:user_id], 'invois_id' => (factura.id || 0), 'operation_date' => (factura.date || Time.now),
       'seller_un_id' => factura.seller_id, 'buyer_un_id' => factura.buyer_id,
-      'overhead_no' => nil, 'overhead_dt' => nil, 'b_s_user_id' => nil,
+      'overhead_no' => '', 'overhead_dt' => format_date(Time.now), # those two parameters are not used actually!
+      # , 'b_s_user_id' => nil,
       'su' => opts[:su], 'sp' => opts[:sp],
     }).to_hash
-    # if response[:chek_service_user_response][:chek_service_user_result]
-    #   payer_id = response[:chek_service_user_response][:un_id]
-    #   user_id  = response[:chek_service_user_response][:s_user_id]
-    #   { payer: payer_id.to_i, user: user_id.to_i }
-    # end
-    # bool save_invoice(int user_id, ref int invois_id, DateTime operation_date, int 
-    #   seller_un_id, int buyer_un_id, string overhead_no, DateTime overhead_dt, int
-    #   b_s_user_id, string su, string sp
-    # )
+    if response[:save_invoice_response][:save_invoice_result]
+      factura.id = response[:save_invoice_response][:invois_id].to_i
+      true
+    else
+      false
+    end
   end
 
-  module_function :create_factura
+  module_function :save_factura
 end
