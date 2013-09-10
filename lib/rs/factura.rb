@@ -8,7 +8,7 @@ module RS
     # Factura, which was sent for review.
     SENT = 1
     # Factura, which was sent and confirmed.
-    SENT_CONFIRMED = 2
+    CONFIRMED = 2
     # Factura is "corrected" by another factura.
     CORRECTED = 3
     # New factura, which corrects an old factura.
@@ -40,6 +40,12 @@ module RS
     # ID of the factura which was corrected by this factura.
     attr_accessor :corrected_id
     attr_accessor :correction_type
+
+    def new?; [ NEW, CORRECTION_NEW ].include?(self.status) end
+    def sent?; [ SENT, CORRECTION_SENT ].include?(self.status) end
+    def confirmed?; [ CONFIRMED, CORRECTION_CONFIRMED ].include?(self.status) end
+    def canceled?; [ CANCELED, CANCELED_CONFIRMED ].include?(self.status) end
+    def corrected?; [ CORRECTED ].include?(self.status) end
 
     def self.extract(id, data)
       Factura.new(id: id, date: data[:operation_dt], register_date: data[:reg_dt],

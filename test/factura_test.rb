@@ -33,6 +33,11 @@ class FacturaTest < Test::Unit::TestCase
     assert_nil factura.number
     assert_nil factura.corrected_id
     assert_nil factura.correction_type
+    assert factura.new?
+    refute factura.sent?
+    refute factura.confirmed?
+    refute factura.canceled?
+    refute factura.corrected?
     # getting factura items
     items = RS.get_factura_items(TEST_SU.merge(user_id: TEST_USER_ID, id: id))
     assert_equal 1, items.size
