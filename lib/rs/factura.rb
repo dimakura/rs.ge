@@ -159,7 +159,21 @@ module RS
     end
   end
 
-  def send_factura()
+  def send_factura(opts = {})
+    validate_presence_of(opts, :user_id, :su, :sp, :id)
+    status = opts[:status] || get_factura_by_id(opts).status
+    if status == RS::Factura::NEW then new_status = RS::Factura::SENT
+    elsif status == RS::Factura::CORRECTED then new_status = RS::Factura::CORRECTION_NEW
+    else new_status = nil end
+    if new_status
+      response = invoice_client.call(:change_invoice_status, message: {
+        'user_id' => opts[:user_id], 'inv_id' => opts[:id], 'status' => new_status,
+        'su' => opts[:su], 'sp' => opts[:sp]
+      }).to_hash
+      response[:change_invoice_status_response][:change_invoice_status_result]
+    else
+      false
+    end
     # bool change_invoice_status(int user_id, int inv_id, int status, string su, string sp)
   end
 
@@ -168,4 +182,5 @@ module RS
   module_function :delete_factura_item
   module_function :get_factura_by_id
   module_function :get_factura_items
+  module_function :send_factura
 end

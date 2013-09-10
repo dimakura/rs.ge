@@ -40,7 +40,10 @@ class FacturaTest < Test::Unit::TestCase
     # get factura items
     items = RS.get_factura_items(TEST_SU.merge(user_id: TEST_USER_ID, id: factura.id))
     assert_equal 1, items.size
-    # TODO: confirm factura
+    # send factura
+    assert RS.send_factura(TEST_SU.merge(user_id: TEST_USER_ID, id: factura.id, status: RS::Factura::NEW))
+    factura = RS.get_factura_by_id(TEST_SU.merge(user_id: TEST_USER_ID, id: factura.id))
+    assert_equal RS::Factura::SENT, factura.status
   end
 
   def test_get_factura_and_items
