@@ -16,4 +16,20 @@ class FacturaTest < Test::Unit::TestCase
     refute_nil factura_item.id
     assert factura_item.id > 0
   end
+
+  def test_get_factura
+    id = 33483243
+    factura = RS.get_factura_by_id(TEST_SU.merge(user_id: TEST_USER_ID, id: id))
+    assert_equal id, factura.id
+    refute_nil factura.date
+    refute_nil factura.register_date
+    assert factura.date.is_a?(Date)
+    assert factura.register_date.is_a?(Date)
+    assert_equal RS::Factura::NOT_SENT, factura.status
+    assert_equal 731937, factura.seller_id
+    assert_equal 1149251, factura.buyer_id
+    assert_equal 'ეა-70', factura.seria
+    assert_nil factura.number
+    assert_nil factura.corrected_id
+  end
 end

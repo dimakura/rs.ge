@@ -1,8 +1,20 @@
 # -*- encoding : utf-8 -*-
 module RS
   class Factura < RS::Initializable
-    attr_accessor :id, :date
+    NOT_SENT = 0
+    attr_accessor :id, :date, :register_date, :status
     attr_accessor :seller_id, :buyer_id
+    attr_accessor :seria, :number
+
+    # ID of the factura which was corrected by this factura.
+    attr_accessor :corrected_id
+
+    def self.extract(id, data)
+      Factura.new(id: id, date: data[:operation_dt], register_date: data[:reg_dt],
+        seller_id: data[:seller_un_id].to_i, buyer_id: data[:buyer_un_id].to_i,
+        status: data[:status].to_i, corrected_id: (data[:k_id].to_i < 0 ? nil : data[:k_id].to_i),
+        seria: data[:f_series], number: (data[:f_number].to_i < 0 ? nil : data[:f_number].to_i))
+    end
   end
 
   class FacturaItem < RS::Initializable
@@ -50,6 +62,16 @@ module RS
     end
   end
 
+  def get_factura_by_id(opts = {})
+    validate_presence_of(opts, :user_id, :su, :sp, :id)
+    response = invoice_client.call(:get_invoice, message: {
+      'user_id' => opts[:user_id], 'invois_id' => opts[:id],
+      'su' => opts[:su], 'sp' => opts[:sp]
+    }).to_hash
+    Factura.extract(opts[:id], response[:get_invoice_response]) if response[:get_invoice_response][:get_invoice_result]
+  end
+  
   module_function :save_factura
   module_function :save_factura_item
+  module_function :get_factura_by_id
 end
