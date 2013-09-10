@@ -17,8 +17,9 @@ class FacturaTest < Test::Unit::TestCase
     assert factura_item.id > 0
   end
 
-  def test_get_factura
+  def test_get_factura_and_items
     id = 33483243
+    # getting factura
     factura = RS.get_factura_by_id(TEST_SU.merge(user_id: TEST_USER_ID, id: id))
     assert_equal id, factura.id
     refute_nil factura.date
@@ -31,5 +32,17 @@ class FacturaTest < Test::Unit::TestCase
     assert_equal 'ეა-70', factura.seria
     assert_nil factura.number
     assert_nil factura.corrected_id
+    # getting factura items
+    items = RS.get_factura_items(TEST_SU.merge(user_id: TEST_USER_ID, id: id))
+    assert_equal 1, items.size
+    item = items.first
+    assert_equal 226635210, item.id
+    assert_equal 'potato', item.good
+    assert_equal 'kg', item.unit
+    assert_equal 100, item.amount
+    assert_equal 10, item.quantity
+    assert_equal 15.25, item.vat
+    assert_equal 0, item.excise_amount
+    assert_nil item.excise_code
   end
 end

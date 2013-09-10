@@ -20,6 +20,29 @@ module RS
   class FacturaItem < RS::Initializable
     attr_accessor :id, :factura, :good, :unit
     attr_accessor :amount, :quantity, :vat, :excise_amount, :excise_code
+
+    def self.extract(data)
+      items = []
+      if data.is_a?(Array) then data.each { |x| items << extract_single(x) }
+      else items << extract_single(data) end
+      items
+    end
+
+    def self.extract_single(data)
+      # :id=>"226635210",
+      # :inv_id=>"33483243",
+      # :goods=>"potato",
+      # :g_unit=>"kg",
+      # :g_number=>"10",
+      # :full_amount=>"100",
+      # :drg_amount=>"15.25",
+      # :aqcizi_amount=>"0",
+      # :akcis_id=>"0",
+      FacturaItem.new(id: data[:id].to_i, good: data[:goods], unit: data[:g_unit], quantity: data[:g_number].to_f,
+        amount: data[:full_amount].to_f, vat: data[:drg_amount].to_f, excise_amount: data[:aqcizi_amount].to_f,
+        excise_code: ( data[:akcis_id].to_i == 0 ? nil : data[:akcis_id].to_i )
+      )
+    end
   end
 
   def save_factura(factura, opts = {})
@@ -70,8 +93,18 @@ module RS
     }).to_hash
     Factura.extract(opts[:id], response[:get_invoice_response]) if response[:get_invoice_response][:get_invoice_result]
   end
-  
+
+  def get_factura_items(opts = {})
+    validate_presence_of(opts, :user_id, :su, :sp, :id)
+    response = invoice_client.call(:get_invoice_desc, message: {
+      'user_id' => opts[:user_id], 'invois_id' => opts[:id],
+      'su' => opts[:su], 'sp' => opts[:sp]
+    }).to_hash
+    FacturaItem.extract(response[:get_invoice_desc_response][:get_invoice_desc_result][:diffgram][:document_element][:invoices_descs])
+  end
+
   module_function :save_factura
   module_function :save_factura_item
   module_function :get_factura_by_id
+  module_function :get_factura_items
 end
