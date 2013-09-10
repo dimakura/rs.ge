@@ -127,6 +127,15 @@ module RS
     end
   end
 
+  def delete_factura_item(opts = {})
+    validate_presence_of(opts, :user_id, :su, :sp, :factura_id, :id)
+    response = invoice_client.call(:delete_invoice_desc, message: {
+      'user_id' => opts[:user_id], 'id' => opts[:id], 'inv_id' => opts[:factura_id],
+      'su' => opts[:su], 'sp' => opts[:sp],
+    }).to_hash
+    response[:delete_invoice_desc_response][:delete_invoice_desc_result]
+  end
+
   def get_factura_by_id(opts = {})
     validate_presence_of(opts, :user_id, :su, :sp, :id)
     response = invoice_client.call(:get_invoice, message: {
@@ -142,11 +151,21 @@ module RS
       'user_id' => opts[:user_id], 'invois_id' => opts[:id],
       'su' => opts[:su], 'sp' => opts[:sp]
     }).to_hash
-    FacturaItem.extract(response[:get_invoice_desc_response][:get_invoice_desc_result][:diffgram][:document_element][:invoices_descs])
+    result = response[:get_invoice_desc_response][:get_invoice_desc_result]
+    if result[:diffgram][:document_element]
+      FacturaItem.extract(result[:diffgram][:document_element][:invoices_descs])
+    else
+      []
+    end
+  end
+
+  def send_factura()
+    # bool change_invoice_status(int user_id, int inv_id, int status, string su, string sp)
   end
 
   module_function :save_factura
   module_function :save_factura_item
+  module_function :delete_factura_item
   module_function :get_factura_by_id
   module_function :get_factura_items
 end
