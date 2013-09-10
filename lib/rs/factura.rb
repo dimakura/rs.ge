@@ -1,18 +1,52 @@
 # -*- encoding : utf-8 -*-
 module RS
   class Factura < RS::Initializable
-    NOT_SENT = 0
+    ## == Factura statuses ==
+
+    # Newly created factura.
+    NEW = 0
+    # Factura, which was sent for review.
+    SENT = 1
+    # Factura, which was sent and confirmed.
+    SENT_CONFIRMED = 2
+    # Factura is "corrected" by another factura.
+    CORRECTED = 3
+    # New factura, which corrects an old factura.
+    CORRECTION_NEW = 4
+    # Correction factura, which is sent to buyer.
+    CORRECTION_SENT = 5
+    # Correction factura, which is confirmed.
+    CORRECTION_CONFIRMED = 8
+    # Canceled factura.
+    CANCELED = 6
+    # Factura which was confirmed and canceled afterwards.
+    CANCELED_CONFIRMED = 7
+
+    ## == Factura correction types ==
+
+    # Gathering operation was canceled.
+    CANCELD_GATHERING_OPERATION = 1
+    # Gathering operation was changed.
+    CHANGED_GATHERING_OPERATION = 2
+    # Prices changed or any other reason.
+    CHANGED_PRICES = 3
+    # Some goods are returned.
+    RETURNED_GOODS = 4
+
     attr_accessor :id, :date, :register_date, :status
     attr_accessor :seller_id, :buyer_id
     attr_accessor :seria, :number
 
     # ID of the factura which was corrected by this factura.
     attr_accessor :corrected_id
+    attr_accessor :correction_type
 
     def self.extract(id, data)
       Factura.new(id: id, date: data[:operation_dt], register_date: data[:reg_dt],
         seller_id: data[:seller_un_id].to_i, buyer_id: data[:buyer_un_id].to_i,
-        status: data[:status].to_i, corrected_id: (data[:k_id].to_i < 0 ? nil : data[:k_id].to_i),
+        status: data[:status].to_i,
+        corrected_id: (data[:k_id].to_i < 0 ? nil : data[:k_id].to_i),
+        correction_type: (data[:k_type].to_i < 0 ? nil : data[:k_type].to_i),
         seria: data[:f_series], number: (data[:f_number].to_i < 0 ? nil : data[:f_number].to_i))
     end
   end
