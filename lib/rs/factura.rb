@@ -87,9 +87,11 @@ module RS
 
   def save_factura(factura, opts = {})
     validate_presence_of(opts, :user_id, :su, :sp)
-    if opts[:buyer_tin].present?
-      params = { su: opts[:su], sp: opts[:sp], tin: opts[:buyer_tin], user_id: opts[:user_id] }
-      factura.buyer_id = RS.get_oranizaton_info_from_tin(params)[:id]
+    if opts[:seller_tin].present? and factura.seller_id.blank?
+      factura.seller_id = RS.get_oranizaton_info_from_tin({ su: opts[:su], sp: opts[:sp], tin: opts[:seller_tin], user_id: opts[:user_id] })[:id]
+    end
+    if opts[:buyer_tin].present? and factura.buyer_id.blank?
+      factura.buyer_id = RS.get_oranizaton_info_from_tin({ su: opts[:su], sp: opts[:sp], tin: opts[:buyer_tin], user_id: opts[:user_id] })[:id]
     end
     raise 'define seller' if factura.seller_id.blank?
     raise 'define buyer' if factura.buyer_id.blank?
