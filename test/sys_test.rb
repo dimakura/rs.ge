@@ -11,7 +11,7 @@ class SystemTest < Test::Unit::TestCase
 
   def test_check_user
     data = RS.check_user(TEST_SU)
-    assert_equal 731937, data[:payer]
-    assert_equal 20155, data[:user]
+    assert_equal 783, data[:user_id]
+    assert_equal 20155, data[:s_user_id]
   end
 end
