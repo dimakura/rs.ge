@@ -2,7 +2,7 @@
 module RS
   class User < RS::Initializable
     attr_accessor :id, :username, :ip, :name, :payer_id
-    def self.extract(data); RS::User.new(id: data[:id].to_i, username: data[:user_name], ip: data[:ip], name: data[:name], payer_id: data[:un_id]) end
+    def self.extract(data); RS::User.new(id: data[:id].to_i, username: data[:user_name], ip: data[:ip], name: data[:name], payer_id: data[:un_id].to_i) end
   end
 
   def what_is_my_ip
