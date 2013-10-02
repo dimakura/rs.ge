@@ -1,6 +1,19 @@
 # -*- encoding : utf-8 -*-
 module RS
   class Waybill < RS::Initializable
+    SAVED   =  0
+    ACTIVE  =  1
+    CLOSED  =  2
+    DELETED  = -1
+    DEACTIVATED = -2
+
+    INNER = 1
+    TRANS = 2
+    WITHOUT_TRANS = 3
+    DISTR = 4
+    RETRN = 5
+    SUBWB = 6
+
     attr_accessor :id, :parent_id, :number, :type, :status
     attr_accessor :seller_id, :seller_tin, :seller_name
     attr_accessor :buyer_tin, :check_buyer_tin, :buyer_name
@@ -17,7 +30,6 @@ module RS
 
     def self.extract(data)
       Waybill.new(
-        # items: WaybillItem.extract(data[:goods_list][:goods]),
         id: data[:id].to_i, type: data[:type].to_i, status: data[:status].to_i,
         seller_id: data[:seler_un_id].to_i, seller_name: data[:seller_name], seller_tin: data[:seller_tin],
         parent_id: data[:par_id].to_i, number: data[:waybill_number],
@@ -34,7 +46,8 @@ module RS
         su_id: data[:s_user_id],
         comment: data[:comment], seller_info: data[:reception_info], buyer_info: data[:receiver_info],
         confirmation_date: data[:confirmation_date], 
-        invoice_id: (data[:invoice_id].present? ? data[:invoice_id].to_i : nil)
+        invoice_id: (data[:invoice_id].present? ? data[:invoice_id].to_i : nil),
+        # items: WaybillItem.extract(data[:goods_list][:goods]),
       )
     end
   end
