@@ -211,7 +211,7 @@ class RS::Waybill < RS::Validable
         b.END_ADDRESS self.end_address
       else
         b.BUYER_TIN ''
-        b.CHEK_BUYER_TIN 0
+        b.CHEK_BUYER_TIN 1
         b.BUYER_NAME ''
         b.END_ADDRESS ''
       end
