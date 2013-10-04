@@ -2,6 +2,12 @@
 require 'singleton'
 
 module RS
+  class User
+    include RS::Initializable
+    attr_accessor :id, :username, :ip, :name, :payer_id
+    def self.extract(data); RS::User.new(id: data[:id].to_i, username: data[:user_name], ip: data[:ip], name: data[:name], payer_id: data[:un_id].to_i) end
+  end
+
   # System administration related methods.
   class SysRequest < BaseRequest
     include Singleton
@@ -12,20 +18,36 @@ module RS
       response.to_hash[:what_is_my_ip_response][:what_is_my_ip_result].strip
     end
 
-    # Create service user.
-    #
-    # * `username` -- login for the main user
-    # * `password` -- password for the main user
-    # * `ip` -- your IP address
-    # * `name` -- some name for this user/ip configuration
-    # * `su` -- new user login
-    # * `sp` -- new user password
-    def create_user(opts)
-      validate_presence_of(opts, :username, :password, :ip, :name, :su, :sp)
-      response = waybill_client.request 'create_service_user' do
-        soap.body = {'user_name' => opts[:username], 'user_password' => opts[:password], 'ip' => opts[:ip], 'name' => opts[:name], 'su' => opts[:su], 'sp' => opts[:sp]}
+    # # Create service user.
+    # #
+    # # * `username` -- login for the main user
+    # # * `password` -- password for the main user
+    # # * `ip` -- your IP address
+    # # * `name` -- some name for this user/ip configuration
+    # # * `su` -- new user login
+    # # * `sp` -- new user password
+    # def create_user(opts)
+    #   validate_presence_of(opts, :username, :password, :ip, :name, :su, :sp)
+    #   response = waybill_client.request 'create_service_user' do
+    #     soap.body = {'user_name' => opts[:username], 'user_password' => opts[:password], 'ip' => opts[:ip], 'name' => opts[:name], 'su' => opts[:su], 'sp' => opts[:sp]}
+    #   end
+    #   response.to_hash[:create_service_user_response][:create_service_user_result]
+    # end
+
+    def get_users(opts)
+      validate_presence_of(opts, :username, :password)
+      response = (waybill_client.request 'get_service_users' do
+              soap.body = { 'user_name' => opts[:username], 'user_password' => opts[:password] }
+            end).to_hash
+      if response[:get_service_users_response][:get_service_users_result][:service_users].blank?
+        raise 'illegal username/password'
+      else
+        users = []
+        response[:get_service_users_response][:get_service_users_result][:service_users][:service_user].each do |data|
+          users << RS::User.extract(data)
+        end
+        users
       end
-      response.to_hash[:create_service_user_response][:create_service_user_result]
     end
 
     # Update service user.
@@ -37,11 +59,11 @@ module RS
     # * `su` -- user login
     # * `sp` -- user's passwrod
     def update_user(opts)
-      validate_presence_of(opts, :username, :password, :ip, :name, :su, :sp)
-      response = waybill_client.request 'update_service_user' do
-        soap.body = {'user_name' => opts[:username], 'user_password' => opts[:password], 'ip' => opts[:ip], 'name' => opts[:name], 'su' => opts[:su], 'sp' => opts[:sp]}
-      end
-      response.to_hash[:update_service_user_response][:update_service_user_result]
+      # validate_presence_of(opts, :username, :password, :ip, :name, :su, :sp)
+      # response = waybill_client.request 'update_service_user' do
+      #   soap.body = {'user_name' => opts[:username], 'user_password' => opts[:password], 'ip' => opts[:ip], 'name' => opts[:name], 'su' => opts[:su], 'sp' => opts[:sp]}
+      # end
+      # response.to_hash[:update_service_user_response][:update_service_user_result]
     end
 
     # Check service user. Also used for getting user's ID and payer's ID.
