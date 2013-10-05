@@ -43,8 +43,11 @@ module RS
         raise 'illegal username/password'
       else
         users = []
-        response[:get_service_users_response][:get_service_users_result][:service_users][:service_user].each do |data|
-          users << RS::User.extract(data)
+        users_data = response[:get_service_users_response][:get_service_users_result][:service_users][:service_user]
+        if users_data.is_a?(Array)
+          users_data.each { |data| users << RS::User.extract(data) }
+        else
+          users << RS::User.extract(users_data)
         end
         users
       end
