@@ -32,7 +32,7 @@ class DictionaryTest < Test::Unit::TestCase
 
   def test_get_excise_codes
     codes = RS.get_excise_codes(TEST_SU)
-    assert_equal 280, codes.size
+    assert codes.size > 280
     code0 = codes.first
     refute_nil code0
     assert_equal 224, code0.id
