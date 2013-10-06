@@ -56,4 +56,26 @@ class WaybillTest < Test::Unit::TestCase
     assert_equal RS::VAT_COMMON, item.vat_type
     assert_nil item.excise_id
   end
+
+  def test_get_waybills
+    waybills = RS.get_waybills(TEST_SU.merge(number: '0083643818'))
+    assert_equal 1, waybills.size
+    waybill = waybills.first
+    assert_equal 81915883, waybill.id
+    assert_equal RS::Waybill::INNER, waybill.type
+    refute_nil waybill.create_date
+    assert_equal '206322102', waybill.buyer_tin
+    assert_equal 'სატესტო კოდი', waybill.buyer_name
+    assert_equal 'ქ. აბაშა, კაჭარავას 35', waybill.start_address
+    assert_equal 'ქ. აბაშა, კაჭარავას 35', waybill.end_address
+    refute_nil waybill.activation_date
+    assert_equal RS::Waybill::ACTIVE, waybill.status
+    assert_equal 24000, waybill.amount
+    assert_equal 'vin222', waybill.vehicle
+    assert_equal '0083643818', waybill.number
+    refute_nil waybill.begin_date
+    refute waybill.confirmed
+    assert waybill.canceled
+    assert_equal false, waybill.corrected
+  end
 end
