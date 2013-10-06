@@ -118,14 +118,27 @@ module RS
     waybill_data = response[:get_waybills_response][:get_waybills_result][:waybill_list][:waybill]
     if waybill_data.is_a?(Array)
       waybill_data.each { |data| waybills << Waybill.extract(data) }
-    else
+    elsif waybill_data.is_a?(Hash)
       waybills << Waybill.extract(waybill_data)
     end
     waybills
   end
 
-  # def get_buyer_waybills(opts = {})    
-  # end
+  def get_buyer_waybills(opts = {})
+    validate_presence_of(opts, :su, :sp)
+    message = { 'su' => opts[:su], 'sp' => opts[:sp] }
+    waybill_search_params(opts, message)
+    message['create_date_s'] = '2010-01-01T00:00:00' if message['create_date_s'].blank? # fix rs.ge bug!!
+    response = waybill_client.call(:get_buyer_waybills, message: message).to_hash
+    waybills = []
+    waybill_data = response[:get_buyer_waybills_response][:get_buyer_waybills_result][:waybill_list][:waybill]
+    if waybill_data.is_a?(Array)
+      waybill_data.each { |data| waybills << Waybill.extract(data) }
+    elsif waybill_data.is_a?(Hash)
+      waybills << Waybill.extract(waybill_data)
+    end
+    waybills
+  end
 
   # fills search parameters opts -> message
   private
@@ -151,4 +164,5 @@ module RS
   module_function :waybill_search_params
   module_function :get_waybill
   module_function :get_waybills
+  module_function :get_buyer_waybills
 end

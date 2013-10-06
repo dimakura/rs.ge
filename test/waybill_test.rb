@@ -78,4 +78,31 @@ class WaybillTest < Test::Unit::TestCase
     assert waybill.canceled
     assert_equal false, waybill.corrected
   end
+
+  def test_get_buyer_waybills
+    waybills = RS.get_buyer_waybills(TEST_SU.merge(number: '0083644572'))
+    assert_equal 1, waybills.size
+    waybill = waybills.first
+    assert_equal 81916664, waybill.id
+    assert_equal RS::Waybill::TRANS, waybill.type
+    refute_nil waybill.create_date
+    assert_equal '206322102', waybill.buyer_tin
+    assert_equal 'სატესტო კოდი', waybill.buyer_name
+    assert_equal '12345678910', waybill.seller_tin
+    assert_equal 'sofio სატესტო', waybill.seller_name
+    assert_equal 'სატესტო 2 მის', waybill.start_address
+    assert_equal 'ბათუმი', waybill.end_address
+    assert_equal '41001022577', waybill.driver_tin
+    assert_equal 'ხვიჩა ერაძე', waybill.driver_name
+    refute_nil waybill.activation_date
+    refute_nil waybill.begin_date
+    refute_nil waybill.delivery_date
+    assert_equal RS::Waybill::CLOSED, waybill.status
+    assert_equal 15, waybill.amount
+    assert_equal 'fff567', waybill.vehicle
+    assert_equal '0083644572', waybill.number
+    refute waybill.confirmed
+    refute waybill.canceled
+    refute waybill.corrected
+  end
 end
