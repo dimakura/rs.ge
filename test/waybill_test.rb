@@ -5,6 +5,7 @@ class WaybillTest < Test::Unit::TestCase
   def test_get_waybill
     waybill = RS.get_waybill(TEST_SU.merge(id: 78061328))
     refute_nil waybill
+    # test header
     assert_equal 78061328, waybill.id
     assert_nil waybill.parent_id
     assert_equal '0080163857', waybill.number
@@ -39,9 +40,20 @@ class WaybillTest < Test::Unit::TestCase
     assert_equal true, waybill.confirmed
     refute_nil waybill.confirmation_date
     assert_nil waybill.invoice_id
-    # assert_equal 2, waybill.items.size
-
-    # attr_accessor :confirmed, :confirmation_date
-    # attr_accessor :invoice_id
+    # test items
+    refute_nil waybill.items
+    assert_equal 1, waybill.items.size
+    item = waybill.items.first
+    assert_equal 416627358, item.id
+    assert_equal '000000115', item.code
+    assert_equal 'რულეტკა', item.name
+    assert_equal 1, item.status
+    assert_equal 99, item.unit_id
+    assert_equal 'ცალი', item.unit_name
+    assert_equal 1, item.quantity
+    assert_equal 0, item.price
+    assert_equal 0, item.amount
+    assert_equal RS::VAT_COMMON, item.vat_type
+    assert_nil item.excise_id
   end
 end

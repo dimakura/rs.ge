@@ -2,6 +2,7 @@
 require 'savon'
 require 'rs/version'
 require 'rs/base'
+require 'rs/vat'
 require 'rs/initializable'
 require 'rs/sys'
 require 'rs/dict'

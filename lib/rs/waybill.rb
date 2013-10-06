@@ -74,7 +74,7 @@ module RS
         comment: data[:comment], seller_info: data[:reception_info], buyer_info: data[:receiver_info],
         confirmed: data[:is_confirmed].to_i == 1, confirmation_date: data[:confirmation_date], 
         invoice_id: (data[:invoice_id].present? ? data[:invoice_id].to_i : nil),
-        # items: WaybillItem.extract(data[:goods_list][:goods]),
+        items: (WaybillItem.extract_items(data[:goods_list][:goods]) if data[:goods_list][:goods]),
       )
     end
   end
@@ -82,8 +82,25 @@ module RS
   class WaybillItem < RS::Initializable
     attr_accessor :id, :code, :name, :status
     attr_accessor :unit_id, :unit_name
-    attr_accessor :quantity, :quantity_ext, :price, :amount
+    attr_accessor :quantity, :price, :amount
     attr_accessor :excise_id, :vat_type
+
+    def self.extract(data)
+      WaybillItem.new(id: data[:id].to_i, code: data[:bar_code], name: data[:w_name], status: data[:status].to_i,
+        unit_id: data[:unit_id].to_i, unit_name: data[:unit_txt],
+        quantity: data[:quantity].to_f, price: data[:price].to_f, amount: data[:amount].to_f,
+        excise_id: (data[:a_id] == '0' ? nil : data[:a_id].to_i), vat_type: data[:vat_type].to_i)
+    end
+
+    def self.extract_items(data)
+      items = []
+      if data.is_a?(Array)
+        data.each { |single| items << WaybillItem.extract(single)  }
+      else
+        items << WaybillItem.extract(data)
+      end
+      items
+    end
   end
 
   def get_waybill(opts = {})
