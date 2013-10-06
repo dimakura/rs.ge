@@ -51,7 +51,7 @@ module RS
     attr_accessor :comment, :seller_info, :buyer_info
     attr_accessor :amount, :su_id
     attr_accessor :items
-    attr_accessor :confirmed, :confirmation_date
+    attr_accessor :confirmed, :confirmation_date, :canceled, :corrected
     attr_accessor :invoice_id
 
     def self.extract(data)
@@ -69,12 +69,12 @@ module RS
         transport_cost: data[:transport_coast].to_f, amount: data[:full_amount].to_f,
         transport_cost_payer: data[:tran_cost_payer].to_i,
         transport_type: data[:trans_id].to_i, transport_name: data[:trans_txt],
-        vehicle: data[:car_number],
-        su_id: data[:s_user_id].to_i,
+        vehicle: data[:car_number], su_id: data[:s_user_id].to_i,
         comment: data[:comment], seller_info: data[:reception_info], buyer_info: data[:receiver_info],
         confirmed: data[:is_confirmed].to_i == 1, confirmation_date: data[:confirmation_date], 
+        canceled: data[:is_confirmed].to_i == -1, corrected: data[:corrected].to_i == 1,
         invoice_id: (data[:invoice_id].present? ? data[:invoice_id].to_i : nil),
-        items: (WaybillItem.extract_items(data[:goods_list][:goods]) if data[:goods_list][:goods]),
+        items: (WaybillItem.extract_items(data[:goods_list][:goods]) if data[:goods_list].present?),
       )
     end
   end
@@ -106,9 +106,49 @@ module RS
   def get_waybill(opts = {})
     validate_presence_of(opts, :id, :su, :sp)
     response = waybill_client.call(:get_waybill, message: {'su' => opts[:su], 'sp' => opts[:sp], 'waybill_id' => opts[:id] }).to_hash
-    # puts response[:get_waybill_response][:get_waybill_result]
     Waybill.extract(response[:get_waybill_response][:get_waybill_result][:waybill])
   end
 
+  def get_waybills(opts = {})
+    validate_presence_of(opts, :su, :sp)
+    message = { 'su' => opts[:su], 'sp' => opts[:sp] }
+    waybill_search_params(opts, message)
+    response = waybill_client.call(:get_waybills, message: message).to_hash
+    waybills = []
+    waybill_data = response[:get_waybills_response][:get_waybills_result][:waybill_list][:waybill]
+    if waybill_data.is_a?(Array)
+      waybill_data.each { |data| waybills << Waybill.extract(data) }
+    else
+      waybills << Waybill.extract(waybill_data)
+    end
+    waybills
+  end
+
+  # def get_buyer_waybills(opts = {})    
+  # end
+
+  # fills search parameters opts -> message
+  private
+
+  def waybill_search_params(opts, message)
+    message['itypes'] = opts[:types].join(',') if opts[:types].present?
+    message['buyer_tin'] = opts[:buyer_tin] if opts[:buyer_tin].present?
+    message['statuses'] = opts[:statuses].join(',') if opts[:statuses].present?
+    message['car_number'] = opts[:vehicle] if opts[:vehicle].present?
+    message['begin_date_s'] = opts[:begin_date_1] if opts[:begin_date_1].present?
+    message['begin_date_e'] = opts[:begin_date_2] if opts[:begin_date_2].present?
+    message['create_date_s'] = opts[:create_date_1] if opts[:create_date_1].present?
+    message['create_date_e'] = opts[:create_date_2] if opts[:create_date_2].present?
+    message['driver_tin'] = opts[:driver_tin] if opts[:driver_tin].present?
+    message['delivery_date_s'] = opts[:delivery_date_1] if opts[:delivery_date_1].present?
+    message['delivery_date_e'] = opts[:delivery_date_2] if opts[:delivery_date_2].present?
+    message['full_amount'] = opts[:amount] if opts[:amount].present?
+    message['waybill_number'] = opts[:number] if opts[:number].present?
+    message['close_date_s'] = opts[:close_date_1] if opts[:close_date_1]
+    message['close_date_e'] = opts[:close_date_2] if opts[:close_date_2]
+  end
+
+  module_function :waybill_search_params
   module_function :get_waybill
+  module_function :get_waybills
 end
