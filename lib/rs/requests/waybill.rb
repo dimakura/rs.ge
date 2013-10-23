@@ -2,7 +2,6 @@
 require 'singleton'
 
 module RS
-
   class WaybillRequest < BaseRequest
     include Singleton
 
@@ -41,6 +40,64 @@ module RS
       end
       wb = RS::Waybill.new
       wb.init_from_hash(response.to_hash[:get_waybill_response][:get_waybill_result][:waybill])
+    end
+
+    # Get waybills (seller's point of view).
+    def get_waybills(opts = {})
+      validate_presence_of(opts, :id, :su, :sp)
+      message = { 'su' => opts[:su], 'sp' => opts[:sp] }
+      waybill_search_params(opts, message)
+      response = waybill_client.request 'get_waybills' do
+        soap.body = message
+      end
+      waybill_data = response.to_hash[:get_waybills_response][:get_waybills_result][:waybill_list][:waybill]
+      extract_waybills(waybill_data)
+    end
+
+    # Get waybills (buyer's point of view).
+    def get_buyer_waybills
+      validate_presence_of(opts, :id, :su, :sp)
+      message = { 'su' => opts[:su], 'sp' => opts[:sp] }
+      waybill_search_params(opts, message)
+      response = waybill_client.request 'get_buyer_waybills' do
+        soap.body = message
+      end
+      waybill_data = response.to_hash[:get_buyer_waybills_response][:get_buyer_waybills_result][:waybill_list][:waybill]
+      extract_waybills(waybill_data)
+    end
+
+    def extract_waybills(waybill_data)
+      waybills = []
+      if waybill_data.is_a?(Array)
+        waybill_data.each do |data|
+          wb = RS::Waybill.new
+          wb.init_from_hash(data)
+          waybills << wb
+        end
+      elsif waybill_data.is_a?(Hash)
+        wb = RS::Waybill.new
+        wb.init_from_hash(waybill_data)
+        waybills << wb
+      end
+      waybills
+    end
+
+    def waybill_search_params(opts, message)
+      message['itypes'] = opts[:types].join(',') if opts[:types].present?
+      message['buyer_tin'] = opts[:buyer_tin] if opts[:buyer_tin].present?
+      message['statuses'] = opts[:statuses].join(',') if opts[:statuses].present?
+      message['car_number'] = opts[:vehicle] if opts[:vehicle].present?
+      message['begin_date_s'] = opts[:begin_date_1] if opts[:begin_date_1].present?
+      message['begin_date_e'] = opts[:begin_date_2] if opts[:begin_date_2].present?
+      message['create_date_s'] = opts[:create_date_1] if opts[:create_date_1].present?
+      message['create_date_e'] = opts[:create_date_2] if opts[:create_date_2].present?
+      message['driver_tin'] = opts[:driver_tin] if opts[:driver_tin].present?
+      message['delivery_date_s'] = opts[:delivery_date_1] if opts[:delivery_date_1].present?
+      message['delivery_date_e'] = opts[:delivery_date_2] if opts[:delivery_date_2].present?
+      message['full_amount'] = opts[:amount] if opts[:amount].present?
+      message['waybill_number'] = opts[:number] if opts[:number].present?
+      message['close_date_s'] = opts[:close_date_1] if opts[:close_date_1]
+      message['close_date_e'] = opts[:close_date_2] if opts[:close_date_2]
     end
 
     # Activate waybill.
@@ -110,7 +167,6 @@ module RS
         nil
       end
     end
-
   end
 
   class << self
@@ -122,5 +178,4 @@ module RS
       RS::WaybillRequest.instance
     end
   end
-
 end
