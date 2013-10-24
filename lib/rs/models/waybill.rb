@@ -246,13 +246,15 @@ class RS::Waybill < RS::Validable
 
   # Initialize this waybill from given hash.
   def init_from_hash(hash)
-    items_hash = hash[:goods_list][:goods]
-    items_hash = [items_hash] if items_hash.instance_of? Hash
     self.items = []
-    items_hash.each do |item_hash|
-      item = RS::WaybillItem.new
-      item.init_from_hash(item_hash)
-      self.items << item
+    if hash[:goods_list].present?
+      items_hash = hash[:goods_list][:goods]
+      items_hash = [items_hash] if items_hash.instance_of? Hash
+      items_hash.each do |item_hash|
+        item = RS::WaybillItem.new
+        item.init_from_hash(item_hash)
+        self.items << item
+      end
     end
     self.id = hash[:id].to_i
     self.type = hash[:type].to_i
@@ -271,6 +273,8 @@ class RS::Waybill < RS::Validable
     self.delivery_date = hash[:delivery_date] # delivery date
     self.status = hash[:status].to_i
     self.seller_id = hash[:seler_un_id].to_i
+    self.seller_tin = hash[:seller_tin]
+    self.seller_name = hash[:seller_name]
     self.activate_date = hash[:activate_date]
     self.parent_id = hash[:par_id] ? hash[:par_id].to_i : nil
     self.total = hash[:full_amount].to_f

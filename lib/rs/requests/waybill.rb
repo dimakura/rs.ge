@@ -44,7 +44,7 @@ module RS
 
     # Get waybills (seller's point of view).
     def get_waybills(opts = {})
-      validate_presence_of(opts, :id, :su, :sp)
+      validate_presence_of(opts, :su, :sp)
       message = { 'su' => opts[:su], 'sp' => opts[:sp] }
       waybill_search_params(opts, message)
       response = waybill_client.request 'get_waybills' do
@@ -55,8 +55,8 @@ module RS
     end
 
     # Get waybills (buyer's point of view).
-    def get_buyer_waybills
-      validate_presence_of(opts, :id, :su, :sp)
+    def get_buyer_waybills(opts = {})
+      validate_presence_of(opts, :su, :sp)
       message = { 'su' => opts[:su], 'sp' => opts[:sp] }
       waybill_search_params(opts, message)
       response = waybill_client.request 'get_buyer_waybills' do
