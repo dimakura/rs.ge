@@ -62,7 +62,8 @@ module RS
       response = waybill_client.request 'get_buyer_waybills' do
         soap.body = message
       end
-      waybill_data = response.to_hash[:get_buyer_waybills_response][:get_buyer_waybills_result][:waybill_list][:waybill]
+      waybill_data = response.to_hash[:get_buyer_waybills_response][:get_buyer_waybills_result][:waybill_list]
+      waybill_data = waybill_data[:waybill] if waybill_data
       extract_waybills(waybill_data)
     end
 
