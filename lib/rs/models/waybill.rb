@@ -70,7 +70,7 @@ class RS::WaybillItem < RS::Validable
       b.QUANTITY self.quantity
       b.PRICE self.price
       b.STATUS self.delete ? -1 : +1
-      b.AMOUNT self.quantity * self.price
+      b.AMOUNT (self.quantity * self.price * 100).round / 100.0
       b.BAR_CODE self.bar_code
       b.A_ID (self.excise_id ? self.excise_id : 0)
       b.VAT_TYPE (self.vat_type || RS::VAT_COMMON)
