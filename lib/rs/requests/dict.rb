@@ -99,7 +99,17 @@ module RS
       end.to_hash
       p_id = response[:get_un_id_from_tin_response][:get_un_id_from_tin_result].to_i
       name = response[:get_un_id_from_tin_response][:name]
-      {payer_id: p_id, name: name}
+      { payer_id: p_id, name: name }
+    end
+
+    # Is given organization a vat payer?
+    def is_vat_payer(params = {})
+      validate_presence_of(params, :su, :sp, :tin)
+      payer_id = get_payer_info(su: params[:su], sp: params[:sp], tin: params[:tin])[:payer_id]
+      response = waybill_client.request 'is_vat_payer' do
+        soap.body = { 'su' => params[:su], 'sp' => params[:sp], 'un_id' => payer_id }
+      end.to_hash
+      response[:is_vat_payer_response][:is_vat_payer_result]
     end
 
     # Returns name by given TIN number.

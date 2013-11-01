@@ -54,6 +54,11 @@ describe 'payer_user_id testing' do
   it { should == RS.config.user_id }
 end
 
+describe 'is_vat_payer?' do
+  specify { RS.dict.is_vat_payer(tin: '422430239').should == false }
+  specify { RS.dict.is_vat_payer(tin: '204417363').should == true }
+end
+
 describe 'getting payer information by its TIN number' do
   before(:all) do
     @info = RS.dict.get_payer_info(tin: '422430239')
