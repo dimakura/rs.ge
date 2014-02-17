@@ -17,27 +17,24 @@ describe 'working with service user' do
     @password = '123456'
     @new_password = 'new_password_123456'
     @ip = RS.sys.what_is_my_ip
-    # @resp = RS.sys.create_user(USER01.merge(ip: @ip, name: 'test', su: @username, sp: @password))
   end
-  # subject { @resp }
-  # it { should == true }
   describe 'update service user' do
     before(:all) do
-      @resp = RS.sys.update_user(USER01.merge(ip: @ip, name: 'test', su: @username, sp: @new_password))
+      @resp = RS.sys.update_user(USER01.merge(ip: @ip, name: 'test', su: RS.config.su, sp: RS.config.sp))
     end
     subject { @resp }
     it { should == true }
   end
   describe 'check service user: illegal user/password' do
     before(:all) do
-      @resp = RS.sys.check_user(su: @username, sp: @password)
+      @resp = RS.sys.check_user(su: RS.config.su, sp: 'illegal password')
     end
     subject { @resp }
     it { should be_nil }
   end
   describe 'check service user: legal user/password' do
     before(:all) do
-      @resp = RS.sys.check_user(su: @username, sp: @new_password)
+      @resp = RS.sys.check_user(su: RS.config.su, sp: RS.config.sp)
     end
     subject { @resp }
     it { should_not be_nil }
@@ -65,5 +62,5 @@ describe 'get service users list' do
   end
   subject { @users }
   it { should_not be_empty }
-  its(:size) { should == 190 }
+  its(:size) { should > 50 }
 end
