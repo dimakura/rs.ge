@@ -66,7 +66,7 @@ describe 'create factura with items' do
       its(:unit) { should == 'kg' }
       its(:quantity) { should == 10 }
       its(:total) { should == 100 }
-      its(:vat) { should == 18 }
+      its(:vat) { should == 15.25 }
       its(:excise) { should == 0 }
       its(:excise_id) { should == 0 }
     end
@@ -125,7 +125,7 @@ describe 'get factura' do
     its(:registration_date) { should_not be_nil }
     its(:seller_id) { should == 731937 }
     #its(:status) { should == RS::Factura::STATUS_START }
-    its(:status) { should == RS::Factura::STATUS_SENT }
+    its(:status) { should == RS::Factura::STATUS_CONFIRMED }
     its(:correction_of) { should be_nil }
   end
   context do
