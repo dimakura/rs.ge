@@ -11,7 +11,7 @@ class RS::BaseRequest
   INVOICE_SERVICE_URL = 'http://www.revenue.mof.ge/ntosservice/ntosservice.asmx?WSDL'
 
   # Defaults
-  DEFAULTS = {su: 'dimitri1979', sp: '123456', payer_id: 731937, user_id: 783}
+  DEFAULTS = {su: 'DIMITRI1979:206322102', sp: '123456', payer_id: 731937, user_id: 783}
 
   # Last error code.
   attr_accessor :last_error_code
