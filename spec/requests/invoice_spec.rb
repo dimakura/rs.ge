@@ -23,8 +23,9 @@ describe 'Save invoice' do
       @waybill = RS.wb.get_waybill(id: @waybill.id)
     end
     subject { @waybill }
+    specify { @resp.should == -1042 } # cannot update waybill with invoice
     its(:error_code) { should be_nil }
-    its(:total) { should == 50 }
+    its(:total) { should == 1 }
   end
   context 'update invoice' do
     before(:all) do
