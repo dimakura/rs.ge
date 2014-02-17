@@ -180,17 +180,9 @@ class RS::Waybill < RS::Validable
   # Service user ID, who created this waybill.
   attr_accessor :user_id
 
-  def transport_vehicle?
-    self.transport_type_id == RS::TRANS_VEHICLE || self.transport_type_id == RS::TRANS_VEHICLE_FRGN
-  end
-
-  def buyer_required?
-    self.type != RS::WAYBILL_TYPE_DISTR
-  end
-
-  def seller_required?
-    self.type != RS::WAYBILL_TYPE_SUBWB
-  end
+  def transport_vehicle?; self.transport_type_id == RS::TRANS_VEHICLE || self.transport_type_id == RS::TRANS_VEHICLE_FRGN end
+  def buyer_required?; self.type != RS::WAYBILL_TYPE_DISTR end
+  def seller_required?; self.type != RS::WAYBILL_TYPE_SUBWB end
 
   # Convert this waybill to XML.
   def to_xml(xml)
@@ -203,13 +195,17 @@ class RS::Waybill < RS::Validable
       b.ID (self.id ? self.id : 0)
       b.TYPE self.type
 
-      # buyer not sent for distrib order
-      if buyer_required?
+      if self.type == RS::WAYBILL_TYPE_INNER # inner
+        b.BUYER_TIN ''
+        b.CHEK_BUYER_TIN 1
+        b.BUYER_NAME ''
+        b.END_ADDRESS self.end_address
+      elsif buyer_required? # default
         b.BUYER_TIN self.buyer_tin
         b.CHEK_BUYER_TIN (self.check_buyer_tin ? 1 : 0)
         b.BUYER_NAME self.buyer_name
         b.END_ADDRESS self.end_address
-      else
+      else # distribution
         b.BUYER_TIN ''
         b.CHEK_BUYER_TIN 1
         b.BUYER_NAME ''
